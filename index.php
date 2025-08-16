@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Tailwind/src/output.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="">
+        <h1 class="text-red-500">Welcome to My Website</h1>
+        <p>This is a simple HTML page.</p>
+        <a href="https://www.example.com">Visit Example</a>
+    </div>
+</body>
+
+</html>
