@@ -13,7 +13,9 @@
         <h1 class="text-red-500">Welcome to My Website</h1>
         <p>This is a simple HTML page.</p>
         <a href="https://www.example.com">Visit Example</a>
+        
     </div>
+    <?php include 'pages/edit-survey/edit-survey.php'; ?>
 </body>
 
 </html>
