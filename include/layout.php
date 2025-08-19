@@ -21,7 +21,6 @@
             <h1 class="text-3xl font-bold mb-6">
                 <?php
                 $page = $_GET['page'] ?? 'dashboard';
-                echo ucfirst($page);
                 ?>
             </h1>
             <?php
