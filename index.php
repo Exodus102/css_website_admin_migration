@@ -9,7 +9,7 @@
 </head>
 
 <body>
-<?php include 'pages/login/login.php'; ?>
+<?php include 'pages/login/password.php'; ?>
 
 </body>
 
