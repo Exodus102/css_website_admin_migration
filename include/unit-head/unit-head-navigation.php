@@ -37,7 +37,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout?page=qr-code" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/qr-code.svg" alt="" class="w-5 h-5">
                 QR Code
             </a>
