@@ -5,12 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="Tailwind/src/output.css">
-    <title>Document</title>
+    <title>Customer Satisfaction</title>
 </head>
 
 <body>
-<?php include 'pages/login/password.php'; ?>
-
+    <?php include 'pages/login/login.php'; ?>
 </body>
 
 </html>

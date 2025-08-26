@@ -11,7 +11,7 @@
 <!-- Footer -->
 <footer class="absolute bottom-20 text-center text-xs text-gray-600">
   You are agreeing to the
-  <a href="#" class="text-blue-700 font-semibold hover:text-blue-900">Terms of Services</a> 
-  and 
+  <a href="#" class="text-blue-700 font-semibold hover:text-blue-900">Terms of Services</a>
+  and
   <a href="#" class="text-blue-700 font-semibold hover:text-blue-900">Privacy Policy</a>.
 </footer>
