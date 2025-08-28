@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 26, 2025 at 03:26 AM
+-- Generation Time: Aug 28, 2025 at 09:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -90,7 +90,28 @@ CREATE TABLE `tbl_questionaire` (
 --
 
 INSERT INTO `tbl_questionaire` (`question_id`, `question_survey`, `section`, `question`, `status`, `question_type`, `required`, `header`, `transaction_type`, `question_rendering`) VALUES
-(1, '2025 Questionaire_V1.0', 'Section 1', 'Campus', 1, 'Dropdown', 1, 1, 2, 'None');
+(1, '2025 Questionaire_V1.0', 'Section 1', 'Campus', 1, 'Dropdown', 1, 1, 2, 'None'),
+(2, '2025 Questionaire_V1.0', 'Section 1', 'Name', 1, 'Text', 1, 0, 2, 'None');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_responses`
+--
+
+CREATE TABLE `tbl_responses` (
+  `id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  `response_id` int(11) DEFAULT NULL,
+  `response` varchar(255) DEFAULT NULL,
+  `comment` varchar(255) NOT NULL,
+  `analysis` varchar(50) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `header` int(11) NOT NULL,
+  `transaction_type` varchar(255) NOT NULL,
+  `question_rendering` varchar(255) NOT NULL,
+  `uploaded` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -136,6 +157,13 @@ ALTER TABLE `tbl_questionaire`
   ADD PRIMARY KEY (`question_id`);
 
 --
+-- Indexes for table `tbl_responses`
+--
+ALTER TABLE `tbl_responses`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `question_id` (`question_id`);
+
+--
 -- Indexes for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
@@ -162,7 +190,13 @@ ALTER TABLE `tbl_choices`
 -- AUTO_INCREMENT for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_responses`
+--
+ALTER TABLE `tbl_responses`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `two_factor_codes`
