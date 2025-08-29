@@ -21,13 +21,12 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
 
   <div class="min-h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
 
-    <?php include 'header_sec.php'; ?>
+    <?php include '2fa_header.php'; ?>
 
     <!-- Reduced padding for center section -->
     <div class="md:w-1/2 flex flex-col justify-center items-center bg-transparent p-4 md:p-6">
       <div class="w-full max-w-sm">
 
-        <?php include 'logo.php'; ?>
 
         <!-- Title -->
         <h3 class="text-2xl font-bold text-[#064089] text-center mb-1">2-Step Verification</h3>
