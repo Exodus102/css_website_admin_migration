@@ -1,19 +1,19 @@
 <nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col md:w-80 w-full rounded-lg shadow-2xl">
     <ul class="space-y-3 flex-grow mt-8">
         <li>
-            <a href="university-mis-navigation.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="layout.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/dashboard.svg" alt="" class="w-5 h-5">
                 Dashboard
             </a>
         </li>
         <li>
-            <a href="university-mis-navigation.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="layout.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/survey.svg" alt="" class="w-5 h-5">
                 Survey
             </a>
         </li>
         <li>
-            <a href="university-mis-navigation.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="layout.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/data-response.svg" alt="" class="w-5 h-5">
                 Data Response
             </a>
@@ -46,7 +46,7 @@
             Settings
         </span>
         <li>
-            <a href="university-mis-navigation.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="layout.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M11.4583 4.66699H4.16659C3.61405 4.66699 3.08415 4.88649 2.69345 5.27719C2.30275 5.66789 2.08325 6.19779 2.08325 6.75033V21.3337C2.08325 21.8862 2.30275 22.4161 2.69345 22.8068C3.08415 23.1975 3.61405 23.417 4.16659 23.417H18.7499C19.3025 23.417 19.8324 23.1975 20.2231 22.8068C20.6138 22.4161 20.8333 21.8862 20.8333 21.3337V14.042" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     <path class="fill-current" d="M19.2708 3.10424C19.6852 2.68984 20.2472 2.45703 20.8333 2.45703C21.4193 2.45703 21.9814 2.68984 22.3958 3.10424C22.8102 3.51864 23.043 4.08069 23.043 4.66674C23.043 5.25279 22.8102 5.81484 22.3958 6.22924L12.4999 16.1251L8.33325 17.1667L9.37492 13.0001L19.2708 3.10424Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -160,7 +160,7 @@
             </a>
         </li>
         <li>
-            <a href="university-mis-navigation.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="layout.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg" class="group-hover:text-[#F1F7F9] text-black">
                     <g clip-path="url(#clip0_180_373)">
                         <path class="fill-current" d="M12.5 8.3125C12.8078 8.3125 13.1126 8.25188 13.3969 
