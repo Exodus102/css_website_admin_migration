@@ -1,43 +1,43 @@
 <nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col md:w-80 w-full rounded-lg shadow-2xl">
     <ul class="space-y-3 flex-grow mt-8">
         <li>
-            <a href="layout.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/dashboard.svg" alt="" class="w-5 h-5">
                 Dashboard
             </a>
         </li>
         <li>
-            <a href="layout.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/survey.svg" alt="" class="w-5 h-5">
                 Survey
             </a>
         </li>
         <li>
-            <a href="layout.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/data-response.svg" alt="" class="w-5 h-5">
                 Data Response
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=tally-results" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/tally-results.svg" alt="" class="w-5 h-5">
                 Tally Results
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=reports" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/reports.svg" alt="" class="w-5 h-5">
                 Reports
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=ncar" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/ncar.svg" alt="" class="w-5 h-5">
                 NCAR
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=qr-code" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <img src="../resources/svg/qr-code.svg" alt="" class="w-5 h-5">
                 QR Code
             </a>
@@ -46,7 +46,7 @@
             Settings
         </span>
         <li>
-            <a href="layout.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M11.4583 4.66699H4.16659C3.61405 4.66699 3.08415 4.88649 2.69345 5.27719C2.30275 5.66789 2.08325 6.19779 2.08325 6.75033V21.3337C2.08325 21.8862 2.30275 22.4161 2.69345 22.8068C3.08415 23.1975 3.61405 23.417 4.16659 23.417H18.7499C19.3025 23.417 19.8324 23.1975 20.2231 22.8068C20.6138 22.4161 20.8333 21.8862 20.8333 21.3337V14.042" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                     <path class="fill-current" d="M19.2708 3.10424C19.6852 2.68984 20.2472 2.45703 20.8333 2.45703C21.4193 2.45703 21.9814 2.68984 22.3958 3.10424C22.8102 3.51864 23.043 4.08069 23.043 4.66674C23.043 5.25279 22.8102 5.81484 22.3958 6.22924L12.4999 16.1251L8.33325 17.1667L9.37492 13.0001L19.2708 3.10424Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
@@ -55,7 +55,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=user-management" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="24" height="24" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_355)">
                         <path class="fill-current" d="M17.1875 9.375C17.1875 10.6182 16.6936 11.8105 15.8146 12.6896C14.9355 13.5686 13.7432 14.0625 12.5 14.0625C11.2568 14.0625 10.0645 13.5686 9.18544 12.6896C8.30636 11.8105 7.8125 10.6182 7.8125 9.375C7.8125 8.1318 8.30636 6.93951 9.18544 6.06044C10.0645 5.18136 11.2568 4.6875 12.5 4.6875C13.7432 4.6875 14.9355 5.18136 15.8146 6.06044C16.6936 6.93951 17.1875 8.1318 17.1875 9.375Z" />
@@ -71,7 +71,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=entity-management" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="19" height="18" viewBox="0 0 19 18" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.25 0.25C1.86929 0.25 0.75 1.36929 0.75 2.75V5.25C0.75 6.63071 1.86929 7.75 3.25 7.75H5.75C7.13071 7.75 8.25 6.63071 8.25 5.25V2.75C8.25 1.36929 7.13071 0.25 5.75 0.25H3.25Z" />
                     <path class="fill-current" d="M3.25 10.25C1.86929 10.25 0.75 11.3693 0.75 12.75V15.25C0.75 16.6307 1.86929 17.75 3.25 17.75H5.75C7.13071 17.75 8.25 16.6307 8.25 15.25V12.75C8.25 11.3693 7.13071 10.25 5.75 10.25H3.25Z" />
@@ -82,7 +82,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=backup-&-restore" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="21" height="22" viewBox="0 0 21 22" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.20825 13.083C2.93198 13.083 2.66703 13.1928 2.47168 13.3881C2.27633 
                     13.5835 2.16659 13.8484 2.16659 14.1247V18.2913C2.16659 18.5676 2.27633 18.8326 
@@ -126,7 +126,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=audit-trail" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="23" height="22" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M13.6938 9.95801H17.8115C18.3803 9.95801 18.8407 10.4247 
                     18.8407 10.9997C18.8407 11.5747 18.3803 12.0413 17.8115 
@@ -160,7 +160,7 @@
             </a>
         </li>
         <li>
-            <a href="layout.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="css-coordinators-layout.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg" class="group-hover:text-[#F1F7F9] text-black">
                     <g clip-path="url(#clip0_180_373)">
                         <path class="fill-current" d="M12.5 8.3125C12.8078 8.3125 13.1126 8.25188 13.3969 
