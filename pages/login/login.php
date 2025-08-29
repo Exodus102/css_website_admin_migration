@@ -1,12 +1,12 @@
 <div class="min-h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
 
-  <?php include 'pages/login/header_sec.php'; ?>
+  <?php include 'pages/login/2fa.php'; ?>
 
   <!-- reduced padding -->
   <div class="md:w-1/2 flex flex-col justify-center items-center bg-transparent p-4 md:p-6">
     <div class="w-full max-w-sm">
 
-      <?php include 'pages/login/logo.php'; ?>
+
 
       <!-- Title -->
       <h3 class="text-2xl font-bold text-[#064089] text-center mb-1">Log in</h3>
