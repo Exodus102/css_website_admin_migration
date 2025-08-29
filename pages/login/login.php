@@ -1,12 +1,10 @@
 <div class="min-h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
 
-  <?php include 'pages/login/2fa.php'; ?>
+  <?php include 'pages/login/login_header.php'; ?>
 
   <!-- reduced padding -->
   <div class="md:w-1/2 flex flex-col justify-center items-center bg-transparent p-4 md:p-6">
     <div class="w-full max-w-sm">
-
-
 
       <!-- Title -->
       <h3 class="text-2xl font-bold text-[#064089] text-center mb-1">Log in</h3>
@@ -31,9 +29,12 @@
           </label>
         </div>
 
-        <!-- Forgot email link -->
+        <!-- Forgot email trigger (button instead of link) -->
         <div>
-          <a href="#" class="text-sm text-[#064089]">Forgot email?</a>
+          <button type="button" id="forgotEmailBtn" 
+            class="text-sm text-[#064089] hover:underline focus:outline-none">
+            Forgot email?
+          </button>
         </div>
 
         <!-- Next Button -->
@@ -48,3 +49,43 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div id="forgotEmailModal" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white rounded-lg shadow-lg w-80 p-6"> 
+    <!-- Changed from max-w-md to w-80 -->
+    <h2 class="text-lg font-bold text-[#064089] mb-3">Forgot your email?</h2>
+    <p class="text-gray-700 mb-4 text-sm">
+      Please contact the University MIS office to recover your account credentials.
+    </p>
+    <div class="flex justify-end">
+      <button id="closeModalBtn"
+        class="px-4 py-2 bg-[#064089] text-white rounded-md hover:bg-[#002266] text-sm">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Script -->
+<script>
+  const modal = document.getElementById("forgotEmailModal");
+  const openBtn = document.getElementById("forgotEmailBtn");
+  const closeBtn = document.getElementById("closeModalBtn");
+
+  openBtn.addEventListener("click", () => {
+    modal.classList.remove("hidden");
+  });
+
+  closeBtn.addEventListener("click", () => {
+    modal.classList.add("hidden");
+  });
+
+  // Close modal when clicking outside
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.add("hidden");
+    }
+  });
+</script>
