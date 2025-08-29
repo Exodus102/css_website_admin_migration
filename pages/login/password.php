@@ -38,7 +38,7 @@ $first_name_for_display = $_SESSION['login_first_name'] ?? 'User';
         <!-- Avatar above welcome -->
         <div class="flex justify-center mb-3">
           <div class="w-16 h-16 rounded-full bg-[#064089] flex items-center justify-center overflow-hidden">
-            <img src="../../resources/svg/oikawa.svg" alt="Login Avatar" class="w-3/4 h-3/4 object-contain">
+            <img src="/resources/svg/oikawa.svg" alt="Login Avatar" class="w-3/4 h-3/4 object-contain">
           </div>
         </div>
 

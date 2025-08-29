@@ -1,4 +1,4 @@
-<div class="absolute top-12 right-3 -translate-x-1/2">
+<div class="absolute top-12 right-8 -translate-x-1/2">
   <div class="flex items-center gap-3">
     <img src="resources/svg/ursatisfaction-logo.svg" alt="URSatisfaction Logo" class="w-20 h-20">
     <div class="text-left">
