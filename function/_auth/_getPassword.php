@@ -20,11 +20,42 @@ require '../../PHPMailer/vendor/phpmailer/phpmailer/src/SMTP.php';
 // Check if the email is available in the session. If not, redirect.
 if (!isset($_SESSION['login_username'])) {
     $_SESSION['login_error'] = "No email provided for login.";
+    // 🔧 ensure session data is written before redirect
+    session_write_close();
     header("Location: ../../index.php");
     exit();
 }
 
 $email_from_session = $_SESSION['login_username'];
+
+// 🔹 Added for lockout system
+if (!isset($_SESSION['attempts'])) $_SESSION['attempts'] = 0;
+if (!isset($_SESSION['lockout_time'])) $_SESSION['lockout_time'] = 0;
+
+$max_attempts = 3;
+$lockout_seconds = 60;
+
+// 🔧 Debug log of current session state (check PHP error log)
+error_log("[getPassword] session start for {$email_from_session} | attempts={$_SESSION['attempts']} | lockout_time={$_SESSION['lockout_time']}");
+
+// Check if still locked
+if (intval($_SESSION['lockout_time']) > time()) {
+    $_SESSION['login_error'] = "Too many failed attempts. Please wait 1 minute.";
+    // 🔧 write session and redirect
+    session_write_close();
+    error_log("[getPassword] Locked out (still within lockout). Redirecting back.");
+    header("Location: ../../pages/login/password.php");
+    exit();
+}
+
+// Reset if lockout expired
+if (intval($_SESSION['lockout_time']) != 0 && intval($_SESSION['lockout_time']) <= time()) {
+    $_SESSION['attempts'] = 0;
+    $_SESSION['lockout_time'] = 0;
+    unset($_SESSION['login_error']);
+    // 🔧 log the reset
+    error_log("[getPassword] Lockout expired. Reset attempts/lockout_time for {$email_from_session}.");
+}
 
 // --- Process Form Submission ---
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -40,26 +71,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->rowCount() > 0) {
             $user_credentials = $stmt->fetch(PDO::FETCH_ASSOC);
             $user_id = $user_credentials['user_id'];
-            $stored_password = $user_credentials['password']; // This is now a plain-text password
+            $stored_password = $user_credentials['password']; // plain-text password
             $user_first_name = $user_credentials['first_name'];
             $user_email = $user_credentials['email'];
             $user_type = $user_credentials['type'];
 
             // --- Password Verification (direct string comparison) ---
             if ($input_password === $stored_password) {
-                // Password is correct. Generate and store the 2FA code.
+                // ✅ Correct password: reset attempts
+                $_SESSION['attempts'] = 0;
+                $_SESSION['lockout_time'] = 0;
+                unset($_SESSION['login_error']);
+
+                // 🔧 log success
+                error_log("[getPassword] Successful login for {$email_from_session}. Resetting attempts.");
+
+                // Generate and store the 2FA code.
                 $verificationCode = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
                 $expiresAt = date('Y-m-d H:i:s', strtotime('+10 minutes'));
 
-                // Clear any old codes for this user before inserting the new one
+                // Clear any old codes
                 $clearStmt = $pdo->prepare("DELETE FROM two_factor_codes WHERE user_id = ?");
                 $clearStmt->execute([$user_id]);
 
-                // Insert the new code and expiration time
+                // Insert new code
                 $insertStmt = $pdo->prepare("INSERT INTO two_factor_codes (user_id, code, expires_at) VALUES (?, ?, ?)");
                 $insertStmt->execute([$user_id, $verificationCode, $expiresAt]);
 
-                // Send the email using PHPMailer
+                // Send email
                 $mail = new PHPMailer(true);
                 try {
                     $mail->isSMTP();
@@ -80,37 +119,62 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $mail->send();
 
-                    // Set session variables for verification and redirect
+                    // Session for verification
                     $_SESSION['user_authenticated_pending'] = true;
                     $_SESSION['user_id'] = $user_id;
                     $_SESSION['user_email'] = $user_email;
                     $_SESSION['user_first_name'] = $user_first_name;
                     $_SESSION['user_type'] = $user_type;
 
-                    // Redirect to the 2FA verification page
+                    // 🔧 ensure session is written before redirect
+                    session_write_close();
                     header("Location: ../../pages/login/two-factor-authentication.php");
                     exit();
                 } catch (Exception $e) {
                     $_SESSION['login_error'] = "Could not send verification email: {$mail->ErrorInfo}";
+                    // 🔧 write session & log
+                    session_write_close();
+                    error_log("[getPassword] PHPMailer error for {$email_from_session}: {$mail->ErrorInfo}");
                     header("Location: ../../pages/login/password.php");
                     exit();
                 }
             } else {
-                $_SESSION['login_error'] = "Incorrect password.";
+                // ❌ Wrong password
+                $_SESSION['attempts']++;
+
+                if ($_SESSION['attempts'] >= $max_attempts) {
+                    $_SESSION['lockout_time'] = time() + $lockout_seconds;
+                    $_SESSION['login_error'] = "Too many failed attempts. Please wait 1 minute.";
+                    // 🔧 log lockout
+                    error_log("[getPassword] Locking out {$email_from_session}. attempts={$_SESSION['attempts']} lockout_time={$_SESSION['lockout_time']}");
+                } else {
+                    $_SESSION['login_error'] = "Incorrect password.";
+                    error_log("[getPassword] Incorrect password for {$email_from_session}. attempts={$_SESSION['attempts']}");
+                }
+
+                // 🔧 ensure session writes and redirect
+                session_write_close();
                 header("Location: ../../pages/login/password.php");
                 exit();
             }
         } else {
             $_SESSION['login_error'] = "User not found or credentials mismatch.";
+            // 🔧 write and log
+            session_write_close();
+            error_log("[getPassword] User not found for email: {$email_from_session}");
             header("Location: ../../pages/login/password.php");
             exit();
         }
     } else {
         $_SESSION['login_error'] = "Please enter your password.";
+        // 🔧 write and redirect
+        session_write_close();
+        error_log("[getPassword] Empty password submitted for {$email_from_session}");
         header("Location: ../../pages/login/password.php");
         exit();
     }
 } else {
+    session_write_close();
     header("Location: ../../index.php");
     exit();
 }
