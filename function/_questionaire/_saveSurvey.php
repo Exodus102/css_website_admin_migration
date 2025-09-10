@@ -41,6 +41,7 @@ if ($data === null) {
 }
 
 $survey_name = $data['survey_name'] ?? '';
+$survey_id = $data['survey_id'] ?? null; // Check for survey_id for updates
 $questions = $data['questions'] ?? [];
 
 if (empty($survey_name) || empty($questions)) {
@@ -48,62 +49,105 @@ if (empty($survey_name) || empty($questions)) {
     exit;
 }
 
-// Prepare statements to prevent SQL injection
-$stmt_question = $pdo->prepare(
-    "INSERT INTO tbl_questionaire (question_survey, section, question, status, question_type, required, header, transaction_type, question_rendering) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
-);
-
-$stmt_choice = $pdo->prepare(
-    "INSERT INTO tbl_choices (question_id, choice_text) VALUES (?, ?)"
-);
-
-if (!$stmt_question || !$stmt_choice) {
-    http_response_code(500);
-    echo json_encode(['success' => false, 'message' => 'Failed to prepare statements.']);
-    exit;
-}
-
 $pdo->beginTransaction();
 
 try {
+    if ($survey_id) {
+        // --- UPDATE LOGIC ---
+        // 1. Get the original survey name to delete old questions
+        $stmt_get_old_name = $pdo->prepare("SELECT question_survey FROM tbl_questionaireform WHERE id = ?");
+        $stmt_get_old_name->execute([$survey_id]);
+        $old_survey_name = $stmt_get_old_name->fetchColumn();
+
+        if (!$old_survey_name) {
+            throw new Exception("Survey with ID $survey_id not found for update.");
+        }
+
+        // 2. Delete old choices and questions associated with the old survey name
+        // We must delete choices first because of the foreign key constraint.
+        // Using a subquery is a reliable way to do this.
+        $stmt_del_choices = $pdo->prepare("DELETE FROM tbl_choices WHERE question_id IN (SELECT question_id FROM tbl_questionaire WHERE question_survey = ?)");
+        $stmt_del_choices->execute([$old_survey_name]);
+
+        // Now that choices are gone, we can safely delete the questions.
+        $stmt_del_questions = $pdo->prepare("DELETE FROM tbl_questionaire WHERE question_survey = ?");
+        $stmt_del_questions->execute([$old_survey_name]);
+
+        // 3. Update the survey form entry
+        $change_log_message = 'Updated survey questions and/or name.';
+        $stmt_update_form = $pdo->prepare("UPDATE tbl_questionaireform SET question_survey = ?, change_log = ? WHERE id = ?");
+        $stmt_update_form->execute([$survey_name, $change_log_message, $survey_id]);
+
+        $message = 'Survey updated successfully!';
+    } else {
+        // --- CREATE LOGIC ---
+        // Check if the survey name already exists.
+        $stmt_check = $pdo->prepare("SELECT COUNT(*) FROM tbl_questionaireform WHERE question_survey = ?");
+        $stmt_check->execute([$survey_name]);
+        if ($stmt_check->fetchColumn() > 0) {
+            throw new Exception("A survey with the name '$survey_name' already exists.");
+        }
+
+        // The survey is new, so add it to the form table.
+        $initial_change_log = 'Initial survey creation.';
+        $stmt_form = $pdo->prepare(
+            "INSERT INTO tbl_questionaireform (question_survey, change_log, date_approved, timestamp) VALUES (?, ?, NULL, NOW())"
+        );
+        $stmt_form->execute([$survey_name, $initial_change_log]);
+        $message = 'Survey saved successfully!';
+    }
+
+    // --- RE-INSERT QUESTIONS AND CHOICES (for both create and update) ---
+    $stmt_question = $pdo->prepare(
+        "INSERT INTO tbl_questionaire (question_survey, section, question, status, question_type, required, header, transaction_type, question_rendering) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+    );
+
+    $stmt_choice = $pdo->prepare(
+        "INSERT INTO tbl_choices (question_id, choice_text) VALUES (?, ?)"
+    );
+
     foreach ($questions as $q) {
         $question_text = $q['question'];
         $question_type = $q['type'];
         $choices = $q['choices'] ?? [];
-
-        // Use the 'required' value from the incoming data, defaulting to 1 if it's not present.
         $required = $q['required'] ?? 1;
-
-        // Static values
         $section = 'Section 2';
-        $status = 1;
+        $status = 0;
         $header = 0;
-        // Get the transaction_type from the question data, defaulting to 2 ('Both') if not provided.
-        $transaction_type = $q['transaction_type'] ?? 2;
-        $question_rendering = 'None';
+        $transaction_type = $q['transaction_type'] ?? '2';
+        $question_rendering = $q['question_rendering'] ?? 'None';
 
-        if (!$stmt_question->execute([$survey_name, $section, $question_text, $status, $question_type, $required, $header, $transaction_type, $question_rendering])) {
+        $stmt_question->execute([
+            $survey_name,
+            $section,
+            $question_text,
+            $status,
+            $question_type,
+            $required,
+            $header,
+            $transaction_type,
+            $question_rendering
+        ]);
+
+        $last_question_id = $pdo->lastInsertId();
+        if (!$last_question_id) {
             throw new Exception('Failed to insert question.');
         }
 
-        $last_question_id = $pdo->lastInsertId();
-
         if (!empty($choices)) {
             foreach ($choices as $choice_text) {
-                if (!$stmt_choice->execute([$last_question_id, $choice_text])) {
-                    throw new Exception('Failed to insert choice.');
-                }
+                $stmt_choice->execute([$last_question_id, $choice_text]);
             }
         }
     }
 
     $pdo->commit();
-    echo json_encode(['success' => true, 'message' => 'Survey saved successfully!']);
+    echo json_encode(['success' => true, 'message' => $message]);
 } catch (Exception $e) {
     $pdo->rollBack();
     // Use http_response_code for a proper status
     http_response_code(500);
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    echo json_encode(['success' => false, 'message' => 'Database Error: ' . $e->getMessage()]);
 }
 
 $pdo = null; // Close PDO connection

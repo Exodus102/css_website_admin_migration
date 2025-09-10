@@ -69,6 +69,20 @@ INSERT INTO `tbl_choices` (`choices_id`, `question_id`, `choice_text`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_questionaireform`
+--
+
+CREATE TABLE `tbl_questionaireform` (
+  `id` int(11) NOT NULL,
+  `question_survey` varchar(200) NOT NULL,
+  `change_log` text DEFAULT NULL,
+  `date_approved` datetime DEFAULT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_questionaire`
 --
 
@@ -144,6 +158,13 @@ ALTER TABLE `credentials`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `tbl_questionaireform`
+--
+ALTER TABLE `tbl_questionaireform`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `question_survey` (`question_survey`);
+
+--
 -- Indexes for table `tbl_choices`
 --
 ALTER TABLE `tbl_choices`
@@ -179,6 +200,12 @@ ALTER TABLE `two_factor_codes`
 --
 ALTER TABLE `credentials`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tbl_questionaireform`
+--
+ALTER TABLE `tbl_questionaireform`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tbl_choices`

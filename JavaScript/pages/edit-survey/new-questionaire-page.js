@@ -37,10 +37,16 @@ document.addEventListener("DOMContentLoaded", () => {
   /**
    * Adds a new question block to the page based on the selected type.
    * @param {string} type - The type of question to add (e.g., 'dropdown', 'text').
+   * @param {object|null} questionData - Optional data to pre-fill the question inputs.
    */
-  function addQuestion(type) {
+  function addQuestion(type, questionData = null) {
     const questionWrapper = document.createElement("div");
     questionWrapper.className = "p-4 border rounded-lg shadow-sm bg-white";
+
+    // If it's a view, add a class to disable interactions
+    if (questionData && questionData.isViewMode) {
+      questionWrapper.classList.add("view-mode");
+    }
     questionWrapper.dataset.questionType = type;
 
     let questionContent = "";
@@ -71,7 +77,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
-                            <option value="2" selected>Both</option>
+                            <option value="2" selected>Both</option>                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="None" selected>None</option>
+                            <option value="QoS">QoS</option>
+                            <option value="Su">Su</option>
                         </select>
                     </div>
                     <div class="flex items-center justify-end mt-4 pt-4 border-t">
@@ -98,6 +111,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="2" selected>Both</option>
                         </select>
                     </div>
+                    <div class="mt-4">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="None" selected>None</option>
+                            <option value="QoS">QoS</option>
+                            <option value="Su">Su</option>
+                        </select>
+                    </div>
                     <div class="flex items-center justify-end mt-4 pt-4 border-t">
                         <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
@@ -120,6 +141,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
                             <option value="2" selected>Both</option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="None" selected>None</option>
+                            <option value="QoS">QoS</option>
+                            <option value="Su">Su</option>
                         </select>
                     </div>
                     <div class="flex items-center justify-end mt-4 pt-4 border-t">
@@ -153,6 +182,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="2" selected>Both</option>
                         </select>
                     </div>
+                    <div class="mt-4">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                            <option value="None" selected>None</option>
+                            <option value="QoS">QoS</option>
+                            <option value="Su">Su</option>
+                        </select>
+                    </div>
                     <div class="flex items-center justify-end mt-4 pt-4 border-t">
                         <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
@@ -172,11 +209,48 @@ document.addEventListener("DOMContentLoaded", () => {
     if (addChoiceBtn) {
       const choicesContainer =
         questionWrapper.querySelector(".choices-container");
+      if (
+        questionData &&
+        questionData.choices &&
+        questionData.choices.length > 0
+      ) {
+        // Populate existing choices
+        questionData.choices.forEach((choiceText) => {
+          addChoiceInput(choicesContainer, choiceText);
+        });
+      } else {
+        // Add one empty choice by default for new questions
+        addChoiceInput(choicesContainer);
+      }
+
+      // Add event listener for the 'Add Choice' button
       addChoiceBtn.addEventListener("click", (event) => {
-        event.preventDefault(); // Explicitly prevent form submission
+        event.preventDefault();
         addChoiceInput(choicesContainer);
       });
-      addChoiceInput(choicesContainer); // Add one choice by default
+    }
+
+    // Pre-fill data if provided
+    if (questionData) {
+      const questionInput = questionWrapper.querySelector(
+        'input[type="text"][id$="-text"], textarea[id$="-text"]'
+      );
+      if (questionInput) questionInput.value = questionData.question || "";
+
+      const requiredToggle = questionWrapper.querySelector(".required-toggle");
+      if (requiredToggle) requiredToggle.checked = !!questionData.required;
+
+      const transactionSelect = questionWrapper.querySelector(
+        ".transaction-type-select"
+      );
+      if (transactionSelect)
+        transactionSelect.value = questionData.transaction_type || "2";
+
+      const renderingSelect = questionWrapper.querySelector(
+        ".question-rendering-select"
+      );
+      if (renderingSelect)
+        renderingSelect.value = questionData.question_rendering || "None";
     }
 
     // Add event listener for the new 'Remove Question' button
@@ -188,13 +262,21 @@ document.addEventListener("DOMContentLoaded", () => {
       });
   }
 
-  function addChoiceInput(container) {
+  /**
+   * Adds a choice input to a choices container.
+   * @param {HTMLElement} container - The container to add the choice to.
+   * @param {string|null} choiceText - Optional text to pre-fill the input.
+   */
+  function addChoiceInput(container, choiceText = null) {
     const choiceWrapper = document.createElement("div");
     choiceWrapper.className = "flex items-center gap-2";
     choiceWrapper.innerHTML = `
             <input type="text" placeholder="Enter a choice" class="flex-grow rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
             <button type="button" class="remove-choice-btn text-red-500 hover:text-red-700 text-xl font-bold">&times;</button>
         `;
+    if (choiceText) {
+      choiceWrapper.querySelector('input[type="text"]').value = choiceText;
+    }
     container.appendChild(choiceWrapper);
 
     // Add event listener to the new remove button
@@ -219,14 +301,130 @@ document.addEventListener("DOMContentLoaded", () => {
       .join(" ");
   }
 
+  /**
+   * Fetches and displays a survey for viewing.
+   * @param {string} surveyId The ID of the survey to load.
+   */
+  async function loadSurveyForViewing(surveyId) {
+    try {
+      const response = await fetch(
+        `../../function/_questionaire/_getSurveyDetails.php?id=${surveyId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+
+      if (result.success) {
+        const surveyData = result.data;
+        const surveyNameInput = document.getElementById("surveyName");
+        const questionsContainer = document.getElementById(
+          "questions-container"
+        );
+
+        // Clear previous content
+        questionsContainer.innerHTML = "";
+        surveyNameInput.value = surveyData.survey_name;
+
+        // Populate questions
+        surveyData.questions.forEach((question) => {
+          // Add a flag to indicate this is for viewing
+          question.isViewMode = true;
+          addQuestion(question.type, question);
+        });
+
+        // Disable all form fields for view mode
+        document
+          .querySelectorAll(
+            "#questionnaire-creator-container .view-mode input, #questionnaire-creator-container .view-mode textarea, #questionnaire-creator-container .view-mode select, #questionnaire-creator-container .view-mode button"
+          )
+          .forEach((el) => {
+            el.disabled = true;
+          });
+
+        // Show the creator/viewer container
+        document
+          .getElementById("survey-list-container")
+          .classList.add("hidden");
+        document
+          .getElementById("questionnaire-creator-container")
+          .classList.remove("hidden");
+      } else {
+        alert(`Error loading survey: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Failed to load survey:", error);
+      alert(
+        "An error occurred while loading the survey. Please check the console."
+      );
+    }
+  }
+
+  /**
+   * Fetches and displays a survey for editing.
+   * @param {string} surveyId The ID of the survey to load.
+   */
+  async function loadSurveyForEditing(surveyId) {
+    try {
+      const response = await fetch(
+        `../../function/_questionaire/_getSurveyDetails.php?id=${surveyId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+
+      if (result.success) {
+        const surveyData = result.data;
+        const surveyNameInput = document.getElementById("surveyName");
+        const surveyIdInput = document.getElementById("surveyId");
+        const questionsContainer = document.getElementById(
+          "questions-container"
+        );
+
+        // Clear previous content and set IDs
+        questionsContainer.innerHTML = "";
+        surveyNameInput.value = surveyData.survey_name;
+        surveyIdInput.value = surveyId; // Set the hidden ID for the form
+
+        // Populate questions (editable)
+        surveyData.questions.forEach((question) => {
+          addQuestion(question.type, question); // No isViewMode flag
+        });
+
+        // Show the creator/editor container
+        document
+          .getElementById("survey-list-container")
+          .classList.add("hidden");
+        document
+          .getElementById("questionnaire-creator-container")
+          .classList.remove("hidden");
+      } else {
+        alert(`Error loading survey for editing: ${result.message}`);
+      }
+    } catch (error) {
+      console.error("Failed to load survey for editing:", error);
+      alert(
+        "An error occurred while loading the survey. Please check the console."
+      );
+    }
+  }
+
   if (surveyForm) {
     surveyForm.addEventListener("submit", async (event) => {
       event.preventDefault();
+
+      const surveyId = document.getElementById("surveyId").value;
 
       const surveyData = {
         survey_name: document.getElementById("surveyName").value,
         questions: [],
       };
+
+      // If we are editing, include the survey_id in the payload
+      if (surveyId) {
+        surveyData.survey_id = surveyId;
+      }
 
       const questionWrappers =
         questionsContainer.querySelectorAll(".p-4.border");
@@ -246,6 +444,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const transactionType = transactionTypeInput
           ? transactionTypeInput.value
           : "2"; // Default to 'Both' (2)
+        const questionRenderingInput = wrapper.querySelector(
+          ".question-rendering-select"
+        );
+        const questionRendering = questionRenderingInput
+          ? questionRenderingInput.value
+          : "None"; // Default to 'None'
 
         const choices = [];
         if (questionType === "dropdown" || questionType === "multiple-choice") {
@@ -267,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
             required: isRequired,
             choices: choices,
             transaction_type: transactionType,
+            question_rendering: questionRendering,
           });
         }
       });
@@ -286,6 +491,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (result.success) {
           questionsContainer.innerHTML = "";
           surveyForm.reset();
+          // Go back to the list view after a successful save/update
+          document.getElementById('questionnaire-creator-container').classList.add('hidden');
+          document.getElementById('survey-list-container').classList.remove('hidden');
+          window.location.reload(); // Reload to see the changes in the list
         }
       } catch (error) {
         console.error("Error saving survey:", error);
@@ -295,4 +504,52 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  // Add event listeners for all "View" buttons
+  const viewSurveyButtons = document.querySelectorAll(".view-survey-btn");
+  viewSurveyButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      loadSurveyForViewing(event.target.dataset.surveyId);
+    });
+  });
+
+  // Add event listeners for all "Edit" buttons
+  const editSurveyButtons = document.querySelectorAll(".edit-survey-btn");
+  editSurveyButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      loadSurveyForEditing(event.target.dataset.surveyId);
+    });
+  });
+
+  // Add event listeners for all "Activate" buttons
+  const activateSurveyButtons = document.querySelectorAll(".activate-survey-btn");
+  activateSurveyButtons.forEach((button) => {
+    button.addEventListener("click", async (event) => {
+      const surveyId = event.target.dataset.surveyId;
+      if (
+        !confirm(
+          "Are you sure you want to make this survey active? This will deactivate any other active survey."
+        )
+      ) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "../../function/_questionaire/_activateSurvey.php",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ survey_id: surveyId }),
+          }
+        );
+
+        const result = await response.json();
+        alert(result.message);
+      } catch (error) {
+        console.error("Error activating survey:", error);
+        alert("An error occurred while activating the survey.");
+      }
+    });
+  });
 });

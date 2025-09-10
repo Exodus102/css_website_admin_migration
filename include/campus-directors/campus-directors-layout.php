@@ -17,7 +17,7 @@
 
         <?php include "campus-directors-navigation.php"; ?>
 
-        <main class="flex-1 p-5 mt-7">
+        <main class="flex-1 p-5">
             <h1 class="text-3xl font-bold mb-6">
                 <?php
                 $page = $_GET['page'] ?? 'dashboard';

@@ -1,18 +1,53 @@
-<div class="bg-[#E6E7EC] p-6 shadow-lg rounded-md overflow-hidden" id="survey-list-container">
-  <h1 class="text-3xl font-bold mb-2">Edit Survey</h1>
-  <p>Customize your survey details and questions.</p>
+<div class="p-4 overflow-hidden" id="survey-list-container">
+  <h1 class="text-3xl font-bold mb-2 font-sfpro leading-5">Edit Survey</h1>
+  <p class="font-sfpro">Customize your survey details and questions.</p><br>
+  <?php
+  require_once '../../function/_databaseConfig/_dbConfig.php';
+
+  try {
+    $stmt = $pdo->query("SELECT id, question_survey, `timestamp`, date_approved, change_log FROM tbl_questionaireform ORDER BY question_survey ASC");
+    $questionnaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $e) {
+    // You could log the error here if needed
+    // error_log($e->getMessage());
+    $questionnaires = [];
+  }
+  ?>
   <table class="border px-4 py-2 border-[#1E1E1ECC] shadow-lg overflow-hidden">
-    <thead class="bg-[#064089] text-white font-normal">
+    <thead class="bg-[#064089] text-white font-normal text-left w-full">
       <tr>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">#</th>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">Questionnaire</th>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">Date Created</th>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">Date Approved</th>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">Change Log</th>
-        <th class="border px-4 py-3 border-[#1E1E1ECC]">Actions</th>
+        <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">Actions</th>
       </tr>
     </thead>
     <tbody>
+      <?php if (empty($questionnaires)) : ?>
+        <tr>
+          <td colspan="6" class="text-center border px-4 py-3 border-[#1E1E1ECC]">No questionnaires found.</td>
+        </tr>
+      <?php else : ?>
+        <?php $row_number = 1; ?>
+        <?php foreach ($questionnaires as $q) : ?>
+          <tr class="bg-white">
+            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo $row_number++; ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo htmlspecialchars($q['question_survey']); ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo date('F j, Y, g:i a', strtotime($q['timestamp'])); ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo $q['date_approved'] ? date('F j, Y, g:i a', strtotime($q['date_approved'])) : 'N/A'; ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo htmlspecialchars($q['change_log'] ?: 'N/A'); ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC]">
+              <div class="flex justify-center items-center gap-2">
+                <button data-survey-id="<?php echo $q['id']; ?>" class="activate-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">Active</button>
+                <button data-survey-id="<?php echo $q['id']; ?>" class="view-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">View</button>
+                <button data-survey-id="<?php echo $q['id']; ?>" class="edit-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">Edit</button>
+              </div>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      <?php endif; ?>
     </tbody>
   </table>
   <div class="mt-4" id="button-container">
@@ -21,6 +56,10 @@
 </div>
 
 <div id="questionnaire-creator-container" class="hidden">
+  <div class="mb-4">
+    <button id="back-to-list-btn" class="border px-4 py-1 border-[#000000cc] shadow-lg font-bold rounded-md">&larr; Back to List</button>
+  </div>
+
   <button id="addQuestionBtn">Add Question</button>
 
   <dialog id="questionTypeDialog">
@@ -40,6 +79,7 @@
 
   <form id="surveyForm" class="mt-8">
     <div>
+      <input type="hidden" id="surveyId" name="survey_id" />
       <label for="surveyName" class="block text-sm font-medium text-gray-700">Survey Name</label>
       <input type="text" id="surveyName" name="survey_name" value="2025 Questionaire_v1.2" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
     </div>
@@ -60,11 +100,27 @@
     const listView = document.getElementById('survey-list-container');
     const creatorView = document.getElementById('questionnaire-creator-container');
     const addNewBtn = document.getElementById('add-new-questionnaire-btn');
+    const backBtn = document.getElementById('back-to-list-btn');
+    const viewBtns = document.querySelectorAll('.view-survey-btn');
+    const surveyIdInput = document.getElementById('surveyId');
 
     if (addNewBtn) {
       addNewBtn.addEventListener('click', () => {
         listView.classList.add('hidden');
         creatorView.classList.remove('hidden');
+        // Ensure we're in "create" mode by clearing the ID
+        if (surveyIdInput) surveyIdInput.value = '';
+      });
+    }
+
+    if (backBtn) {
+      backBtn.addEventListener('click', () => {
+        creatorView.classList.add('hidden');
+        listView.classList.remove('hidden');
+        // Reset the form for the next use
+        document.getElementById('surveyForm').reset();
+        if (surveyIdInput) surveyIdInput.value = '';
+        document.getElementById('questions-container').innerHTML = '';
       });
     }
   });

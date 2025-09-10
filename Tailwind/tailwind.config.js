@@ -4,10 +4,14 @@ module.exports = {
     "../*.{html,js,php}",
     "../include/**/*.{html,php}",
     "../pages/**/*.{html,php}",
-    "../JavScript/**/*.js",
+    "../JavaScript/**/*.{html,js}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["SF Pro", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };
