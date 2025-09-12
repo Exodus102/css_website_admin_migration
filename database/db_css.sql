@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 12, 2025 at 09:30 AM
+-- Generation Time: Sep 12, 2025 at 03:08 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,9 +48,9 @@ CREATE TABLE `credentials` (
 --
 
 INSERT INTO `credentials` (`user_id`, `first_name`, `middle_name`, `last_name`, `contact_number`, `campus`, `unit`, `type`, `dp`, `email`, `password`, `status`, `date_created`) VALUES
-(1, 'Jenrick', 'Panopio', 'Aran', '09158100920', 'Binangonan', 'University MIS', 'Campus Director', '', 'aranjenrick@gmail.com', 'b9fbm4ya', 'Active', '0000-00-00'),
-(5, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Campus Management Information System', 'University MIS', '', 'ferf96989@gmail.com', 'b9fbm4ya', 'Active', '2025-09-12'),
-(6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Registrar', 'University MIS', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Active', '2025-09-12');
+(1, 'Jenrick', 'Panopio', 'Aran', '09158100920', 'Binangonan', 'University MIS', 'Campus Director', '', 'aranjenrick@gmail.com', 'polskie123', 'Active', '0000-00-00'),
+(6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Registrar', 'University MIS', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Active', '2025-09-12'),
+(7, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Morong', 'Registrar', 'University MIS', '', 'ferf96989@gmail.com', 'polskie123', 'Inactive', '2025-09-12');
 
 -- --------------------------------------------------------
 
@@ -97,47 +97,26 @@ CREATE TABLE `tbl_choices` (
 
 INSERT INTO `tbl_choices` (`choices_id`, `question_id`, `choice_text`) VALUES
 (2, 3, 'asdasdasdasdas'),
-(108, 38, 'Angono'),
-(109, 38, 'Antipolo'),
-(110, 38, 'Binangonan'),
-(111, 38, 'Cainta'),
-(112, 38, 'Cardona'),
-(113, 38, 'Morong'),
-(114, 38, 'Pililia'),
-(115, 38, 'Rodriguez'),
-(116, 38, 'Tanay'),
-(117, 38, 'Taytay'),
-(118, 39, 'Office of The President'),
-(119, 39, 'Academic Affairs'),
-(120, 39, 'Administration and Finance Division'),
-(121, 39, 'Research, Development, Extension, and Production Division'),
-(122, 40, 'Campus Management Information System'),
-(123, 41, 'Student'),
-(124, 41, 'Faculty'),
-(125, 41, 'Alumni'),
-(126, 41, 'Parent'),
-(127, 41, 'Staff'),
-(128, 41, 'Other'),
-(129, 45, '5'),
-(130, 45, '4'),
-(131, 45, '3'),
-(132, 45, '2'),
-(133, 45, '1'),
-(134, 46, '5'),
-(135, 46, '4'),
-(136, 46, '3'),
-(137, 46, '2'),
-(138, 46, '1'),
-(139, 47, '5'),
-(140, 47, '4'),
-(141, 47, '3'),
-(142, 47, '2'),
-(143, 47, '1'),
-(144, 48, '5'),
-(145, 48, '4'),
-(146, 48, '3'),
-(147, 48, '2'),
-(148, 48, '1');
+(175, 60, '5'),
+(176, 60, '4'),
+(177, 60, '3'),
+(178, 60, '2'),
+(179, 60, '1'),
+(180, 61, '5'),
+(181, 61, '4'),
+(182, 61, '3'),
+(183, 61, '2'),
+(184, 61, '1'),
+(185, 62, '5'),
+(186, 62, '4'),
+(187, 62, '3'),
+(188, 62, '2'),
+(189, 62, '1'),
+(190, 63, '5'),
+(191, 63, '4'),
+(192, 63, '3'),
+(193, 63, '2'),
+(194, 63, '1');
 
 -- --------------------------------------------------------
 
@@ -208,17 +187,13 @@ CREATE TABLE `tbl_questionaire` (
 
 INSERT INTO `tbl_questionaire` (`question_id`, `question_survey`, `section`, `question`, `status`, `question_type`, `required`, `header`, `transaction_type`, `question_rendering`) VALUES
 (3, '2025 Questionaire_v1.3', 'Section 2', 'asdasdas', 0, 'Dropdown', 1, 0, 2, 'None'),
-(38, '2025 Questionaire_v1.2', 'Section 2', 'Campus', 1, 'Dropdown', 1, 0, 2, 'None'),
-(39, '2025 Questionaire_v1.2', 'Section 2', 'Division', 1, 'Dropdown', 1, 0, 2, 'None'),
-(40, '2025 Questionaire_v1.2', 'Section 2', 'Unit', 1, 'Dropdown', 1, 0, 2, 'None'),
-(41, '2025 Questionaire_v1.2', 'Section 2', 'Customer Type', 1, 'Multiple Choice', 1, 0, 2, 'None'),
-(42, '2025 Questionaire_v1.2', 'Section 2', 'Name (Optional)', 1, 'Text', 0, 0, 2, 'None'),
-(43, '2025 Questionaire_v1.2', 'Section 2', 'Contact No. (Optional)', 1, 'Text', 0, 0, 2, 'None'),
-(44, '2025 Questionaire_v1.2', 'Section 2', 'Click on the corresponding to your answer using the given scale below', 1, 'Description', 1, 0, 2, 'None'),
-(45, '2025 Questionaire_v1.2', 'Section 2', 'a. Knowledge of the Job', 1, 'Multiple Choice', 1, 0, 0, 'QoS'),
-(46, '2025 Questionaire_v1.2', 'Section 2', 'b. Accuracy in providing information', 1, 'Multiple Choice', 1, 0, 0, 'QoS'),
-(47, '2025 Questionaire_v1.2', 'Section 2', 'c. Delivery of prompt and appropriate service', 1, 'Multiple Choice', 1, 0, 0, 'QoS'),
-(48, '2025 Questionaire_v1.2', 'Section 2', 'd. Professionalism and skillfulness of the service personnel', 1, 'Multiple Choice', 1, 0, 0, 'QoS');
+(57, '2025 Questionaire_v1.2', 'Section 2', 'Name (Optional)', 1, 'Text', 0, 0, 2, 'None'),
+(58, '2025 Questionaire_v1.2', 'Section 2', 'Contact No. (Optional)', 1, 'Text', 0, 0, 2, 'None'),
+(59, '2025 Questionaire_v1.2', 'Section 2', 'Click on the corresponding to your answer using the given scale below', 1, 'Description', 1, 0, 2, 'None'),
+(60, '2025 Questionaire_v1.2', 'Section 2', 'a. Knowledge of the Job', 1, 'Multiple Choice', 1, 0, 2, 'QoS'),
+(61, '2025 Questionaire_v1.2', 'Section 2', 'b. Accuracy in providing information', 1, 'Multiple Choice', 1, 0, 2, 'QoS'),
+(62, '2025 Questionaire_v1.2', 'Section 2', 'c. Delivery of prompt and appropriate service', 1, 'Multiple Choice', 1, 0, 2, 'QoS'),
+(63, '2025 Questionaire_v1.2', 'Section 2', 'd. Professionalism and skillfulness of the service personnel', 1, 'Multiple Choice', 1, 0, 2, 'QoS');
 
 -- --------------------------------------------------------
 
@@ -371,7 +346,7 @@ ALTER TABLE `two_factor_codes`
 -- AUTO_INCREMENT for table `credentials`
 --
 ALTER TABLE `credentials`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_campus`
@@ -383,7 +358,7 @@ ALTER TABLE `tbl_campus`
 -- AUTO_INCREMENT for table `tbl_choices`
 --
 ALTER TABLE `tbl_choices`
-  MODIFY `choices_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+  MODIFY `choices_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=195;
 
 --
 -- AUTO_INCREMENT for table `tbl_customer_type`
@@ -401,7 +376,7 @@ ALTER TABLE `tbl_division`
 -- AUTO_INCREMENT for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaireform`
@@ -425,7 +400,7 @@ ALTER TABLE `tbl_unit`
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- Constraints for dumped tables

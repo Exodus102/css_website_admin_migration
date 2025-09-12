@@ -2,6 +2,14 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+// Include PHPMailer files
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require '../../PHPMailer/vendor/phpmailer/phpmailer/src/Exception.php';
+require '../../PHPMailer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require '../../PHPMailer/vendor/phpmailer/phpmailer/src/SMTP.php';
+
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -39,8 +47,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $stmt = $pdo->prepare("INSERT INTO credentials (first_name, middle_name, last_name, contact_number, campus, unit, type, dp, email, password, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if ($stmt->execute([$firstName, $middleName, $lastName, $contactNumber, $campus, $unit, $type, $dp, $email, $password, $dateCreated, $status])) {
-                    $response['success'] = true;
-                    $response['message'] = 'Account added successfully!';
+                    // Account created, now send email notification
+                    $mail = new PHPMailer(true);
+                    try {
+                        //Server settings
+                        $mail->isSMTP();
+                        $mail->Host       = 'smtp.gmail.com';
+                        $mail->SMTPAuth   = true;
+                        $mail->Username   = 'dlhor65@gmail.com';
+                        $mail->Password   = 'mqvt lbsn naoe fgze';
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port       = 587;
+
+                        //Recipients
+                        $mail->setFrom('ursmain@urs.edu.ph', 'Customer Satisfaction Survey System');
+                        $mail->addAddress($email, $firstName . ' ' . $lastName);
+
+                        //Content
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Your Account for the Customer Satisfaction Survey System has been created';
+                        $mail->Body    = "Hello {$firstName},<br><br>An account has been created for you in the Customer Satisfaction Survey System.<br><br>You can log in using the following credentials:<br><b>Email:</b> {$email}<br><b>Password:</b> {$password}<br><br>Thank you.";
+                        $mail->AltBody = "Hello {$firstName}, An account has been created for you in the Customer Satisfaction Survey System. You can log in using the following credentials: Email: {$email}, Password: {$password}. Thank you.";
+
+                        $mail->send();
+                        $response['success'] = true;
+                        $response['message'] = 'Account added successfully and a notification email has been sent!';
+                    } catch (Exception $e) {
+                        $response['success'] = true; // Account was still created
+                        $response['message'] = "Account added successfully, but the notification email could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                    }
                 } else {
                     $response['message'] = 'Failed to add account.';
                 }

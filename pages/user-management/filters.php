@@ -1,7 +1,7 @@
 <div class="w-10/12">
     <div class="flex gap-2">
         <div class="relative flex-grow">
-            <input type="text" placeholder="Search" class="border border-[#1E1E1E] py-1 pl-4 pr-10 rounded focus:border-blue-500 focus:ring-blue-500 w-full bg-[#E6E7EC] placeholder:text-[#1E1E1E]/80">
+            <input type="text" id="search-input" placeholder="Search" class="border border-[#1E1E1E] py-1 pl-4 pr-10 rounded focus:border-blue-500 focus:ring-blue-500 w-full bg-[#E6E7EC] placeholder:text-[#1E1E1E]/80">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
                 <img src="../../resources/svg/search-icon.svg" alt="Search" class="h-5 w-5 text-gray-400">
             </div>
@@ -35,12 +35,12 @@
             <label for="usertype-filter" class="block text-xs font-medium text-[#48494A]">USER TYPE</label>
             <select name="usertype_filter" id="usertype-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] h-7">
                 <option value="" hidden>User Type</option>
-                <option value="">Campus Director</option>
-                <option value="">CSS Head</option>
-                <option value="">University MIS</option>
-                <option value="">CSS Coordinator</option>
-                <option value="">Unit Head</option>
-                <option value="">DCC</option>
+                <option value="Campus Director">Campus Director</option>
+                <option value="CSS Head">CSS Head</option>
+                <option value="University MIS">University MIS</option>
+                <option value="CSS Coordinator">CSS Coordinator</option>
+                <option value="Unit Head">Unit Head</option>
+                <option value="DCC">DCC</option>
             </select>
         </div>
 
@@ -57,8 +57,8 @@
             <label for="status-filter" class="block text-xs font-medium text-[#48494A]">STATUS</label>
             <select name="status_filter" id="status-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] h-7">
                 <option value="" hidden>Status</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
             </select>
         </div>
     </div>
@@ -304,5 +304,86 @@
             }
         });
 
+        // --- Filtering and Search Logic ---
+        const searchInput = document.getElementById('search-input');
+        const userTableBody = document.getElementById('user-table-body');
+        const campusFilter = document.getElementById('campus-filter');
+        const unitFilter = document.getElementById('unit-filter');
+        const usertypeFilter = document.getElementById('usertype-filter');
+        const dateFromFilter = document.getElementById('date-from');
+        const dateToFilter = document.getElementById('date-to');
+        const statusFilter = document.getElementById('status-filter');
+
+        const noResultsRow = document.createElement('tr');
+        noResultsRow.className = 'no-results-row';
+        noResultsRow.style.display = 'none';
+        noResultsRow.innerHTML = `<td colspan="10" class="text-center border border-[#1E1E1ECC] p-2 bg-white">No matching users found.</td>`;
+
+        if (userTableBody) {
+            userTableBody.appendChild(noResultsRow);
+
+            const applyFilters = () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                const campus = campusFilter.value;
+                const unit = unitFilter.value;
+                const userType = usertypeFilter.value;
+                const dateFrom = dateFromFilter.value;
+                const dateTo = dateToFilter.value;
+                const status = statusFilter.value;
+
+                const tableRows = userTableBody.querySelectorAll('tr:not(.no-results-row)');
+                let visibleRows = 0;
+
+                tableRows.forEach(row => {
+                    if (row.cells.length === 1 && row.cells[0].getAttribute('colspan') === '10') {
+                        row.style.display = 'none'; // Hide initial "No users found" row
+                        return;
+                    }
+
+                    const rowData = {
+                        campus: row.cells[0].textContent,
+                        unit: row.cells[1].textContent,
+                        userType: row.cells[2].textContent,
+                        dateCreated: row.cells[7].textContent,
+                        status: row.cells[8].textContent.trim()
+                    };
+
+                    const rowText = row.textContent.toLowerCase();
+                    let isVisible = true;
+
+                    // Apply all filters
+                    if (searchTerm && !rowText.includes(searchTerm)) isVisible = false;
+                    if (campus && rowData.campus !== campus) isVisible = false;
+                    if (unit && rowData.unit !== unit) isVisible = false;
+                    if (userType && rowData.userType !== userType) isVisible = false;
+                    if (status && rowData.status !== status) isVisible = false;
+
+                    // Date filtering
+                    if (isVisible && (dateFrom || dateTo)) {
+                        const rowDate = new Date(rowData.dateCreated);
+                        if (dateFrom && rowDate < new Date(dateFrom)) {
+                            isVisible = false;
+                        }
+                        if (dateTo) {
+                            const toDate = new Date(dateTo);
+                            toDate.setHours(23, 59, 59, 999); // Include the whole "to" day
+                            if (rowDate > toDate) {
+                                isVisible = false;
+                            }
+                        }
+                    }
+
+                    if (isVisible) {
+                        row.style.display = '';
+                        visibleRows++;
+                    } else {
+                        row.style.display = 'none';
+                    }
+                });
+                noResultsRow.style.display = visibleRows === 0 ? '' : 'none';
+            };
+
+            [searchInput, campusFilter, unitFilter, usertypeFilter, dateFromFilter, dateToFilter, statusFilter].forEach(el => el.addEventListener('input', applyFilters));
+        }
     });
 </script>

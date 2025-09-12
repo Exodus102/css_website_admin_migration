@@ -64,17 +64,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $input_password = trim($_POST['pass']);
 
         // Prepare a statement to fetch the password and user details for the given email
-        $stmt = $pdo->prepare("SELECT user_id, password, first_name, email, type FROM credentials WHERE email = :email LIMIT 1");
+        $stmt = $pdo->prepare("SELECT user_id, password, first_name, last_name, email, type, status, dp FROM credentials WHERE email = :email LIMIT 1");
         $stmt->bindParam(':email', $email_from_session, PDO::PARAM_STR);
         $stmt->execute();
 
         if ($stmt->rowCount() > 0) {
             $user_credentials = $stmt->fetch(PDO::FETCH_ASSOC);
+            $user_status = $user_credentials['status'];
             $user_id = $user_credentials['user_id'];
             $stored_password = $user_credentials['password']; // plain-text password
             $user_first_name = $user_credentials['first_name'];
+            $user_last_name = $user_credentials['last_name'];
             $user_email = $user_credentials['email'];
             $user_type = $user_credentials['type'];
+            $user_dp = $user_credentials['dp'];
 
             // --- Password Verification (direct string comparison) ---
             if ($input_password === $stored_password) {
@@ -82,6 +85,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['attempts'] = 0;
                 $_SESSION['lockout_time'] = 0;
                 unset($_SESSION['login_error']);
+
+                // Check if the user's account is active
+                if ($user_status === 'Inactive') {
+                    header("Location: ../../pages/login/inactive.php");
+                    exit();
+                }
 
                 // 🔧 log success
                 error_log("[getPassword] Successful login for {$email_from_session}. Resetting attempts.");
@@ -124,6 +133,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_id'] = $user_id;
                     $_SESSION['user_email'] = $user_email;
                     $_SESSION['user_first_name'] = $user_first_name;
+                    $_SESSION['user_last_name'] = $user_last_name;
+                    $_SESSION['user_dp'] = $user_dp;
                     $_SESSION['user_type'] = $user_type;
 
                     // 🔧 ensure session is written before redirect

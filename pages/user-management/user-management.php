@@ -47,7 +47,7 @@ try {
                     <th class="border border-[#1E1E1ECC] font-normal py-2">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="user-table-body">
                 <?php if (empty($users)) : ?>
                     <tr>
                         <td colspan="10" class="text-center border border-[#1E1E1ECC] p-2 bg-white">No users found.</td>

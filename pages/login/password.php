@@ -47,8 +47,21 @@ if ($remaining <= 0 && $lockout_time > 0) {
 
         <!-- Avatar -->
         <div class="flex justify-center mb-3">
-          <div class="w-16 h-16 rounded-full bg-[#064089] flex items-center justify-center overflow-hidden">
-            <img src="/resources/svg/oikawa.svg" alt="Login Avatar" class="w-3/4 h-3/4 object-contain">
+          <div class="w-16 h-16 rounded-full bg-[#064089] flex items-center justify-center text-2xl font-bold text-white overflow-hidden">
+            <?php
+            $dp_path = $_SESSION['login_user_dp'] ?? '';
+            $full_dp_path = '../../' . $dp_path;
+
+            if (!empty($dp_path) && file_exists($full_dp_path)) {
+              // Display the image if it exists
+              echo '<img src="' . htmlspecialchars($full_dp_path) . '" alt="User Avatar" class="w-full h-full object-cover border-2 border-[#1E1E1E]">';
+            } else {
+              // Display the first letter of the first name as an initial
+              $firstName = $_SESSION['login_first_name'] ?? 'U';
+              $initial = strtoupper(substr($firstName, 0, 1));
+              echo '<span>' . htmlspecialchars($initial) . '</span>';
+            }
+            ?>
           </div>
         </div>
 
@@ -70,13 +83,13 @@ if ($remaining <= 0 && $lockout_time > 0) {
         <?php endif; ?>
 
         <!-- 🔹 Attempts indicator -->
-          <?php if ($attempts > 0 && $remaining <= 0): ?>
-            <div class="text-center mb-3">
-              <p class="text-sm font-semibold text-red-600">
-                Attempts: <?php echo min($attempts, $max_attempts) . '/' . $max_attempts; ?>
-              </p>
-            </div>
-          <?php endif; ?>
+        <?php if ($attempts > 0 && $remaining <= 0): ?>
+          <div class="text-center mb-3">
+            <p class="text-sm font-semibold text-red-600">
+              Attempts: <?php echo min($attempts, $max_attempts) . '/' . $max_attempts; ?>
+            </p>
+          </div>
+        <?php endif; ?>
 
         <!-- 🔹 Lockout timer -->
         <?php if ($remaining > 0): ?>
@@ -126,40 +139,41 @@ if ($remaining <= 0 && $lockout_time > 0) {
     </div>
   </div>
 
- <script>
-  function togglePassword() {
-    const passInput = document.getElementById("pass");
-    passInput.type = passInput.type === "password" ? "text" : "password";
-  }
+  <script>
+    function togglePassword() {
+      const passInput = document.getElementById("pass");
+      passInput.type = passInput.type === "password" ? "text" : "password";
+    }
 
-  // 🔹 Countdown timer
-  let timeLeft = <?php echo $remaining; ?>;
-  if (timeLeft > 0) {
-    const timerEl = document.getElementById("timer");
-    const btn = document.querySelector("button[type='submit']");
-    const passInput = document.getElementById("pass");
-    const errorEl = document.getElementById("error-msg");
-    const attemptsEl = document.querySelector("p.font-semibold.text-red-600"); // Attempts indicator
+    // 🔹 Countdown timer
+    let timeLeft = <?php echo $remaining; ?>;
+    if (timeLeft > 0) {
+      const timerEl = document.getElementById("timer");
+      const btn = document.querySelector("button[type='submit']");
+      const passInput = document.getElementById("pass");
+      const errorEl = document.getElementById("error-msg");
+      const attemptsEl = document.querySelector("p.font-semibold.text-red-600"); // Attempts indicator
 
-    const interval = setInterval(() => {
-      timeLeft--;
-      if (timerEl) timerEl.textContent = timeLeft;
+      const interval = setInterval(() => {
+        timeLeft--;
+        if (timerEl) timerEl.textContent = timeLeft;
 
-      if (timeLeft <= 0) {
-        clearInterval(interval);
+        if (timeLeft <= 0) {
+          clearInterval(interval);
 
-        // ✅ Enable inputs again
-        if (btn) btn.disabled = false;
-        if (passInput) passInput.disabled = false;
+          // ✅ Enable inputs again
+          if (btn) btn.disabled = false;
+          if (passInput) passInput.disabled = false;
 
-        // ✅ Clean up messages
-        if (errorEl) errorEl.textContent = "";
-        if (attemptsEl) attemptsEl.remove(); // remove attempts 3/3
-        if (timerEl) timerEl.parentElement.innerHTML = "You may now try again.";
-      }
-    }, 1000);
-  }
-</script>
+          // ✅ Clean up messages
+          if (errorEl) errorEl.textContent = "";
+          if (attemptsEl) attemptsEl.remove(); // remove attempts 3/3
+          if (timerEl) timerEl.parentElement.innerHTML = "You may now try again.";
+        }
+      }, 1000);
+    }
+  </script>
 
 </body>
+
 </html>

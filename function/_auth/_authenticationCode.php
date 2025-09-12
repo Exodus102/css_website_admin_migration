@@ -39,20 +39,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 // Redirect based on user type
                 if ($user_type === 'University MIS') {
                     header("Location: ../../include/university-mis/university-mis-layout.php");
-                }
-                if ($user_type === 'CSS Coordinator') {
+                } elseif ($user_type === 'CSS Coordinator') {
                     header("Location: ../../include/css-coordinators/css-coordinators-layout.php");
-                }
-                if ($user_type === 'CSS Head') {
+                } elseif ($user_type === 'CSS Head') {
                     header("Location: ../../include/css-head/css-head-layout.php");
-                }
-                if ($user_type === 'DCC') {
+                } elseif ($user_type === 'DCC') {
                     header("Location: ../../include/dcc/dcc-layout.php");
-                }
-                if ($user_type === 'Campus Director') {
+                } elseif ($user_type === 'Campus Director') {
                     header("Location: ../../include/campus-directors/campus-directors-layout.php");
-                }
-                if ($user_type === 'Unit Head') {
+                } elseif ($user_type === 'Unit Head') {
                     header("Location: ../../include/unit-head/unit-head-layout.php");
                 } else {
                     // Default redirect for all other user types
@@ -61,20 +56,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 exit();
             } else {
                 $_SESSION['login_error'] = "Invalid or expired verification code.";
-                header("Location: ../../pages/login/verify_2fa.php");
+                header("Location: ../../pages/login/two-factor-authentication.php");
                 exit();
             }
         } else {
             $_SESSION['login_error'] = "No verification code found. Please try logging in again.";
-            header("Location: ../../pages/login/verify_2fa.php");
+            header("Location: ../../pages/login/two-factor-authentication.php");
             exit();
         }
     } catch (PDOException $e) {
         $_SESSION['login_error'] = "Database error: " . $e->getMessage();
-        header("Location: ../../pages/login/verify_2fa.php");
+        header("Location: ../../pages/login/two-factor-authentication.php");
         exit();
     }
 } else {
-    header("Location: ../../pages/login/verify_2fa.php");
+    header("Location: ../../pages/login/two-factor-authentication.php");
     exit();
 }
