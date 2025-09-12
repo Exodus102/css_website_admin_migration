@@ -1,44 +1,116 @@
 <nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col md:w-80 w-full rounded-lg shadow-2xl">
     <ul class="space-y-3 flex-grow mt-8">
         <li>
-            <a href="layout.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/dashboard.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4.16667 14.0417H10.4167C10.9896 14.0417 11.4583 13.5729 11.4583 13V4.66667C11.4583 4.09375 10.9896 3.625 10.4167 3.625H4.16667C3.59375 3.625 3.125 4.09375 3.125 4.66667V13C3.125 13.5729 3.59375 14.0417 4.16667 14.0417ZM4.16667 22.375H10.4167C10.9896 22.375 11.4583 21.9062 11.4583 21.3333V17.1667C11.4583 16.5937 10.9896 16.125 10.4167 16.125H4.16667C3.59375 16.125 3.125 16.5937 3.125 17.1667V21.3333C3.125 21.9062 3.59375 22.375 4.16667 22.375ZM14.5833 22.375H20.8333C21.4062 22.375 21.875 21.9062 21.875 21.3333V13C21.875 12.4271 21.4062 11.9583 20.8333 11.9583H14.5833C14.0104 11.9583 13.5417 12.4271 13.5417 13V21.3333C13.5417 21.9062 14.0104 22.375 14.5833 22.375ZM13.5417 4.66667V8.83333C13.5417 9.40625 14.0104 9.875 14.5833 9.875H20.8333C21.4062 9.875 21.875 9.40625 21.875 8.83333V4.66667C21.875 4.09375 21.4062 3.625 20.8333 3.625H14.5833C14.0104 3.625 13.5417 4.09375 13.5417 4.66667Z" fill="#1E1E1E" />
+                </svg>
                 Dashboard
             </a>
         </li>
         <li>
-            <a href="layout.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/survey.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=survey" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_292)">
+                        <path d="M14.8438 0.5C15.051 0.5 15.2497 0.58231 15.3962 0.728823C15.5427 0.875336 15.625 1.07405 15.625 1.28125C15.625 1.48845 15.7073 1.68716 15.8538 1.83368C16.0003 1.98019 16.199 2.0625 16.4062 2.0625C16.6135 2.0625 16.8122 2.14481 16.9587 2.29132C17.1052 2.43784 17.1875 2.63655 17.1875 2.84375V3.625C17.1875 3.8322 17.1052 4.03091 16.9587 4.17743C16.8122 4.32394 16.6135 4.40625 16.4062 4.40625H8.59375C8.38655 4.40625 8.18784 4.32394 8.04132 4.17743C7.89481 4.03091 7.8125 3.8322 7.8125 3.625V2.84375C7.8125 2.63655 7.89481 2.43784 8.04132 2.29132C8.18784 2.14481 8.38655 2.0625 8.59375 2.0625C8.80095 2.0625 8.99966 1.98019 9.14618 1.83368C9.29269 1.68716 9.375 1.48845 9.375 1.28125C9.375 1.07405 9.45731 0.875336 9.60382 0.728823C9.75034 0.58231 9.94905 0.5 10.1562 0.5H14.8438Z" fill="#1E1E1E" />
+                        <path d="M4.6875 4.40625C4.6875 4.19905 4.76981 4.00034 4.91632 3.85382C5.06284 3.70731 5.26155 3.625 5.46875 3.625H6.25C6.4572 3.625 6.65591 3.54269 6.80243 3.39618C6.94894 3.24966 7.03125 3.05095 7.03125 2.84375C7.03125 2.63655 6.94894 2.43784 6.80243 2.29132C6.65591 2.14481 6.4572 2.0625 6.25 2.0625H5.46875C4.84715 2.0625 4.25101 2.30943 3.81147 2.74897C3.37193 3.18851 3.125 3.78465 3.125 4.40625V23.1562C3.125 23.7779 3.37193 24.374 3.81147 24.8135C4.25101 25.2531 4.84715 25.5 5.46875 25.5H19.5312C20.1529 25.5 20.749 25.2531 21.1885 24.8135C21.6281 24.374 21.875 23.7779 21.875 23.1562V4.40625C21.875 3.78465 21.6281 3.18851 21.1885 2.74897C20.749 2.30943 20.1529 2.0625 19.5312 2.0625H18.75C18.5428 2.0625 18.3441 2.14481 18.1976 2.29132C18.0511 2.43784 17.9688 2.63655 17.9688 2.84375C17.9688 3.05095 18.0511 3.24966 18.1976 3.39618C18.3441 3.54269 18.5428 3.625 18.75 3.625H19.5312C19.7385 3.625 19.9372 3.70731 20.0837 3.85382C20.2302 4.00034 20.3125 4.19905 20.3125 4.40625V23.1562C20.3125 23.3635 20.2302 23.5622 20.0837 23.7087C19.9372 23.8552 19.7385 23.9375 19.5312 23.9375H5.46875C5.26155 23.9375 5.06284 23.8552 4.91632 23.7087C4.76981 23.5622 4.6875 23.3635 4.6875 23.1562V4.40625Z" fill="#1E1E1E" />
+                        <path d="M16.9594 12.7719C17.1061 12.6252 17.1885 12.4262 17.1885 12.2188C17.1885 12.0113 17.1061 11.8123 16.9594 11.6656C16.8127 11.5189 16.6137 11.4365 16.4063 11.4365C16.1988 11.4365 15.9998 11.5189 15.8531 11.6656L11.7188 15.8016L9.92814 14.0094C9.78144 13.8627 9.58247 13.7803 9.37501 13.7803C9.16755 13.7803 8.96858 13.8627 8.82189 14.0094C8.67519 14.1561 8.59277 14.355 8.59277 14.5625C8.59277 14.77 8.67519 14.9689 8.82189 15.1156L11.1656 17.4594C11.2382 17.5321 11.3244 17.5899 11.4193 17.6292C11.5142 17.6686 11.616 17.6889 11.7188 17.6889C11.8215 17.6889 11.9233 17.6686 12.0182 17.6292C12.1131 17.5899 12.1993 17.5321 12.2719 17.4594L16.9594 12.7719Z" fill="#1E1E1E" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_292">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 Survey
             </a>
         </li>
         <li>
-            <a href="layout.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/data-response.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=data-response" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_299)">
+                        <path d="M14.8438 0.5C15.051 0.5 15.2497 0.58231 15.3962 0.728823C15.5427 0.875336 15.625 1.07405 15.625 1.28125C15.625 1.48845 15.7073 1.68716 15.8538 1.83368C16.0003 1.98019 16.199 2.0625 16.4062 2.0625C16.6135 2.0625 16.8122 2.14481 16.9587 2.29132C17.1052 2.43784 17.1875 2.63655 17.1875 2.84375V3.625C17.1875 3.8322 17.1052 4.03091 16.9587 4.17743C16.8122 4.32394 16.6135 4.40625 16.4062 4.40625H8.59375C8.38655 4.40625 8.18784 4.32394 8.04132 4.17743C7.89481 4.03091 7.8125 3.8322 7.8125 3.625V2.84375C7.8125 2.63655 7.89481 2.43784 8.04132 2.29132C8.18784 2.14481 8.38655 2.0625 8.59375 2.0625C8.80095 2.0625 8.99966 1.98019 9.14618 1.83368C9.29269 1.68716 9.375 1.48845 9.375 1.28125C9.375 1.07405 9.45731 0.875336 9.60382 0.728823C9.75034 0.58231 9.94905 0.5 10.1562 0.5H14.8438Z" fill="#1E1E1E" />
+                        <path d="M4.6875 4.40625C4.6875 4.19905 4.76981 4.00034 4.91632 3.85382C5.06284 3.70731 5.26155 3.625 5.46875 3.625H6.25C6.4572 3.625 6.65591 3.54269 6.80243 3.39618C6.94894 3.24966 7.03125 3.05095 7.03125 2.84375C7.03125 2.63655 6.94894 2.43784 6.80243 2.29132C6.65591 2.14481 6.4572 2.0625 6.25 2.0625H5.46875C4.84715 2.0625 4.25101 2.30943 3.81147 2.74897C3.37193 3.18851 3.125 3.78465 3.125 4.40625V23.1562C3.125 23.7779 3.37193 24.374 3.81147 24.8135C4.25101 25.2531 4.84715 25.5 5.46875 25.5H19.5312C20.1529 25.5 20.749 25.2531 21.1885 24.8135C21.6281 24.374 21.875 23.7779 21.875 23.1562V4.40625C21.875 3.78465 21.6281 3.18851 21.1885 2.74897C20.749 2.30943 20.1529 2.0625 19.5312 2.0625H18.75C18.5428 2.0625 18.3441 2.14481 18.1976 2.29132C18.0511 2.43784 17.9688 2.63655 17.9688 2.84375C17.9688 3.05095 18.0511 3.24966 18.1976 3.39618C18.3441 3.54269 18.5428 3.625 18.75 3.625H19.5312C19.7385 3.625 19.9372 3.70731 20.0837 3.85382C20.2302 4.00034 20.3125 4.19905 20.3125 4.40625V23.1562C20.3125 23.3635 20.2302 23.5622 20.0837 23.7087C19.9372 23.8552 19.7385 23.9375 19.5312 23.9375H5.46875C5.26155 23.9375 5.06284 23.8552 4.91632 23.7087C4.76981 23.5622 4.6875 23.3635 4.6875 23.1562V4.40625Z" fill="#1E1E1E" />
+                        <path d="M15.625 11.4375C15.625 11.0231 15.7896 10.6257 16.0826 10.3326C16.3757 10.0396 16.7731 9.875 17.1875 9.875C17.6019 9.875 17.9993 10.0396 18.2924 10.3326C18.5854 10.6257 18.75 11.0231 18.75 11.4375V19.25C18.75 19.6644 18.5854 20.0618 18.2924 20.3549C17.9993 20.6479 17.6019 20.8125 17.1875 20.8125C16.7731 20.8125 16.3757 20.6479 16.0826 20.3549C15.7896 20.0618 15.625 19.6644 15.625 19.25V11.4375ZM6.25 17.6875C6.25 17.2731 6.41462 16.8757 6.70765 16.5826C7.00067 16.2896 7.3981 16.125 7.8125 16.125C8.2269 16.125 8.62433 16.2896 8.91735 16.5826C9.21038 16.8757 9.375 17.2731 9.375 17.6875V19.25C9.375 19.6644 9.21038 20.0618 8.91735 20.3549C8.62433 20.6479 8.2269 20.8125 7.8125 20.8125C7.3981 20.8125 7.00067 20.6479 6.70765 20.3549C6.41462 20.0618 6.25 19.6644 6.25 19.25V17.6875ZM12.5 13C12.0856 13 11.6882 13.1646 11.3951 13.4576C11.1021 13.7507 10.9375 14.1481 10.9375 14.5625V19.25C10.9375 19.6644 11.1021 20.0618 11.3951 20.3549C11.6882 20.6479 12.0856 20.8125 12.5 20.8125C12.9144 20.8125 13.3118 20.6479 13.6049 20.3549C13.8979 20.0618 14.0625 19.6644 14.0625 19.25V14.5625C14.0625 14.1481 13.8979 13.7507 13.6049 13.4576C13.3118 13.1646 12.9144 13 12.5 13Z" fill="#1E1E1E" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_299">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 Data Response
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/tally-results.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=tally-results" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_306)">
+                        <path d="M11.0156 19.0701C11.0156 21.2811 10.1594 22.517 8.63438 22.517C7.10625 22.5154 6.25 21.2811 6.25 19.0701C6.25 16.8639 7.10625 15.6279 8.63438 15.6279C10.1594 15.6279 11.0156 16.8623 11.0156 19.0701ZM8.63438 16.5514C7.7875 16.5514 7.33437 17.4311 7.33437 19.0701C7.33437 19.2076 7.33906 19.3404 7.34375 19.4639L9.77969 17.6779C9.58281 16.9373 9.19375 16.5529 8.63438 16.5529V16.5514ZM7.49063 20.4701C7.6875 21.2076 8.07188 21.592 8.63438 21.592C9.47813 21.592 9.93125 20.7123 9.93125 19.0701C9.93125 18.9373 9.92656 18.8045 9.92188 18.6795L7.49063 20.4701ZM16.9609 21.4451V22.3748H12.2734V21.4451H14.1188V16.9061H14.0406L12.2656 18.0732V16.9982L14.125 15.7701H15.2031V21.4467H16.9609V21.4451Z" fill="#1E1E1E" />
+                        <path d="M21.875 22.375V7.53125L14.8438 0.5H6.25C5.4212 0.5 4.62634 0.82924 4.04029 1.41529C3.45424 2.00134 3.125 2.7962 3.125 3.625V22.375C3.125 23.2038 3.45424 23.9987 4.04029 24.5847C4.62634 25.1708 5.4212 25.5 6.25 25.5H18.75C19.5788 25.5 20.3737 25.1708 20.9597 24.5847C21.5458 23.9987 21.875 23.2038 21.875 22.375ZM14.8438 5.1875C14.8438 5.8091 15.0907 6.40524 15.5302 6.84478C15.9698 7.28432 16.5659 7.53125 17.1875 7.53125H20.3125V22.375C20.3125 22.7894 20.1479 23.1868 19.8549 23.4799C19.5618 23.7729 19.1644 23.9375 18.75 23.9375H6.25C5.8356 23.9375 5.43817 23.7729 5.14515 23.4799C4.85212 23.1868 4.6875 22.7894 4.6875 22.375V3.625C4.6875 3.2106 4.85212 2.81317 5.14515 2.52015C5.43817 2.22712 5.8356 2.0625 6.25 2.0625H14.8438V5.1875Z" fill="#1E1E1E" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_306">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 Tally Results
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/reports.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=reports" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_312)">
+                        <path d="M8.5703 11.2484C8.54744 11.1468 8.50451 11.0508 8.44403 10.9661C8.38355 10.8813 8.30673 10.8095 8.21811 10.7549C8.12948 10.7003 8.03082 10.6639 7.92794 10.6479C7.82505 10.6319 7.72001 10.6367 7.61899 10.6619C7.51797 10.6871 7.42301 10.7323 7.33968 10.7947C7.25635 10.8571 7.18635 10.9356 7.13377 11.0254C7.0812 11.1153 7.04712 11.2148 7.03353 11.318C7.01995 11.4212 7.02714 11.5261 7.05467 11.6265L9.39842 21.0015C9.44063 21.1689 9.53704 21.3175 9.67262 21.4243C9.8082 21.531 9.97531 21.5899 10.1479 21.5917C10.3204 21.5935 10.4887 21.5381 10.6265 21.4341C10.7642 21.3302 10.8637 21.1836 10.9094 21.0172L12.5 15.1906L14.0906 21.0187C14.1363 21.1851 14.2357 21.3318 14.3735 21.4357C14.5113 21.5396 14.6795 21.595 14.8521 21.5932C15.0247 21.5915 15.1918 21.5326 15.3273 21.4258C15.4629 21.3191 15.5593 21.1704 15.6015 21.0031L17.9453 11.6281C17.9901 11.429 17.9552 11.2203 17.8481 11.0466C17.741 10.8729 17.5702 10.748 17.3722 10.6986C17.1742 10.6492 16.9648 10.6792 16.7886 10.7823C16.6125 10.8853 16.4836 11.0532 16.4297 11.25L14.8109 17.725L13.2531 12.014C13.2076 11.8492 13.1093 11.7038 12.9733 11.6002C12.8373 11.4966 12.671 11.4405 12.5 11.4405C12.329 11.4405 12.1627 11.4966 12.0267 11.6002C11.8906 11.7038 11.7923 11.8492 11.7469 12.014L10.189 17.725L8.5703 11.25V11.2484Z" fill="#1E1E1E" />
+                        <path d="M21.875 22.375V7.53125L14.8438 0.5H6.25C5.4212 0.5 4.62634 0.82924 4.04029 1.41529C3.45424 2.00134 3.125 2.7962 3.125 3.625V22.375C3.125 23.2038 3.45424 23.9987 4.04029 24.5847C4.62634 25.1708 5.4212 25.5 6.25 25.5H18.75C19.5788 25.5 20.3737 25.1708 20.9597 24.5847C21.5458 23.9987 21.875 23.2038 21.875 22.375ZM14.8438 5.1875C14.8438 5.8091 15.0907 6.40524 15.5302 6.84478C15.9698 7.28432 16.5659 7.53125 17.1875 7.53125H20.3125V22.375C20.3125 22.7894 20.1479 23.1868 19.8549 23.4799C19.5618 23.7729 19.1644 23.9375 18.75 23.9375H6.25C5.8356 23.9375 5.43817 23.7729 5.14515 23.4799C4.85212 23.1868 4.6875 22.7894 4.6875 22.375V3.625C4.6875 3.2106 4.85212 2.81317 5.14515 2.52015C5.43817 2.22712 5.8356 2.0625 6.25 2.0625H14.8438V5.1875Z" fill="#1E1E1E" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_312">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 Reports
             </a>
         </li>
         <li>
-            <a href="#" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/ncar.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=ncar" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_318)">
+                        <path d="M8.59375 11.4375C8.38655 11.4375 8.18784 11.5198 8.04132 11.6663C7.89481 11.8128 7.8125 12.0115 7.8125 12.2188C7.8125 12.426 7.89481 12.6247 8.04132 12.7712C8.18784 12.9177 8.38655 13 8.59375 13H16.4062C16.6135 13 16.8122 12.9177 16.9587 12.7712C17.1052 12.6247 17.1875 12.426 17.1875 12.2188C17.1875 12.0115 17.1052 11.8128 16.9587 11.6663C16.8122 11.5198 16.6135 11.4375 16.4062 11.4375H8.59375ZM7.8125 15.3438C7.8125 15.1365 7.89481 14.9378 8.04132 14.7913C8.18784 14.6448 8.38655 14.5625 8.59375 14.5625H16.4062C16.6135 14.5625 16.8122 14.6448 16.9587 14.7913C17.1052 14.9378 17.1875 15.1365 17.1875 15.3438C17.1875 15.551 17.1052 15.7497 16.9587 15.8962C16.8122 16.0427 16.6135 16.125 16.4062 16.125H8.59375C8.38655 16.125 8.18784 16.0427 8.04132 15.8962C7.89481 15.7497 7.8125 15.551 7.8125 15.3438ZM7.8125 18.4688C7.8125 18.2615 7.89481 18.0628 8.04132 17.9163C8.18784 17.7698 8.38655 17.6875 8.59375 17.6875H11.7188C11.926 17.6875 12.1247 17.7698 12.2712 17.9163C12.4177 18.0628 12.5 18.2615 12.5 18.4688C12.5 18.676 12.4177 18.8747 12.2712 19.0212C12.1247 19.1677 11.926 19.25 11.7188 19.25H8.59375C8.38655 19.25 8.18784 19.1677 8.04132 19.0212C7.89481 18.8747 7.8125 18.676 7.8125 18.4688Z" fill="#1E1E1E" />
+                        <path d="M14.8438 0.5H6.25C5.4212 0.5 4.62634 0.82924 4.04029 1.41529C3.45424 2.00134 3.125 2.7962 3.125 3.625V22.375C3.125 23.2038 3.45424 23.9987 4.04029 24.5847C4.62634 25.1708 5.4212 25.5 6.25 25.5H18.75C19.5788 25.5 20.3737 25.1708 20.9597 24.5847C21.5458 23.9987 21.875 23.2038 21.875 22.375V7.53125L14.8438 0.5ZM14.8438 2.0625V5.1875C14.8438 5.8091 15.0907 6.40524 15.5302 6.84478C15.9698 7.28432 16.5659 7.53125 17.1875 7.53125H20.3125V22.375C20.3125 22.7894 20.1479 23.1868 19.8549 23.4799C19.5618 23.7729 19.1644 23.9375 18.75 23.9375H6.25C5.8356 23.9375 5.43817 23.7729 5.14515 23.4799C4.85212 23.1868 4.6875 22.7894 4.6875 22.375V3.625C4.6875 3.2106 4.85212 2.81317 5.14515 2.52015C5.43817 2.22712 5.8356 2.0625 6.25 2.0625H14.8438Z" fill="#1E1E1E" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_318">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
                 NCAR
             </a>
         </li>
         <li>
-            <a href="unit-head-layout?page=qr-code" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <img src="../resources/svg/qr-code.svg" alt="" class="w-5 h-5">
+            <a href="unit-head-layout.php?page=qr-code" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9.375 7.375V9.25C9.375 9.59518 9.09518 9.875 8.75 9.875H6.875C6.52982 9.875 6.25 9.59518 6.25 9.25V7.375C6.25 7.02982 6.52982 6.75 6.875 6.75H8.75C9.09518 6.75 9.375 7.02982 9.375 7.375Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M6.25 13H9.375" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M15.625 13V16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12.5 19.25H15.625" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12.5 13.0111L12.51 13" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 13.0111L18.76 13" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12.5 16.1361L12.51 16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 16.1361L18.76 16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 19.2611L18.76 19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12.5 9.88611L12.51 9.875" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12.5 6.76111L12.51 6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M9.375 16.75V18.625C9.375 18.9702 9.09518 19.25 8.75 19.25H6.875C6.52982 19.25 6.25 18.9702 6.25 18.625V16.75C6.25 16.4048 6.52982 16.125 6.875 16.125H8.75C9.09518 16.125 9.375 16.4048 9.375 16.75Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 7.375V9.25C18.75 9.59518 18.4702 9.875 18.125 9.875H16.25C15.9048 9.875 15.625 9.59518 15.625 9.25V7.375C15.625 7.02982 15.9048 6.75 16.25 6.75H18.125C18.4702 6.75 18.75 7.02982 18.75 7.375Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 3.625H21.875V6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M18.75 22.375H21.875V19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M6.25 3.625H3.125V6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M6.25 22.375H3.125V19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
                 QR Code
             </a>
         </li>
@@ -46,16 +118,16 @@
             Settings
         </span>
         <li>
-            <a href="layout.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
-                <svg class="group-hover:text-[#F1F7F9] text-black" width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg">
-                    <path class="fill-current" d="M11.4583 4.66699H4.16659C3.61405 4.66699 3.08415 4.88649 2.69345 5.27719C2.30275 5.66789 2.08325 6.19779 2.08325 6.75033V21.3337C2.08325 21.8862 2.30275 22.4161 2.69345 22.8068C3.08415 23.1975 3.61405 23.417 4.16659 23.417H18.7499C19.3025 23.417 19.8324 23.1975 20.2231 22.8068C20.6138 22.4161 20.8333 21.8862 20.8333 21.3337V14.042" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path class="fill-current" d="M19.2708 3.10424C19.6852 2.68984 20.2472 2.45703 20.8333 2.45703C21.4193 2.45703 21.9814 2.68984 22.3958 3.10424C22.8102 3.51864 23.043 4.08069 23.043 4.66674C23.043 5.25279 22.8102 5.81484 22.3958 6.22924L12.4999 16.1251L8.33325 17.1667L9.37492 13.0001L19.2708 3.10424Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            <a href="unit-head-layout.php?page=edit-survey" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+                <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.4583 4.66699H4.16659C3.61405 4.66699 3.08415 4.88649 2.69345 5.27719C2.30275 5.66789 2.08325 6.19779 2.08325 6.75033V21.3337C2.08325 21.8862 2.30275 22.4161 2.69345 22.8068C3.08415 23.1975 3.61405 23.417 4.16659 23.417H18.7499C19.3025 23.417 19.8324 23.1975 20.2231 22.8068C20.6138 22.4161 20.8333 21.8862 20.8333 21.3337V14.042" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M19.2708 3.10424C19.6852 2.68984 20.2472 2.45703 20.8333 2.45703C21.4193 2.45703 21.9814 2.68984 22.3958 3.10424C22.8102 3.51864 23.043 4.08069 23.043 4.66674C23.043 5.25279 22.8102 5.81484 22.3958 6.22924L12.4999 16.1251L8.33325 17.1667L9.37492 13.0001L19.2708 3.10424Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
                 Edit Survey
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout.php?page=user-management" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="24" height="24" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_355)">
                         <path class="fill-current" d="M17.1875 9.375C17.1875 10.6182 16.6936 11.8105 15.8146 12.6896C14.9355 13.5686 13.7432 14.0625 12.5 14.0625C11.2568 14.0625 10.0645 13.5686 9.18544 12.6896C8.30636 11.8105 7.8125 10.6182 7.8125 9.375C7.8125 8.1318 8.30636 6.93951 9.18544 6.06044C10.0645 5.18136 11.2568 4.6875 12.5 4.6875C13.7432 4.6875 14.9355 5.18136 15.8146 6.06044C16.6936 6.93951 17.1875 8.1318 17.1875 9.375Z" />
@@ -71,7 +143,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout.php?page=entity-management" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="19" height="18" viewBox="0 0 19 18" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.25 0.25C1.86929 0.25 0.75 1.36929 0.75 2.75V5.25C0.75 6.63071 1.86929 7.75 3.25 7.75H5.75C7.13071 7.75 8.25 6.63071 8.25 5.25V2.75C8.25 1.36929 7.13071 0.25 5.75 0.25H3.25Z" />
                     <path class="fill-current" d="M3.25 10.25C1.86929 10.25 0.75 11.3693 0.75 12.75V15.25C0.75 16.6307 1.86929 17.75 3.25 17.75H5.75C7.13071 17.75 8.25 16.6307 8.25 15.25V12.75C8.25 11.3693 7.13071 10.25 5.75 10.25H3.25Z" />
@@ -82,7 +154,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout.php?page=backup-&-restore" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="21" height="22" viewBox="0 0 21 22" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.20825 13.083C2.93198 13.083 2.66703 13.1928 2.47168 13.3881C2.27633 
                     13.5835 2.16659 13.8484 2.16659 14.1247V18.2913C2.16659 18.5676 2.27633 18.8326 
@@ -126,7 +198,7 @@
             </a>
         </li>
         <li>
-            <a href="#" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout.php?page=audit-trail" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="23" height="22" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M13.6938 9.95801H17.8115C18.3803 9.95801 18.8407 10.4247 
                     18.8407 10.9997C18.8407 11.5747 18.3803 12.0413 17.8115 
@@ -160,7 +232,7 @@
             </a>
         </li>
         <li>
-            <a href="layout.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="unit-head-layout.php?page=display" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg width="25" height="26" viewBox="0 0 25 26" xmlns="http://www.w3.org/2000/svg" class="group-hover:text-[#F1F7F9] text-black">
                     <g clip-path="url(#clip0_180_373)">
                         <path class="fill-current" d="M12.5 8.3125C12.8078 8.3125 13.1126 8.25188 13.3969 
