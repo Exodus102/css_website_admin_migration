@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 10, 2025 at 02:28 PM
+-- Generation Time: Sep 12, 2025 at 09:30 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -30,21 +30,54 @@ SET time_zone = "+00:00";
 CREATE TABLE `credentials` (
   `user_id` int(11) NOT NULL,
   `first_name` text NOT NULL,
-  `middle_name` text NOT NULL,
+  `middle_name` text DEFAULT NULL,
   `last_name` text NOT NULL,
+  `contact_number` varchar(100) NOT NULL,
   `campus` text NOT NULL,
+  `unit` varchar(100) NOT NULL,
   `type` varchar(100) NOT NULL,
-  `dp` varchar(100) NOT NULL,
+  `dp` varchar(100) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL
+  `password` varchar(100) NOT NULL,
+  `status` text NOT NULL,
+  `date_created` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `credentials`
 --
 
-INSERT INTO `credentials` (`user_id`, `first_name`, `middle_name`, `last_name`, `campus`, `type`, `dp`, `email`, `password`) VALUES
-(1, 'Jenrick', 'Panopio', 'Aran', 'Binangonan', 'Campus Director', '', 'aranjenrick@gmail.com', 'b9fbm4ya');
+INSERT INTO `credentials` (`user_id`, `first_name`, `middle_name`, `last_name`, `contact_number`, `campus`, `unit`, `type`, `dp`, `email`, `password`, `status`, `date_created`) VALUES
+(1, 'Jenrick', 'Panopio', 'Aran', '09158100920', 'Binangonan', 'University MIS', 'Campus Director', '', 'aranjenrick@gmail.com', 'b9fbm4ya', 'Active', '0000-00-00'),
+(5, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Campus Management Information System', 'University MIS', '', 'ferf96989@gmail.com', 'b9fbm4ya', 'Active', '2025-09-12'),
+(6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Registrar', 'University MIS', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Active', '2025-09-12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_campus`
+--
+
+CREATE TABLE `tbl_campus` (
+  `id` int(11) NOT NULL,
+  `campus_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_campus`
+--
+
+INSERT INTO `tbl_campus` (`id`, `campus_name`) VALUES
+(1, 'Antipolo'),
+(2, 'Angono'),
+(3, 'Binangonan'),
+(4, 'Cardona'),
+(5, 'Cainta'),
+(6, 'Morong'),
+(7, 'Pililia'),
+(8, 'Rodriguez'),
+(10, 'Tanay'),
+(11, 'Taytay');
 
 -- --------------------------------------------------------
 
@@ -105,6 +138,50 @@ INSERT INTO `tbl_choices` (`choices_id`, `question_id`, `choice_text`) VALUES
 (146, 48, '3'),
 (147, 48, '2'),
 (148, 48, '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_customer_type`
+--
+
+CREATE TABLE `tbl_customer_type` (
+  `id` int(11) NOT NULL,
+  `customer_type` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_customer_type`
+--
+
+INSERT INTO `tbl_customer_type` (`id`, `customer_type`) VALUES
+(2, 'Student'),
+(3, 'Parent'),
+(4, 'Faculty'),
+(5, 'Alumni'),
+(6, 'Staff'),
+(7, 'Other');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_division`
+--
+
+CREATE TABLE `tbl_division` (
+  `id` int(11) NOT NULL,
+  `division_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_division`
+--
+
+INSERT INTO `tbl_division` (`id`, `division_name`) VALUES
+(1, 'Office of The President'),
+(2, 'Academic Affairs'),
+(3, 'Administration and Finance Division'),
+(4, 'Research, Development, Extension, and Production Development');
 
 -- --------------------------------------------------------
 
@@ -188,6 +265,27 @@ CREATE TABLE `tbl_responses` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_unit`
+--
+
+CREATE TABLE `tbl_unit` (
+  `id` int(11) NOT NULL,
+  `campus_name` varchar(100) NOT NULL,
+  `division_name` varchar(100) NOT NULL,
+  `unit_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_unit`
+--
+
+INSERT INTO `tbl_unit` (`id`, `campus_name`, `division_name`, `unit_name`) VALUES
+(1, 'Binangonan', 'Office of The President', 'Campus Management Information System'),
+(2, 'Binangonan', 'Office of The President', 'Campus Planning, Monitoring and Evaluation');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `two_factor_codes`
 --
 
@@ -209,11 +307,29 @@ ALTER TABLE `credentials`
   ADD PRIMARY KEY (`user_id`);
 
 --
+-- Indexes for table `tbl_campus`
+--
+ALTER TABLE `tbl_campus`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_choices`
 --
 ALTER TABLE `tbl_choices`
   ADD PRIMARY KEY (`choices_id`),
   ADD KEY `fk_question_id` (`question_id`);
+
+--
+-- Indexes for table `tbl_customer_type`
+--
+ALTER TABLE `tbl_customer_type`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_division`
+--
+ALTER TABLE `tbl_division`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_questionaire`
@@ -235,6 +351,12 @@ ALTER TABLE `tbl_responses`
   ADD KEY `question_id` (`question_id`);
 
 --
+-- Indexes for table `tbl_unit`
+--
+ALTER TABLE `tbl_unit`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
@@ -249,13 +371,31 @@ ALTER TABLE `two_factor_codes`
 -- AUTO_INCREMENT for table `credentials`
 --
 ALTER TABLE `credentials`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `tbl_campus`
+--
+ALTER TABLE `tbl_campus`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tbl_choices`
 --
 ALTER TABLE `tbl_choices`
   MODIFY `choices_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
+
+--
+-- AUTO_INCREMENT for table `tbl_customer_type`
+--
+ALTER TABLE `tbl_customer_type`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `tbl_division`
+--
+ALTER TABLE `tbl_division`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaire`
@@ -276,10 +416,16 @@ ALTER TABLE `tbl_responses`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `tbl_unit`
+--
+ALTER TABLE `tbl_unit`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- Constraints for dumped tables

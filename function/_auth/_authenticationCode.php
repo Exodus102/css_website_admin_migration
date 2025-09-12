@@ -51,6 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 }
                 if ($user_type === 'Campus Director') {
                     header("Location: ../../include/campus-directors/campus-directors-layout.php");
+                }
+                if ($user_type === 'Unit Head') {
+                    header("Location: ../../include/unit-head/unit-head-layout.php");
                 } else {
                     // Default redirect for all other user types
                     header("Location: ../../include/layout.php");
