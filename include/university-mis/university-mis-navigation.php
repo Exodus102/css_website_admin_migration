@@ -143,7 +143,7 @@
             </a>
         </li>
         <li>
-            <a href="university-mis-layout.php?page=entity-management" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="university-mis-layout.php?page=entity-management-mis" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="19" height="18" viewBox="0 0 19 18" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.25 0.25C1.86929 0.25 0.75 1.36929 0.75 2.75V5.25C0.75 6.63071 1.86929 7.75 3.25 7.75H5.75C7.13071 7.75 8.25 6.63071 8.25 5.25V2.75C8.25 1.36929 7.13071 0.25 5.75 0.25H3.25Z" />
                     <path class="fill-current" d="M3.25 10.25C1.86929 10.25 0.75 11.3693 0.75 12.75V15.25C0.75 16.6307 1.86929 17.75 3.25 17.75H5.75C7.13071 17.75 8.25 16.6307 8.25 15.25V12.75C8.25 11.3693 7.13071 10.25 5.75 10.25H3.25Z" />
@@ -291,4 +291,15 @@
             </a>
         </li>
     </ul>
+
+    <div class="mt-auto">
+        <a href="../../function/_auth/_logout.php" class="group font-bold px-4 py-2 text-base text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-colors duration-200 flex items-center gap-2">
+            <svg class="group-hover:stroke-white stroke-red-600" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.75 9V5.25C15.75 4.65326 15.5129 4.08097 15.091 3.65901C14.669 3.23705 14.0967 3 13.5 3H7.5C6.90326 3 6.33097 3.23705 5.90901 3.65901C5.48705 4.08097 5.25 4.65326 5.25 5.25V18.75C5.25 19.3467 5.48705 19.919 5.90901 20.341C6.33097 20.7629 6.90326 21 7.5 21H13.5C14.0967 21 14.669 20.7629 15.091 20.341C15.5129 19.919 15.75 19.3467 15.75 18.75V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M20.25 12H9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M17.25 9L20.25 12L17.25 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            Log Out
+        </a>
+    </div>
 </nav>

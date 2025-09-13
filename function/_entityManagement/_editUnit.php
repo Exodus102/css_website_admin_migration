@@ -1,13 +1,18 @@
 <?php
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_POST['unit_id'], $_POST['campus_name'], $_POST['division_name'], $_POST['unit_name']) && is_numeric($_POST['unit_id']) && !empty(trim($_POST['campus_name'])) && !empty(trim($_POST['division_name'])) && !empty(trim($_POST['unit_name']))) {
+    if (!isset($_SESSION['user_campus']) || empty(trim($_SESSION['user_campus']))) {
+        $response['message'] = 'User campus not found in session. Please log in again.';
+    } elseif (isset($_POST['unit_id'], $_POST['division_name'], $_POST['unit_name']) && is_numeric($_POST['unit_id']) && !empty(trim($_POST['division_name'])) && !empty(trim($_POST['unit_name']))) {
         $unitId = $_POST['unit_id'];
-        $campusName = trim($_POST['campus_name']);
+        $campusName = trim($_SESSION['user_campus']);
         $divisionName = trim($_POST['division_name']);
         $unitName = trim($_POST['unit_name']);
 

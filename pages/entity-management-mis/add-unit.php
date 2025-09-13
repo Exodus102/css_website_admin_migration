@@ -1,30 +1,19 @@
 <?php
 require_once __DIR__ . '/../../function/_databaseConfig/_dbConfig.php';
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
 $units = [];
+$campuses = [];
 $divisions = [];
-$units_mis = [];
-$user_campus = $_SESSION['user_campus'] ?? null;
-
 try {
-    // Fetch units only for the logged-in user's campus
-    if ($user_campus) {
-        $stmtUnits = $pdo->prepare("SELECT id, campus_name, division_name, unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY division_name, unit_name ASC");
-        $stmtUnits->execute([$user_campus]);
-        $units = $stmtUnits->fetchAll(PDO::FETCH_ASSOC);
-    }
+    // Fetch all units from tbl_unit_mis
+    $stmtUnits = $pdo->query("SELECT id, division_name, unit_name FROM tbl_unit_mis ORDER BY division_name, unit_name ASC");
+    $units = $stmtUnits->fetchAll(PDO::FETCH_ASSOC);
+
+    // No need to fetch campuses for this table
 
     // Fetch all divisions for dropdowns
     $stmtDivisions = $pdo->query("SELECT division_name FROM tbl_division ORDER BY division_name ASC");
     $divisions = $stmtDivisions->fetchAll(PDO::FETCH_COLUMN);
-
-    // Fetch all MIS units to populate the unit dropdown
-    $stmtMisUnits = $pdo->query("SELECT division_name, unit_name FROM tbl_unit_mis ORDER BY division_name, unit_name ASC");
-    // Group units by division name
-    $units_mis = $stmtMisUnits->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     // Optional: log error for debugging
     // error_log($e->getMessage());
@@ -63,7 +52,7 @@ try {
                             <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($unit['unit_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2">
                                 <div class="flex justify-center items-center gap-2">
-                                    <button data-id="<?php echo $unit['id']; ?>" data-campus="<?php echo htmlspecialchars($unit['campus_name']); ?>" data-division="<?php echo htmlspecialchars($unit['division_name']); ?>" data-unit="<?php echo htmlspecialchars($unit['unit_name']); ?>" class="edit-unit-btn flex items-center gap-1 bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-[#c2ccd6]">
+                                    <button data-id="<?php echo $unit['id']; ?>" data-division="<?php echo htmlspecialchars($unit['division_name']); ?>" data-unit="<?php echo htmlspecialchars($unit['unit_name']); ?>" class="edit-unit-btn flex items-center gap-1 bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-[#c2ccd6]">
                                         <img src="../../resources/svg/pencil.svg" alt="Edit" class="h-4 w-4">
                                         <span>Edit</span>
                                     </button>
@@ -96,9 +85,7 @@ try {
         </div>
         <div>
             <label for="add-unit-name" class="block text-sm font-medium text-gray-700">Unit Name</label>
-            <select id="add-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
-                <option value="" hidden>Select Unit</option>
-            </select>
+            <input type="text" id="add-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
         </div>
         <div class="mt-6 flex justify-end gap-4">
             <button type="button" id="cancel-add-unit" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
@@ -123,9 +110,7 @@ try {
         </div>
         <div>
             <label for="edit-unit-name" class="block text-sm font-medium text-gray-700">Unit Name</label>
-            <select id="edit-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
-                <option value="">Select Unit</option>
-            </select>
+            <input type="text" id="edit-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
         </div>
         <div class="mt-6 flex justify-end gap-4">
             <button type="button" id="cancel-edit-unit" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
@@ -136,25 +121,6 @@ try {
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const misUnitsByDivision = <?php echo json_encode($units_mis); ?>;
-
-        const populateUnitDropdown = (divisionDropdown, unitDropdown, selectedUnit = '') => {
-            const selectedDivision = divisionDropdown.value;
-            unitDropdown.innerHTML = '<option value="" hidden>Select Unit</option>'; // Reset
-
-            if (selectedDivision && misUnitsByDivision[selectedDivision]) {
-                misUnitsByDivision[selectedDivision].forEach(unit => {
-                    const option = document.createElement('option');
-                    option.value = unit.unit_name;
-                    option.textContent = unit.unit_name;
-                    if (unit.unit_name === selectedUnit) {
-                        option.selected = true;
-                    }
-                    unitDropdown.appendChild(option);
-                });
-            }
-        };
-
         const handleRequest = async (url, formData) => {
             const response = await fetch(url, {
                 method: 'POST',
@@ -167,47 +133,31 @@ try {
 
         // --- Add Logic ---
         const addDialog = document.getElementById('add-unit-dialog');
-        const addDivisionDropdown = document.getElementById('add-division-name');
-        const addUnitDropdown = document.getElementById('add-unit-name');
         const addForm = document.getElementById('add-unit-form');
         document.getElementById('add-unit-btn').addEventListener('click', () => addDialog.showModal());
         document.getElementById('cancel-add-unit').addEventListener('click', () => addDialog.close());
         addDialog.addEventListener('click', (e) => e.target === addDialog && addDialog.close());
-        addDivisionDropdown.addEventListener('change', () => {
-            populateUnitDropdown(addDivisionDropdown, addUnitDropdown);
-        });
         addForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            handleRequest('../../function/_entityManagement/_addUnit.php', new FormData(addForm));
+            handleRequest('../../function/_entityManagement/_addUnitMis.php', new FormData(addForm));
         });
 
         // --- Edit Logic ---
         const editDialog = document.getElementById('edit-unit-dialog');
-        const editDivisionDropdown = document.getElementById('edit-division-name');
-        const editUnitDropdown = document.getElementById('edit-unit-name');
         const editForm = document.getElementById('edit-unit-form');
         document.querySelectorAll('.edit-unit-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const division = btn.dataset.division;
-                const unit = btn.dataset.unit;
-
                 document.getElementById('edit-unit-id').value = btn.dataset.id;
-                editDivisionDropdown.value = division;
-
-                // Populate and select the unit
-                populateUnitDropdown(editDivisionDropdown, editUnitDropdown, unit);
-
+                document.getElementById('edit-division-name').value = btn.dataset.division;
+                document.getElementById('edit-unit-name').value = btn.dataset.unit;
                 editDialog.showModal();
             });
         });
         document.getElementById('cancel-edit-unit').addEventListener('click', () => editDialog.close());
         editDialog.addEventListener('click', (e) => e.target === editDialog && editDialog.close());
-        editDivisionDropdown.addEventListener('change', () => {
-            populateUnitDropdown(editDivisionDropdown, editUnitDropdown);
-        });
         editForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            handleRequest('../../function/_entityManagement/_editUnit.php', new FormData(editForm));
+            handleRequest('../../function/_entityManagement/_editUnitMis.php', new FormData(editForm));
         });
 
         // --- Delete Logic ---
@@ -216,7 +166,7 @@ try {
                 if (confirm('Are you sure you want to delete this unit? This action cannot be undone.')) {
                     const formData = new FormData();
                     formData.append('unit_id', btn.dataset.id);
-                    handleRequest('../../function/_entityManagement/_deleteUnit.php', formData);
+                    handleRequest('../../function/_entityManagement/_deleteUnitMis.php', formData);
                 }
             });
         });

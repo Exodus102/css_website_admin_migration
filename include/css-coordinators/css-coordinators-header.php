@@ -1,9 +1,9 @@
 <header class="absolute top-0 right-0 bg-[#F1F7F9] shadow-md p-4 flex items-center w-full">
     <div class="flex items-center space-x-4 w-5/6">
         <div class="hidden md:flex items-center gap-9 text-gray-500">
-            <img src="../resources/svg/hamburger.svg" alt="" class="w-7 h-7">
+            <img src="../../resources/svg/hamburger.svg" alt="" class="w-7 h-7">
             <span class="flex gap-2">
-                <img src="../resources/svg/ursatisfaction-logo.svg" alt="" class="w-12 h-12">
+                <img src="../../resources/svg/ursatisfaction-logo.svg" alt="" class="w-12 h-12">
                 <p class="flex flex-col">
                     <span class="font-bold text-[#064089]">URSatisfaction</span>
                     <span class="flex flex-col text-xs text-[#064089] leading-none">

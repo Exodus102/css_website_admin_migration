@@ -3,7 +3,7 @@
     <div class="">
         <!-- Welcome Section -->
         <div class="">
-            <h1 class="text-3xl font-bold">Welcome, Neil!</h1>
+            <h1 class="text-3xl font-bold">Welcome, <?php echo htmlspecialchars($_SESSION['user_first_name'] ?? 'User'); ?>!</h1>
             <p class="">Gain real-time insights, track system status, and monitor key metrics to ensure total satisfaction.</p>
         </div>
 
