@@ -2,8 +2,7 @@
   <h1 class="text-3xl font-bold mb-2 font-sfpro leading-5">Edit Survey</h1>
   <p class="font-sfpro">Customize your survey details and questions.</p><br>
   <?php
-require_once __DIR__ . '/../../function/_databaseConfig/_dbConfig.php';
-
+  require_once '../../function/_databaseConfig/_dbConfig.php';
 
   try {
     $stmt = $pdo->query("SELECT id, question_survey, `timestamp`, date_approved, change_log FROM tbl_questionaireform ORDER BY question_survey ASC");
