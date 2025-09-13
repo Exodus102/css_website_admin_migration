@@ -1,5 +1,5 @@
 <nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col md:w-80 w-full rounded-lg shadow-2xl">
-    <ul class="space-y-3 flex-grow mt-8">
+    <ul class="space-y-1 flex-grow mt-8">
         <li>
             <a href="css-coordinators-layout.php?=dashboard" class="font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">

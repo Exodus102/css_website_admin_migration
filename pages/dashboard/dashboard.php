@@ -1,4 +1,4 @@
-<div class="">
+<div class="p-4">
     <!-- Main Dashboard Content -->
     <div class="">
         <!-- Welcome Section -->

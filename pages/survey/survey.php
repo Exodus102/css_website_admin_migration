@@ -21,7 +21,7 @@ try {
         // Prepare statement for fetching choices
         $stmt_choices = $pdo->prepare("SELECT choice_text FROM tbl_choices WHERE question_id = ?");
 ?>
-        <div class="">
+        <div class="p-4">
             <h1 class="text-4xl font-bold font-sfpro"><?php echo htmlspecialchars($active_survey_name); ?></h1>
             <p class="font-sfpro">You are viewing the survey questionnaire currently in use. Last updated: <span class="text-[#064089]"><?php echo $last_updated; ?>.</span></p><br>
 

@@ -492,8 +492,12 @@ document.addEventListener("DOMContentLoaded", () => {
           questionsContainer.innerHTML = "";
           surveyForm.reset();
           // Go back to the list view after a successful save/update
-          document.getElementById('questionnaire-creator-container').classList.add('hidden');
-          document.getElementById('survey-list-container').classList.remove('hidden');
+          document
+            .getElementById("questionnaire-creator-container")
+            .classList.add("hidden");
+          document
+            .getElementById("survey-list-container")
+            .classList.remove("hidden");
           window.location.reload(); // Reload to see the changes in the list
         }
       } catch (error) {
@@ -522,7 +526,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Add event listeners for all "Activate" buttons
-  const activateSurveyButtons = document.querySelectorAll(".activate-survey-btn");
+  const activateSurveyButtons = document.querySelectorAll(
+    ".activate-survey-btn"
+  );
   activateSurveyButtons.forEach((button) => {
     button.addEventListener("click", async (event) => {
       const surveyId = event.target.dataset.surveyId;
