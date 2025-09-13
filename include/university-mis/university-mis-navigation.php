@@ -154,7 +154,7 @@
             </a>
         </li>
         <li>
-            <a href="university-mis-layout.php?page=backup-&-restore" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
+            <a href="university-mis-layout.php?page=backup-and-restore" class="group font-bold px-4 py-1 text-base hover:bg-[#064089] hover:text-[#F1F7F9] rounded-md transition-colors duration-200 flex items-center gap-2">
                 <svg class="group-hover:text-[#F1F7F9] text-black" width="21" height="22" viewBox="0 0 21 22" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.20825 13.083C2.93198 13.083 2.66703 13.1928 2.47168 13.3881C2.27633 
                     13.5835 2.16659 13.8484 2.16659 14.1247V18.2913C2.16659 18.5676 2.27633 18.8326 
