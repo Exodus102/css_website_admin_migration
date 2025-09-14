@@ -18,5 +18,5 @@ try {
     error_log("Database connection failed: " . $e->getMessage());
     // For a production environment, you might want to redirect to a generic error page
     // or set a session message here, but for now, we'll let _getEmail.php handle the redirect.
-    die("Database connection failed. Please try again later."); // Stop script execution
+    die("Database connection failed: " . $e->getMessage()); // Stop script execution
 }
