@@ -35,7 +35,7 @@ try {
                 <tbody class="bg-[#F1F7F9] text-center">
                     <?php if (empty($backups)) : ?>
                         <tr>
-                            <td colspan="6" class="px-3 py-2 border border-black text-center">No backups found.</td>
+                            <td colspan="7" class="px-3 py-2 border border-black text-center">No backups found.</td>
                         </tr>
                     <?php else : ?>
                         <?php $count = 1; ?>
