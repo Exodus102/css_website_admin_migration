@@ -3,7 +3,8 @@
         <div class="hidden md:flex items-center gap-9 text-gray-500">
             <img src="../../resources/svg/hamburger.svg" alt="" class="w-7 h-7">
             <span class="flex gap-2">
-                <img src="../../resources/svg/ursatisfaction-logo.svg" alt="" class="w-12 h-12">
+                <!-- <img src="../../resources/svg/ursatisfaction-logo.svg" alt="" class="w-12 h-12"> -->
+                <img src="../../resources/img/new-logo.png" alt="" srcset="" class="size-14">
                 <p class="flex flex-col">
                     <span class="font-bold text-[#064089]">URSatisfaction</span>
                     <span class="flex flex-col text-xs text-[#064089] leading-none">

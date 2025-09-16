@@ -42,99 +42,119 @@ if ($remaining <= 0 && $lockout_time > 0) {
     <?php include 'password_header.php'; ?>
 
     <!-- reduced padding -->
-    <div class="md:w-1/2 flex flex-col justify-center items-center bg-transparent p-4 md:p-6">
-      <div class="w-full max-w-sm">
-
-        <!-- Avatar -->
-        <div class="flex justify-center mb-3">
-          <div class="w-16 h-16 rounded-full bg-[#064089] flex items-center justify-center text-2xl font-bold text-white overflow-hidden">
-            <?php
-            $dp_path = $_SESSION['login_user_dp'] ?? '';
-            $full_dp_path = '../../' . $dp_path;
-
-            if (!empty($dp_path) && file_exists($full_dp_path)) {
-              // Display the image if it exists
-              echo '<img src="' . htmlspecialchars($full_dp_path) . '" alt="User Avatar" class="w-full h-full object-cover border-2 border-[#1E1E1E]">';
-            } else {
-              // Display the first letter of the first name as an initial
-              $firstName = $_SESSION['login_first_name'] ?? 'U';
-              $initial = strtoupper(substr($firstName, 0, 1));
-              echo '<span>' . htmlspecialchars($initial) . '</span>';
-            }
-            ?>
+    <div class="md:w-1/2">
+      <div class="w-full h-full flex flex-col items-center justify-around">
+        <!-- Logo -->
+        <div class="flex items-center gap-3">
+          <!-- <img src="resources/svg/ursatisfaction-logo.svg" alt="URSatisfaction Logo" class="w-20 h-20"> -->
+          <img src="../../resources/img/new-logo.png" alt="" srcset="">
+          <div class="text-left">
+            <h2 class="font-bold text-blue-800">URSatisfaction</h2>
+            <p class="text-xs text-gray-500">We comply so URSatisfied</p>
           </div>
         </div>
 
-        <!-- Title -->
-        <h3 class="text-2xl font-bold text-[#064089] text-center mb-1">
-          Welcome, <?php echo htmlspecialchars($first_name_for_display); ?>
-        </h3>
-        <p class="text-sm text-center mb-4">
-          <a href="javascript:history.back()" class="text-gray-600 underline hover:text-[#064089]">not you?</a>
-        </p>
+        <div class="flex flex-col items-center w-full">
+          <!-- Avatar -->
+          <div class="flex justify-center mb-3">
+            <div class="w-16 h-16 rounded-full bg-[#064089] flex items-center justify-center text-2xl font-bold text-white overflow-hidden">
+              <?php
+              $dp_path = $_SESSION['login_user_dp'] ?? '';
+              $full_dp_path = '../../' . $dp_path;
 
-        <!-- 🔹 Error message -->
-        <?php if ($error): ?>
-          <div class="text-center mb-3">
-            <p class="text-sm text-[#8B0000]" id="error-msg">
-              <?php echo htmlspecialchars($error); ?>
-            </p>
+              if (!empty($dp_path) && file_exists($full_dp_path)) {
+                // Display the image if it exists
+                echo '<img src="' . htmlspecialchars($full_dp_path) . '" alt="User Avatar" class="w-full h-full object-cover border-2 border-[#1E1E1E]">';
+              } else {
+                // Display the first letter of the first name as an initial
+                $firstName = $_SESSION['login_first_name'] ?? 'U';
+                $initial = strtoupper(substr($firstName, 0, 1));
+                echo '<span>' . htmlspecialchars($initial) . '</span>';
+              }
+              ?>
+            </div>
           </div>
-        <?php endif; ?>
 
-        <!-- 🔹 Attempts indicator -->
-        <?php if ($attempts > 0 && $remaining <= 0): ?>
-          <div class="text-center mb-3">
-            <p class="text-sm font-semibold text-red-600">
-              Attempts: <?php echo min($attempts, $max_attempts) . '/' . $max_attempts; ?>
-            </p>
-          </div>
-        <?php endif; ?>
+          <!-- Title -->
+          <h3 class="text-2xl font-bold text-[#064089] text-center mb-1">
+            Welcome, <?php echo htmlspecialchars($first_name_for_display); ?>
+          </h3>
+          <p class="text-sm text-center mb-4">
+            <a href="javascript:history.back()" class="text-gray-600 underline hover:text-[#064089]">not you?</a>
+          </p>
 
-        <!-- 🔹 Lockout timer -->
-        <?php if ($remaining > 0): ?>
-          <div class="text-center mb-3">
-            <p class="text-sm text-[#8B0000]">
-              Please wait <span id="timer"><?php echo $remaining; ?></span> seconds before retrying.
-            </p>
-          </div>
-        <?php endif; ?>
+          <!-- 🔹 Error message -->
+          <?php if ($error): ?>
+            <div class="text-center mb-3">
+              <p class="text-sm text-[#8B0000]" id="error-msg">
+                <?php echo htmlspecialchars($error); ?>
+              </p>
+            </div>
+          <?php endif; ?>
 
-        <!-- Password form -->
-        <form action="../../function/_auth/_getPassword.php" method="post" class="space-y-3">
-          <div class="relative">
-            <input type="password" name="pass" id="pass" required
-              class="peer w-full px-3 pt-3 pb-1 border rounded-md 
+          <!-- 🔹 Attempts indicator -->
+          <?php if ($attempts > 0 && $remaining <= 0): ?>
+            <div class="text-center mb-3">
+              <p class="text-sm font-semibold text-red-600">
+                Attempts: <?php echo min($attempts, $max_attempts) . '/' . $max_attempts; ?>
+              </p>
+            </div>
+          <?php endif; ?>
+
+          <!-- 🔹 Lockout timer -->
+          <?php if ($remaining > 0): ?>
+            <div class="text-center mb-3">
+              <p class="text-sm text-[#8B0000]">
+                Please wait <span id="timer"><?php echo $remaining; ?></span> seconds before retrying.
+              </p>
+            </div>
+          <?php endif; ?>
+
+          <!-- Password form -->
+          <form action="../../function/_auth/_getPassword.php" method="post" class="space-y-3 w-full px-28">
+            <div class="relative">
+              <input type="password" name="pass" id="pass" required
+                class="peer w-full px-3 pt-3 pb-1 border rounded-md 
                         focus:outline-none focus:ring-0 
                         <?php echo $wrong_password ? 'border-red-600 focus:border-red-600' : 'border-[#064089] focus:border-[#064089]'; ?>"
-              placeholder=" " <?php echo $remaining > 0 ? 'disabled' : ''; ?> />
+                placeholder=" " <?php echo $remaining > 0 ? 'disabled' : ''; ?> />
 
-            <label for="pass"
-              class="absolute left-3 -top-2 bg-white px-1 text-gray-600 text-sm transition-all
+              <label for="pass"
+                class="absolute left-3 -top-2 bg-white px-1 text-gray-600 text-sm transition-all
                          peer-placeholder-shown:top-2.5 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:text-base peer-placeholder-shown:bg-transparent
                          peer-focus:-top-2 peer-focus:text-sm peer-focus:text-[#064089] peer-focus:bg-[#F1F7F9]">
-              Password
-            </label>
-          </div>
-
-          <!-- Show password + Forgot password -->
-          <div class="flex items-center justify-between text-sm">
-            <div class="flex items-center gap-2 text-gray-700">
-              <input type="checkbox" id="showPass" onclick="togglePassword()" class="cursor-pointer" <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
-              <label for="showPass" class="cursor-pointer">Show password</label>
+                Password
+              </label>
             </div>
-            <a href="../../function/_auth/_sendPasswordResetCode.php?email=<?php echo urlencode($username_for_password); ?>" class="text-[#064089] hover:underline">Forgot password?</a>
-          </div>
 
-          <!-- Next Button -->
-          <div class="flex justify-end">
-            <button type="submit"
-              class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] "
-              <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
-              Next
-            </button>
-          </div>
-        </form>
+            <!-- Show password + Forgot password -->
+            <div class="flex items-center justify-between text-sm">
+              <div class="flex items-center gap-2 text-gray-700">
+                <input type="checkbox" id="showPass" onclick="togglePassword()" class="cursor-pointer" <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
+                <label for="showPass" class="cursor-pointer">Show password</label>
+              </div>
+              <a href="../../function/_auth/_sendPasswordResetCode.php?email=<?php echo urlencode($username_for_password); ?>" class="text-[#064089] hover:underline">Forgot password?</a>
+            </div>
+
+            <!-- Next Button -->
+            <div class="flex justify-end">
+              <button type="submit"
+                class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] "
+                <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
+                Next
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <footer class="mt-6 text-center text-xs text-gray-600 max-w-xs mx-auto">
+          <p>
+            You are agreeing to the
+            <a href="#" class="text-blue-700 font-semibold hover:text-blue-900">Terms of Services</a>
+            and
+            <a href="#" class="text-blue-700 font-semibold hover:text-blue-900">Privacy Policy</a>.
+          </p>
+        </footer>
       </div>
     </div>
   </div>

@@ -30,7 +30,7 @@ try {
     // error_log("Error fetching filters: " . $e->getMessage());
 }
 ?>
-<div class="flex items-end gap-1 mt-3 w-3/4">
+<div class="flex items-center gap-1 mt-3 w-3/4">
     <span class="font-semibold">FILTERS:</span>
 
     <div class="flex-grow">
