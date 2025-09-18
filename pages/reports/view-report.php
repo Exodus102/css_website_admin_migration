@@ -1,11 +1,9 @@
 <?php
-$unit_id = htmlspecialchars($_GET['unit_id'] ?? '');
-$quarter = htmlspecialchars($_GET['quarter'] ?? '');
-$year = htmlspecialchars($_GET['year'] ?? '');
+// Get the file path from the URL. It's already been generated.
+$filePath = $_GET['filePath'] ?? '';
 
-// This URL points to a script that will *stream* a PDF, not return JSON.
-// We need a separate script for this, or add a parameter to generate-report.php
-$pdf_url = "stream-report.php?unit_id=$unit_id&quarter=$quarter&year=$year";
+// Construct the correct relative path from this file's location to the project root.
+$pdf_url = '../../' . htmlspecialchars($filePath);
 ?>
 
 <div class="bg-[#F1F7F9] rounded h-[80vh]">

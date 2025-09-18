@@ -67,7 +67,7 @@ try {
     $pdf->Ln(10);
 
     $pdf->SetFont('Times', '', 12);
-    $pdf->MultiCell(0, 10, 'This is a sample report generated with FPDF. You can add your report data, tables, and charts here.');
+    $pdf->MultiCell(0, 10, 'This is a sample report generated with FPDF. You can add your report data, tables, and charts here. eh par saan tyo??');
 
     // Output the PDF to the browser for inline viewing. 'I' sends headers and content.
     $pdf->Output('I', 'report.pdf');

@@ -6,6 +6,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $divisions = [];
 $units = [];
+$years = [];
 $user_campus = $_SESSION['user_campus'] ?? null;
 
 try {
@@ -24,6 +25,13 @@ try {
         ");
         $stmtUnits->execute([$user_campus]);
         $units = $stmtUnits->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Fetch distinct years from responses, ordered from newest to oldest
+    $stmtYears = $pdo->query("SELECT DISTINCT YEAR(timestamp) as response_year FROM tbl_responses WHERE YEAR(timestamp) IS NOT NULL ORDER BY response_year DESC");
+    $years = $stmtYears->fetchAll(PDO::FETCH_COLUMN);
+    if (empty($years)) {
+        $years[] = date('Y'); // Default to current year if no responses exist
     }
 } catch (PDOException $e) {
     // Optional: log error for debugging
@@ -49,6 +57,18 @@ try {
             <option value="" hidden>Office</option>
             <?php foreach ($units as $unit) : ?>
                 <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>"><?php echo htmlspecialchars($unit['unit_name']); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div class="flex-groww w-28">
+        <label for="filter_year" class="block text-xs font-medium text-[#48494A]">YEAR</label>
+        <select name="filter_year" id="filter_year" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
+            <option value="" hidden>Year</option>
+            <?php foreach ($years as $year) : ?>
+                <option value="<?php echo htmlspecialchars($year); ?>" <?php echo ($year == date('Y')) ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($year); ?>
+                </option>
             <?php endforeach; ?>
         </select>
     </div>

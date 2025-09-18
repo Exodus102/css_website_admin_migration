@@ -87,8 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t">
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
+                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
+                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
+                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        </label>
+                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
                     </div>
                 `;
@@ -119,8 +122,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t">
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
+                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
+                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
+                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        </label>
+                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
                     </div>
                 `;
@@ -151,8 +157,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t">
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
+                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
+                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
+                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        </label>
+                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
                     </div>
                 `;
@@ -190,8 +199,11 @@ document.addEventListener("DOMContentLoaded", () => {
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t">
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 mr-2">Required</label>
+                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
+                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
+                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        </label>
+                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
                         <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
                     </div>
                 `;
@@ -236,6 +248,9 @@ document.addEventListener("DOMContentLoaded", () => {
         'input[type="text"][id$="-text"], textarea[id$="-text"]'
       );
       if (questionInput) questionInput.value = questionData.question || "";
+
+      const headerToggle = questionWrapper.querySelector(".header-toggle");
+      if (headerToggle) headerToggle.checked = !!questionData.header;
 
       const requiredToggle = questionWrapper.querySelector(".required-toggle");
       if (requiredToggle) requiredToggle.checked = !!questionData.required;
@@ -433,6 +448,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionInput = wrapper.querySelector(
           'input[type="text"][id$="-text"], textarea[id$="-text"]'
         );
+        const headerInput = wrapper.querySelector(".header-toggle");
+        const isHeader = headerInput ? (headerInput.checked ? 1 : 0) : 0;
         const questionText = questionInput ? questionInput.value.trim() : "";
         const questionType = wrapper.dataset.questionType;
         const requiredInput = wrapper.querySelector(".required-toggle");
@@ -468,6 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
           surveyData.questions.push({
             type: formatQuestionTypeForDisplay(questionType),
             question: questionText,
+            header: isHeader,
             required: isRequired,
             choices: choices,
             transaction_type: transactionType,

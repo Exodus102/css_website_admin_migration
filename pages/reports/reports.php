@@ -181,11 +181,11 @@
         });
 
         // --- View Report Logic ---
-        const loadReportView = async (unitId, officeName, quarter, year, quarterDisplayText) => {
-            if (!reportsListContainer || !reportViewContainer || !reportContent || !unitId || !officeName || !quarterDisplayText) return;
+        const loadReportView = async (officeName, quarterDisplayText, filePath) => {
+            if (!reportsListContainer || !reportViewContainer || !reportContent || !officeName || !quarterDisplayText || !filePath) return;
 
-            // Construct URL with the correct path from the project root
-            const url = `../../pages/reports/view-report.php?unit_id=${unitId}&quarter=${quarter}&year=${year}`;
+            // Construct URL, passing the specific file path to the viewer
+            const url = `../../pages/reports/view-report.php?filePath=${encodeURIComponent(filePath)}`;
 
             try {
                 const response = await fetch(url);
@@ -219,18 +219,30 @@
         tableBody.addEventListener('click', async (event) => {
             const viewButton = event.target.closest('.view-report-btn');
             if (viewButton) {
+                // Disable button and show loader to prevent double-clicks
+                const originalButtonContent = viewButton.innerHTML;
+                viewButton.disabled = true;
+                viewButton.innerHTML = `
+                    <svg class="animate-spin h-5 w-5 text-[#064089]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span class="ml-1">Generating...</span>
+                `;
+
                 const row = viewButton.closest('tr.office-row');
                 const unitId = row.dataset.unitId;
                 const officeName = row.querySelector('td').textContent.trim();
 
                 const quarterFilter = document.getElementById('filter_quarter');
-                const year = new Date().getFullYear();
+                const yearFilter = document.getElementById('filter_year');
                 let quarterValue = quarterFilter.value;
+                let yearValue = yearFilter.value || new Date().getFullYear(); // Use selected year or default to current
                 let quarterDisplay = '';
 
                 if (quarterValue) {
                     // A quarter is selected from the dropdown
-                    quarterDisplay = `${year} ${quarterFilter.options[quarterFilter.selectedIndex].text}`;
+                    quarterDisplay = `${yearValue} ${quarterFilter.options[quarterFilter.selectedIndex].text}`;
                 } else {
                     // No quarter selected, so we calculate the current one
                     const currentMonth = new Date().getMonth(); // 0-11
@@ -242,24 +254,29 @@
                     else if (currentQuarter === 2) suffix = 'nd';
                     else if (currentQuarter === 3) suffix = 'rd';
 
-                    quarterDisplay = `${year} ${currentQuarter}${suffix} Quarter`;
+                    quarterDisplay = `${yearValue} ${currentQuarter}${suffix} Quarter`;
                 }
 
                 // --- New Flow: Generate first, then view ---
                 try {
-                    const generateUrl = `../../pages/reports/generate-report.php?unit_id=${unitId}&quarter=${quarterValue}&year=${year}`;
+                    const generateUrl = `../../pages/reports/generate-report.php?unit_id=${unitId}&quarter=${quarterValue}&year=${yearValue}`;
                     const response = await fetch(generateUrl);
                     const result = await response.json();
 
                     if (result.success) {
                         // On success, show the success modal and then load the viewer
-                        loadReportView(unitId, officeName, quarterValue, year, quarterDisplay);
+                        loadReportView(officeName, quarterDisplay, result.filePath);
                     } else {
-                        // On failure, show the error modal with the message from the server
+                        // On failure, show the error modal with the message from the server.
+                        showModal(false, result.message || 'An unknown error occurred during PDF generation.');
                     }
                 } catch (error) {
                     console.error('Error during PDF generation request:', error);
                     showModal(false, 'A network error occurred. Could not contact the server.');
+                } finally {
+                    // Restore the button's original state
+                    viewButton.disabled = false;
+                    viewButton.innerHTML = originalButtonContent;
                 }
             }
         });

@@ -33,16 +33,45 @@ try {
         // Page header
         function Header()
         {
-            // Logo
-            // $this->Image('logo.png',10,6,30);
-            // Arial bold 15
-            $this->SetFont('Arial', 'B', 15);
-            // Move to the right
-            $this->Cell(80);
-            // Title
-            $this->Cell(30, 10, 'CSS Report', 1, 0, 'C');
+            // --- Dynamic Logo and Text Centering ---
+            $logoPath = '../../resources/img/urs-logo.png';
+            $logoWidth = 15;
+            $logoGap = 3; // Space between logo and text
+
+            // Set font to calculate the width of the main title, which is the widest part of the text block.
+            $this->SetFont('Arial', 'B', 12);
+            $titleWidth = $this->GetStringWidth('University of Rizal System');
+
+            // Calculate the starting X position to center the entire block (logo + gap + text).
+            // A small negative offset is subtracted to shift the block slightly to the left.
+            $blockWidth = $logoWidth + $logoGap + $titleWidth;
+            $start_x = (($this->GetPageWidth() - $blockWidth) / 2) - 8;
+            $this->Image($logoPath, $start_x, 8, $logoWidth);
+
+            // --- Centered Header Text ---
+            $this->SetY(10); // Move the cursor up to align text with the logo
+            // Set font for the first line
+            $this->SetFont('Arial', '', 10);
+            // Add the cell, 0 width means it spans the page, 1 means new line after, 'C' is for center.
+            $this->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
+
+            // Set font for the main title
+            $this->SetFont('Arial', 'B', 12);
+            $this->Cell(0, 6, 'University of Rizal System', 0, 1, 'C');
+
+            // Set font for the third line
+            $this->SetFont('Arial', '', 10);
+            $this->Cell(0, 5, 'Province of Rizal', 0, 1, 'C');
+
+            // Draw a line below the header
+            $this->Ln(5); // Add a smaller space before the line
+            $this->SetLineWidth(0.5); // Make the line bold
+            $y = $this->GetY();
+            $this->Line($this->lMargin, $y, $this->GetPageWidth() - $this->rMargin, $y);
+            $this->SetLineWidth(0.2); // Reset line width to default for other elements
+
             // Line break
-            $this->Ln(20);
+            $this->Ln(15);
         }
 
         // Page footer
@@ -61,6 +90,8 @@ try {
 
     // Instanciation of inherited class
     $pdf = new PDF();
+    $pdf->SetMargins(23, 23, 23); // Set 23mm margins (left, top, right)
+    $pdf->SetAutoPageBreak(true, 23); // Set 23mm bottom margin for page breaks
     $pdf->AliasNbPages();
     $pdf->AddPage();
     $pdf->SetFont('Times', '', 12);
@@ -76,14 +107,36 @@ try {
         error_log("Database error fetching office name: " . $e->getMessage());
     }
 
-    $pdf->SetFont('Arial', 'B', 14);
-    $pdf->Cell(0, 10, 'Report for: ' . $office_name, 0, 1);
-    $pdf->Cell(0, 10, "Campus: $user_campus", 0, 1);
-    $pdf->Cell(0, 10, "Period: $year - Quarter $quarter", 0, 1);
+    // Determine the quarter text based on the quarter number
+    $quarter_text = '';
+    switch ($quarter) {
+        case 1:
+            $quarter_text = "January to March";
+            break;
+        case 2:
+            $quarter_text = "April to June";
+            break;
+        case 3:
+            $quarter_text = "July to September";
+            break;
+        case 4:
+            $quarter_text = "October to December";
+            break;
+    }
+    $period_display = "$quarter_text $year";
+
+    // Display Office and Period information
+    $pdf->SetFont('Arial', '', 12);
+    $pdf->Cell(20, 7, 'Office:', 0, 0);
+    $pdf->SetFont('Arial', 'B', 12);
+    $pdf->Cell(0, 7, $office_name, 0, 1);
+    $pdf->SetFont('Arial', '', 12);
+    $pdf->Cell(20, 7, '', 0, 0); // Add an empty cell for indentation
+    $pdf->Cell(0, 7, $period_display, 0, 1);
     $pdf->Ln(10);
 
     $pdf->SetFont('Times', '', 12);
-    $pdf->MultiCell(0, 10, 'This is a sample report generated with FPDF. You can add your report data, tables, and charts here. The data for this report would be fetched from the database based on the provided parameters.');
+    $pdf->MultiCell(0, 10, 'This is a sample report generated with FPDF. You can add your report data, tables, and charts here. The data for this report would be fetched from the database based on the provided parameters. Jenrick The GREWAT');
 
     // --- Save and Output PDF ---
 
@@ -114,8 +167,23 @@ try {
         throw new Exception('Failed to save the PDF file. Please check server permissions for the "upload/pdf" folder.');
     }
 
-    // 5. If we reach here, it was successful. Send a success response.
-    echo json_encode(['success' => true, 'message' => 'PDF report created successfully!']);
+    // 5. Insert the file path into the database.
+    // We'll store the relative path from the project root for better portability.
+    $relativePath = 'upload/pdf/' . $filename;
+    try {
+        $stmt = $pdo->prepare("INSERT INTO tbl_report (file_path) VALUES (?)");
+        $stmt->execute([$relativePath]);
+    } catch (PDOException $e) {
+        // Log this DB error, but don't fail the whole operation since the PDF was created.
+        error_log("Database error inserting report path: " . $e->getMessage());
+    }
+
+    // 6. If we reach here, it was successful. Send a success response.
+    echo json_encode([
+        'success' => true,
+        'message' => 'PDF report created successfully!',
+        'filePath' => $relativePath // Return the path to the generated file
+    ]);
 } catch (Exception $e) {
     // If any error occurs, catch it and send a JSON error response.
     $errorMessage = "An error occurred while generating the PDF: " . $e->getMessage();

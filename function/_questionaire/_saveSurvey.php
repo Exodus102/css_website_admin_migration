@@ -112,8 +112,8 @@ try {
         $choices = $q['choices'] ?? [];
         $required = $q['required'] ?? 1;
         $section = 'Section 2';
-        $status = 0;
-        $header = 0;
+        $status = 0; // Default status
+        $header = $q['header'] ?? 0; // Get header value, default to 0
         $transaction_type = $q['transaction_type'] ?? '2';
         $question_rendering = $q['question_rendering'] ?? 'None';
 
