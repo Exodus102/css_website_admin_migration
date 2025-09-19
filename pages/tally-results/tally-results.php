@@ -183,8 +183,9 @@ if ($target_campus_name) {
                                     <?php echo $analysis; ?>
                                 </span>
                             </td>
-                            <td class="border border-gray-300 p-3 text-center">
-                                <button class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6]">View</button>
+                            <td class="border border-gray-300 p-3 text-center flex justify-center">
+                                <button class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition flex justify-center items-center hover:bg-[#c2ccd6]">
+                                    <img src="../../resources/svg/download-outline.svg" alt="" alt="" srcset=""> Download</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>

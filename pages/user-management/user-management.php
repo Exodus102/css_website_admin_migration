@@ -3,6 +3,7 @@ require_once '../../function/_databaseConfig/_dbConfig.php';
 
 $campuses = [];
 $units = [];
+$all_units_for_dialog = [];
 $users = [];
 
 try {
@@ -10,14 +11,20 @@ try {
     $stmtCampuses = $pdo->query("SELECT DISTINCT campus_name FROM tbl_campus ORDER BY campus_name ASC");
     $campuses = $stmtCampuses->fetchAll(PDO::FETCH_COLUMN);
 
-    // Fetch all users
     // Fetch all users, ordered by the most recently created
     $stmtUsers = $pdo->query("SELECT * FROM credentials ORDER BY date_created DESC");
     $users = $stmtUsers->fetchAll(PDO::FETCH_ASSOC);
 
-    // Fetch units
+    // Fetch distinct units for the main filter dropdown
     $stmtUnits = $pdo->query("SELECT DISTINCT unit_name FROM tbl_unit ORDER BY unit_name ASC");
     $units = $stmtUnits->fetchAll(PDO::FETCH_COLUMN);
+
+    // Fetch all units with their campus for the add/edit dialogs and group them
+    $stmtAllUnits = $pdo->query("SELECT campus_name, unit_name FROM tbl_unit ORDER BY campus_name, unit_name ASC");
+    $all_units_raw = $stmtAllUnits->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($all_units_raw as $unit) {
+        $all_units_for_dialog[$unit['campus_name']][] = $unit['unit_name'];
+    }
 } catch (PDOException $e) {
     // You can log the error here if needed
     // error_log($e->getMessage());

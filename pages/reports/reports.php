@@ -17,8 +17,8 @@
                         <tr class="bg-[#F1F7F9] office-row" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
                             <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($unit['unit_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2 text-center flex gap-2 justify-center">
-                                <button class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
-                                <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
+                                <button class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
+                                <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
                             </td>
                         </tr>
                     <?php endforeach; ?>

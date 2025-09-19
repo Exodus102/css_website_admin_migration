@@ -101,7 +101,9 @@
 
         <div>
             <label for="add-unit" class="block text-sm font-medium text-gray-700">Unit</label>
-            <input type="text" id="add-unit" name="unit" placeholder="Enter unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <select id="add-unit" name="unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+                <option value="" hidden>Select a campus first</option>
+            </select>
         </div>
 
         <div>
@@ -176,7 +178,9 @@
 
         <div>
             <label for="edit-unit" class="block text-sm font-medium text-gray-700">Unit</label>
-            <input type="text" id="edit-unit" name="unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-unit" name="unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+                <option value="" hidden>Select a campus first</option>
+            </select>
         </div>
 
         <div>
@@ -218,6 +222,24 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        const allUnitsByCampus = <?php echo json_encode($all_units_for_dialog ?? []); ?>;
+
+        const populateUnitDropdown = (campusDropdown, unitDropdown, selectedUnit = '') => {
+            const selectedCampus = campusDropdown.value;
+            unitDropdown.innerHTML = '<option value="" hidden>Select Unit</option>'; // Reset
+
+            if (selectedCampus && allUnitsByCampus[selectedCampus]) {
+                allUnitsByCampus[selectedCampus].forEach(unitName => {
+                    const option = document.createElement('option');
+                    option.value = unitName;
+                    option.textContent = unitName;
+                    if (unitName === selectedUnit) {
+                        option.selected = true;
+                    }
+                    unitDropdown.appendChild(option);
+                });
+            }
+        };
         const addAccountBtn = document.getElementById('add-account-btn');
         const addAccountDialog = document.getElementById('add-account-dialog');
         const cancelAddAccountBtn = document.getElementById('cancel-add-account');
@@ -229,6 +251,12 @@
                 addAccountDialog.close();
             }
         });
+
+        // --- Add Account: Link Campus and Unit dropdowns ---
+        const addCampusDropdown = document.getElementById('add-campus');
+        const addUnitDropdown = document.getElementById('add-unit');
+        addCampusDropdown.addEventListener('change', () => populateUnitDropdown(addCampusDropdown, addUnitDropdown));
+
 
         const addAccountForm = document.getElementById('add-account-form');
         addAccountForm.addEventListener('submit', async (event) => {
@@ -255,6 +283,9 @@
         const editAccountDialog = document.getElementById('edit-account-dialog');
         const editAccountForm = document.getElementById('edit-account-form');
         const cancelEditAccountBtn = document.getElementById('cancel-edit-account');
+        const editCampusDropdown = document.getElementById('edit-campus');
+        const editUnitDropdown = document.getElementById('edit-unit');
+
 
         document.querySelectorAll('.edit-account-btn').forEach(button => {
             button.addEventListener('click', () => {
@@ -266,12 +297,14 @@
                 document.getElementById('edit-middle-name').value = data.middleName;
                 document.getElementById('edit-last-name').value = data.lastName;
                 document.getElementById('edit-contact-number').value = data.contactNumber;
-                document.getElementById('edit-campus').value = data.campus;
-                document.getElementById('edit-unit').value = data.unit;
+                editCampusDropdown.value = data.campus;
                 document.getElementById('edit-user-type').value = data.type;
                 document.getElementById('edit-email').value = data.email;
                 document.getElementById('edit-status').value = data.status;
                 document.getElementById('edit-password').value = ''; // Clear password field
+
+                // Populate and select the unit
+                populateUnitDropdown(editCampusDropdown, editUnitDropdown, data.unit);
 
                 editAccountDialog.showModal();
             });
@@ -283,6 +316,9 @@
                 editAccountDialog.close();
             }
         });
+
+        // --- Edit Account: Link Campus and Unit dropdowns ---
+        editCampusDropdown.addEventListener('change', () => populateUnitDropdown(editCampusDropdown, editUnitDropdown));
 
         editAccountForm.addEventListener('submit', async (event) => {
             event.preventDefault();
