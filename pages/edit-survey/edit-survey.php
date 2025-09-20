@@ -13,7 +13,7 @@
     $questionnaires = [];
   }
   ?>
-  <table class="border px-4 py-2 border-[#1E1E1ECC] shadow-lg overflow-hidden">
+  <table class="border px-4 py-2 border-[#1E1E1ECC] shadow-lg overflow-hidden w-full">
     <thead class="bg-[#064089] text-white font-normal text-left w-full">
       <tr>
         <th class="border px-4 py-3 border-[#1E1E1ECC]">#</th>
@@ -60,7 +60,7 @@
     <button id="back-to-list-btn" class="border px-4 py-1 border-[#000000cc] shadow-lg font-bold rounded-md">&larr; Back to List</button>
   </div>
 
-  <button id="addQuestionBtn">Add Question</button>
+  <!-- <button id="addQuestionBtn">Add Question</button> -->
 
   <dialog id="questionTypeDialog">
     <div class="p-4">
@@ -92,6 +92,7 @@
       <button type="submit" id="saveSurveyBtn" class="px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Save Survey</button>
     </div>
   </form>
+  <button id="addQuestionBtn" class="mt-5 px-6 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700">Add Question</button>
 </div>
 
 <script src="../../JavaScript/pages/edit-survey/new-questionaire-page.js"></script>

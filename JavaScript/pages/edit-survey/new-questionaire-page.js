@@ -49,6 +49,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     questionWrapper.dataset.questionType = type;
 
+    // If we are editing an existing question, store its ID
+    if (questionData && questionData.question_id) {
+      questionWrapper.dataset.questionId = questionData.question_id;
+    }
+
     let questionContent = "";
 
     // A unique ID for elements within this question, to link labels and inputs
@@ -467,6 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const questionRendering = questionRenderingInput
           ? questionRenderingInput.value
           : "None"; // Default to 'None'
+        const questionId = wrapper.dataset.questionId; // Get existing question ID if it exists
 
         const choices = [];
         if (questionType === "dropdown" || questionType === "multiple-choice") {
@@ -482,7 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (questionText) {
           // Only add questions that have text
-          surveyData.questions.push({
+          const questionPayload = {
             type: formatQuestionTypeForDisplay(questionType),
             question: questionText,
             header: isHeader,
@@ -490,7 +496,13 @@ document.addEventListener("DOMContentLoaded", () => {
             choices: choices,
             transaction_type: transactionType,
             question_rendering: questionRendering,
-          });
+          };
+
+          if (questionId) {
+            questionPayload.question_id = questionId;
+          }
+
+          surveyData.questions.push(questionPayload);
         }
       });
 

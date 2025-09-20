@@ -53,30 +53,75 @@ $pdo->beginTransaction();
 
 try {
     if ($survey_id) {
-        // --- UPDATE LOGIC ---
-        // 1. Get the original survey name to delete old questions
+        // --- INTELLIGENT UPDATE LOGIC ---
+
+        // 1. Get original survey name and all existing question IDs for this survey
         $stmt_get_old_name = $pdo->prepare("SELECT question_survey FROM tbl_questionaireform WHERE id = ?");
         $stmt_get_old_name->execute([$survey_id]);
         $old_survey_name = $stmt_get_old_name->fetchColumn();
 
         if (!$old_survey_name) {
-            throw new Exception("Survey with ID $survey_id not found for update.");
+            throw new Exception("Survey with ID {$survey_id} not found for update.");
         }
 
-        // 2. Delete old choices and questions associated with the old survey name
-        // We must delete choices first because of the foreign key constraint.
-        // Using a subquery is a reliable way to do this.
-        $stmt_del_choices = $pdo->prepare("DELETE FROM tbl_choices WHERE question_id IN (SELECT question_id FROM tbl_questionaire WHERE question_survey = ?)");
-        $stmt_del_choices->execute([$old_survey_name]);
+        $stmt_get_ids = $pdo->prepare("SELECT question_id FROM tbl_questionaire WHERE question_survey = ?");
+        $stmt_get_ids->execute([$old_survey_name]);
+        $existing_db_ids = $stmt_get_ids->fetchAll(PDO::FETCH_COLUMN);
 
-        // Now that choices are gone, we can safely delete the questions.
-        $stmt_del_questions = $pdo->prepare("DELETE FROM tbl_questionaire WHERE question_survey = ?");
-        $stmt_del_questions->execute([$old_survey_name]);
-
-        // 3. Update the survey form entry
+        // 2. Update the survey form entry itself
         $change_log_message = 'Updated survey questions and/or name.';
         $stmt_update_form = $pdo->prepare("UPDATE tbl_questionaireform SET question_survey = ?, change_log = ? WHERE id = ?");
         $stmt_update_form->execute([$survey_name, $change_log_message, $survey_id]);
+
+        // 3. Process submitted questions: update existing ones and identify new ones.
+        $submitted_ids = [];
+        $stmt_update_question = $pdo->prepare(
+            "UPDATE tbl_questionaire SET question_survey = ?, question = ?, question_type = ?, required = ?, header = ?, transaction_type = ?, question_rendering = ? WHERE question_id = ?"
+        );
+        $stmt_del_choices = $pdo->prepare("DELETE FROM tbl_choices WHERE question_id = ?");
+
+        foreach ($questions as $q) {
+            if (isset($q['question_id'])) {
+                // This is an existing question, so UPDATE it.
+                $current_question_id = $q['question_id'];
+                $submitted_ids[] = $current_question_id;
+
+                $stmt_update_question->execute([
+                    $survey_name,
+                    $q['question'],
+                    $q['type'],
+                    $q['required'] ?? 1,
+                    $q['header'] ?? 0,
+                    $q['transaction_type'] ?? '2',
+                    $q['question_rendering'] ?? 'None',
+                    $current_question_id
+                ]);
+
+                // Clear its old choices and re-insert the new ones.
+                $stmt_del_choices->execute([$current_question_id]);
+                if (!empty($q['choices'])) {
+                    $stmt_choice = $pdo->prepare("INSERT INTO tbl_choices (question_id, choice_text) VALUES (?, ?)");
+                    foreach ($q['choices'] as $choice_text) {
+                        $stmt_choice->execute([$current_question_id, $choice_text]);
+                    }
+                }
+            }
+            // New questions will be handled in the re-insertion logic below.
+        }
+
+        // 4. Determine which questions were deleted and remove them.
+        $ids_to_delete = array_diff($existing_db_ids, $submitted_ids);
+        if (!empty($ids_to_delete)) {
+            // Placeholders for the IN clause
+            $placeholders = implode(',', array_fill(0, count($ids_to_delete), '?'));
+
+            // Important: Delete from tbl_choices first due to foreign key constraints.
+            $stmt_del_choices_batch = $pdo->prepare("DELETE FROM tbl_choices WHERE question_id IN ($placeholders)");
+            $stmt_del_choices_batch->execute($ids_to_delete);
+
+            $stmt_del_questions_batch = $pdo->prepare("DELETE FROM tbl_questionaire WHERE question_id IN ($placeholders)");
+            $stmt_del_questions_batch->execute($ids_to_delete);
+        }
 
         $message = 'Survey updated successfully!';
     } else {
@@ -97,7 +142,7 @@ try {
         $message = 'Survey saved successfully!';
     }
 
-    // --- RE-INSERT QUESTIONS AND CHOICES (for both create and update) ---
+    // --- INSERT NEW QUESTIONS AND CHOICES ---
     $stmt_question = $pdo->prepare(
         "INSERT INTO tbl_questionaire (question_survey, section, question, status, question_type, required, header, transaction_type, question_rendering) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
     );
@@ -107,6 +152,12 @@ try {
     );
 
     foreach ($questions as $q) {
+        // Skip existing questions on an update, as they were handled above.
+        if (isset($q['question_id'])) {
+            continue;
+        }
+
+        // This is a new question, so INSERT it.
         $question_text = $q['question'];
         $question_type = $q['type'];
         $choices = $q['choices'] ?? [];

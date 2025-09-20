@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 19, 2025 at 11:25 AM
+-- Generation Time: Sep 20, 2025 at 06:50 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -107,6 +107,72 @@ CREATE TABLE `tbl_choices` (
   `choice_text` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_choices`
+--
+
+INSERT INTO `tbl_choices` (`choices_id`, `question_id`, `choice_text`) VALUES
+(76, 15, '5'),
+(77, 15, '4'),
+(78, 15, '3'),
+(79, 15, '2'),
+(80, 15, '1'),
+(81, 16, '5'),
+(82, 16, '4'),
+(83, 16, '3'),
+(84, 16, '2'),
+(85, 16, '1'),
+(86, 17, '5'),
+(87, 17, '4'),
+(88, 17, '3'),
+(89, 17, '2'),
+(90, 17, '1'),
+(91, 18, '5'),
+(92, 18, '4'),
+(93, 18, '3'),
+(94, 18, '2'),
+(95, 18, '1'),
+(96, 19, '5'),
+(97, 19, '4'),
+(98, 19, '3'),
+(99, 19, '2'),
+(100, 19, '1'),
+(101, 20, '5'),
+(102, 20, '4'),
+(103, 20, '3'),
+(104, 20, '2'),
+(105, 20, '1'),
+(106, 21, '5'),
+(107, 21, '4'),
+(108, 21, '3'),
+(109, 21, '2'),
+(110, 21, '1'),
+(111, 23, '5'),
+(112, 23, '4'),
+(113, 23, '3'),
+(114, 23, '2'),
+(115, 23, '1'),
+(116, 24, '5'),
+(117, 24, '4'),
+(118, 24, '3'),
+(119, 24, '2'),
+(120, 24, '1'),
+(121, 25, '5'),
+(122, 25, '4'),
+(123, 25, '3'),
+(124, 25, '2'),
+(125, 25, '1'),
+(126, 26, '5'),
+(127, 26, '4'),
+(128, 26, '3'),
+(129, 26, '2'),
+(130, 26, '1'),
+(131, 28, '5'),
+(132, 28, '4'),
+(133, 28, '3'),
+(134, 28, '2'),
+(135, 28, '1');
+
 -- --------------------------------------------------------
 
 --
@@ -171,6 +237,30 @@ CREATE TABLE `tbl_questionaire` (
   `question_rendering` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_questionaire`
+--
+
+INSERT INTO `tbl_questionaire` (`question_id`, `question_survey`, `section`, `question`, `status`, `question_type`, `required`, `header`, `transaction_type`, `question_rendering`) VALUES
+(11, '2025 Questionaire_v1.2', 'Section 2', 'Name (Optional)', 1, 'Text', 0, 0, 2, 'None'),
+(12, '2025 Questionaire_v1.2', 'Section 2', 'Contact No. (Optional)', 1, 'Text', 0, 0, 2, 'None'),
+(13, '2025 Questionaire_v1.2', 'Section 2', 'Click on the item corresponding to your answer using the given scale below.\n\n5 - Excellent \n4 - Very Satisfactory \n3 - Satisfactory \n2 - Unsatisfactory \n1 - Needs Improvement', 1, 'Description', 0, 0, 2, 'None'),
+(14, '2025 Questionaire_v1.2', 'Section 2', '1. How well were you served by the personnel during your visit or transaction in terms of the following: \nPaano ka pinagsilbihan ng kawani nang bumisita ka sa tanggapan ayon sa mga sumusunod:', 1, 'Description', 0, 1, 0, 'QoS'),
+(15, '2025 Questionaire_v1.2', 'Section 2', 'a. Knowledge of the job (Kaalaman sa trabaho)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(16, '2025 Questionaire_v1.2', 'Section 2', 'b. Accuracy in providing information (Katumpakan sa pagbibigay ng impormasyon)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(17, '2025 Questionaire_v1.2', 'Section 2', 'c. Delivery of prompt and appropriate service (Pagbibigay ng mabilis at nararapat na serbisyo)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(18, '2025 Questionaire_v1.2', 'Section 2', 'd. Professionalism and skillfulness of the service personnel (Pagiging propesyunal at may kasanayan na kawani)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(19, '2025 Questionaire_v1.2', 'Section 2', 'e. Flexibility in handling requests and inquiries (Kakayahang umangkop ng pagtugon sa mga kahilingan at katanungan)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(20, '2025 Questionaire_v1.2', 'Section 2', 'f. Friendliness, attentiveness, helpfulness and courtesy (Pagiging magiliw, maasikaso, matulungin at magalang)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(21, '2025 Questionaire_v1.2', 'Section 2', 'g. The physical appearance of service personnel (e.g. wearing the prescribed uniform, ID, etc.) (Pisikal na kaayusan ng kawani tulad ng pagsusuot ng akmang uniporme, pagkakakilanlan o ID, at iba pa)', 1, 'Multiple Choice', 1, 1, 0, 'QoS'),
+(22, '2025 Questionaire_v1.2', 'Section 2', '2. How did you find our service unit as to: \nAno ang masasabi mo sa aming tanggapan ayon sa:', 1, 'Description', 0, 1, 0, 'Su'),
+(23, '2025 Questionaire_v1.2', 'Section 2', 'a. Accessibility/location of the office/unit (Lokasyon ng tanggapan)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
+(24, '2025 Questionaire_v1.2', 'Section 2', 'b. Physical setup, condition, and availability of facilities and equipment (Pisikal na kaayusan, kalagayan at pgkakaroon ng mga kagamitan)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
+(25, '2025 Questionaire_v1.2', 'Section 2', 'c. Cleanliness of the premises (Kalinisan ng kapaligiran)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
+(26, '2025 Questionaire_v1.2', 'Section 2', 'd. Processes and procedures of service delivery are customer-friendly (Kaangkupan ng mga pamamaraan sa pagbibigay ng serbisyo sa mga kliyente o bisita)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
+(27, '2025 Questionaire_v1.2', 'Section 2', '2. How did you find our service unit as to: \nAno ang masasabi mo sa aming tanggapan ayon sa:', 1, 'Description', 1, 0, 1, 'Su'),
+(28, '2025 Questionaire_v1.2', 'Section 2', 'a. Online platform used is customer-friendly (Kaangkupan ng ginamit na online platform o pamamaraan mga kliyente o bisita)', 1, 'Multiple Choice', 1, 1, 1, 'Su');
+
 -- --------------------------------------------------------
 
 --
@@ -185,6 +275,13 @@ CREATE TABLE `tbl_questionaireform` (
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_questionaireform`
+--
+
+INSERT INTO `tbl_questionaireform` (`id`, `question_survey`, `change_log`, `date_approved`, `timestamp`) VALUES
+(1, '2025 Questionaire_v1.2', 'Updated survey questions and/or name.', NULL, '2025-09-20 14:36:09');
+
 -- --------------------------------------------------------
 
 --
@@ -196,6 +293,14 @@ CREATE TABLE `tbl_report` (
   `file_path` varchar(255) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_report`
+--
+
+INSERT INTO `tbl_report` (`id`, `file_path`, `timestamp`) VALUES
+(1, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 14:54:26'),
+(2, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 15:03:11');
 
 -- --------------------------------------------------------
 
@@ -217,6 +322,30 @@ CREATE TABLE `tbl_responses` (
   `uploaded` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_responses`
+--
+
+INSERT INTO `tbl_responses` (`id`, `question_id`, `response_id`, `response`, `comment`, `analysis`, `timestamp`, `header`, `transaction_type`, `question_rendering`, `uploaded`) VALUES
+(1, -1, 1, 'Binangonan', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(2, -2, 1, 'Academic Affairs', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(3, -3, 1, 'College of Accountancy', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(4, -4, 1, 'Student', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(5, 1, 1, 'Clearance', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(6, 11, 1, '', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(7, 12, 1, '', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(8, 15, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(9, 16, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(10, 17, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(11, 18, 1, '4', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(12, 19, 1, '3', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(13, 20, 1, '2', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(14, 21, 1, '1', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(15, 23, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(16, 24, 1, '4', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(17, 25, 1, '3', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(18, 26, 1, '2', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -228,6 +357,16 @@ CREATE TABLE `tbl_tally_report` (
   `file_path` varchar(255) NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_tally_report`
+--
+
+INSERT INTO `tbl_tally_report` (`id`, `file_path`, `timestamp`) VALUES
+(1, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:48:08'),
+(2, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:51:06'),
+(3, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:52:44'),
+(4, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 15:02:29');
 
 -- --------------------------------------------------------
 
@@ -431,7 +570,7 @@ ALTER TABLE `tbl_campus`
 -- AUTO_INCREMENT for table `tbl_choices`
 --
 ALTER TABLE `tbl_choices`
-  MODIFY `choices_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `choices_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=136;
 
 --
 -- AUTO_INCREMENT for table `tbl_customer_type`
@@ -449,31 +588,31 @@ ALTER TABLE `tbl_division`
 -- AUTO_INCREMENT for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaireform`
 --
 ALTER TABLE `tbl_questionaireform`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_report`
 --
 ALTER TABLE `tbl_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_responses`
 --
 ALTER TABLE `tbl_responses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `tbl_tally_report`
 --
 ALTER TABLE `tbl_tally_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_unit`
@@ -491,7 +630,7 @@ ALTER TABLE `tbl_unit_mis`
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
 
 --
 -- Constraints for dumped tables

@@ -135,14 +135,20 @@ if ($target_campus_name) {
                     <?php foreach ($column_headers as $header) : ?>
                         <th class="border border-gray-300 px-4 py-3 text-center"><?php echo $header; ?></th>
                     <?php endforeach; ?>
-                    <th class="border border-gray-300 px-4 py-3 text-center">Analysis</th>
+                    <?php if ($view_mode === 'month') : ?>
+                        <th class="border border-gray-300 px-4 py-3 text-center">Analysis</th>
+                    <?php endif; ?>
                     <th class="border border-gray-300 px-4 py-3 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="text-sm">
                 <?php if (empty($tally_data)) : ?>
                     <tr class="bg-white">
-                        <td colspan="<?php echo count($column_headers) + 3; ?>" class="text-center p-4 text-gray-500 border border-gray-300">No offices found for your campus or no responses have been recorded for the selected period.</td>
+                        <?php
+                        $colspan = count($column_headers) + 2; // Office + Action
+                        if ($view_mode === 'month') $colspan++; // Add one for Analysis
+                        ?>
+                        <td colspan="<?php echo $colspan; ?>" class="text-center p-4 text-gray-500 border border-gray-300">No offices found for your campus or no responses have been recorded for the selected period.</td>
                     </tr>
                 <?php else : ?>
                     <?php foreach ($tally_data as $row) : ?>
@@ -178,14 +184,27 @@ if ($target_campus_name) {
                                 echo '<td class="border border-gray-300 p-3 text-center">' . htmlspecialchars($row['count']) . '</td>';
                             }
                             ?>
-                            <td class="border border-gray-300 p-3 text-center">
-                                <span class="px-3 py-1 font-semibold leading-tight rounded-full text-xs <?php echo $analysis_class; ?>">
-                                    <?php echo $analysis; ?>
-                                </span>
-                            </td>
+                            <?php if ($view_mode === 'month') : ?>
+                                <td class="border border-gray-300 p-3 text-center">
+                                    <span class="px-3 py-1 font-semibold leading-tight rounded-full text-xs <?php echo $analysis_class; ?>">
+                                        <?php echo $analysis; ?>
+                                    </span>
+                                </td>
+                            <?php endif; ?>
                             <td class="border border-gray-300 p-3 text-center flex justify-center">
-                                <button class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition flex justify-center items-center hover:bg-[#c2ccd6]">
-                                    <img src="../../resources/svg/download-outline.svg" alt="" alt="" srcset=""> Download</button>
+                                <?php
+                                $query_params = [
+                                    'filter_campus' => $filter_campus_id,
+                                    'filter_division' => $filter_division_id,
+                                    'filter_year' => $filter_year,
+                                    'filter_quarter' => $filter_quarter,
+                                    'filter_month' => $filter_month,
+                                    'unit_id' => $row['unit_id'],
+                                ];
+                                $download_url = '../../pages/tally-results/generate-tally-results.php?' . http_build_query(array_filter($query_params));
+                                ?>
+                                <a href="<?php echo htmlspecialchars($download_url); ?>" target="_blank" class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition flex justify-center items-center hover:bg-[#c2ccd6]">
+                                    <img src="../../resources/svg/download-outline.svg" alt="Download Icon"> Download</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
