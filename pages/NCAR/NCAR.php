@@ -47,13 +47,21 @@ try {
     // --- Fetch NCAR Data (Offices with 'negative' analysis) ---
     if ($user_campus) {
         $sql = "
-            SELECT DISTINCT
+            SELECT
                 u.id AS unit_id,
-                u.unit_name
+                u.unit_name,
+                COALESCE(n.status, 'Unresolved') AS ncar_status
             FROM
                 tbl_unit u
             JOIN
                 tbl_responses r_office ON u.unit_name = r_office.response AND r_office.question_id = -3
+            LEFT JOIN
+                tbl_ncar n ON n.file_path = CONCAT(
+                    'upload/pdf/ncar-report_',
+                    REPLACE(REPLACE(REPLACE(u.campus_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
+                    REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
+                    :year, '_q', :quarter, '.pdf'
+                )
             WHERE
                 u.campus_name = :user_campus
                 AND r_office.response_id IN (
@@ -63,6 +71,7 @@ try {
                     AND YEAR(r_main.timestamp) = :year
                     AND QUARTER(r_main.timestamp) = :quarter
                 )
+            GROUP BY u.id, u.unit_name, n.status
         ";
 
         $params = [
@@ -81,7 +90,7 @@ try {
             $params[':office_id'] = $filter_office_id;
         }
 
-        $sql .= " ORDER BY u.unit_name ASC";
+        $sql .= " ORDER BY u.unit_name ASC, n.id DESC";
 
         $stmtNcar = $pdo->prepare($sql);
         $stmtNcar->execute($params);
@@ -151,13 +160,24 @@ try {
                     <?php foreach ($ncar_data as $row) : ?>
                         <tr class="bg-white hover:bg-gray-50 ncar-row" data-unit-id="<?php echo htmlspecialchars($row['unit_id']); ?>">
                             <td class="border border-gray-300 p-3 office-name"><?php echo htmlspecialchars($row['unit_name']); ?></td>
-                            <td class="border border-gray-300 p-3 text-center">
-                                <span class="px-3 py-1 font-semibold leading-tight rounded-full text-xs bg-red-100 text-red-800">
-                                    Negative
+                            <td class="border border-gray-300 p-3 text-center status-cell">
+                                <?php
+                                $status = htmlspecialchars($row['ncar_status']);
+                                $status_class = 'bg-[#EE6B6E] text-white'; // Default for Unresolved
+                                if ($status === 'Resolved') {
+                                    $status_class = 'bg-[#29AB87] text-white';
+                                } elseif ($status === 'Action Taken') {
+                                    $status_class = 'bg-blue-100 text-blue-800';
+                                }
+                                ?>
+                                <span class="status-badge px-3 py-1 font-semibold leading-tight rounded-full text-xs <?php echo $status_class; ?>">
+                                    <?php echo $status; ?>
                                 </span>
                             </td>
-                            <td class="border border-gray-300 p-3 text-center">
-                                <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6]">View</button>
+                            <td class="border border-gray-300 p-3 text-center action-cell flex justify-center">
+                                <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
+                                    <img src="../../resources/svg/eye-icon.svg" alt="">View
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -277,6 +297,15 @@ try {
                     // We need to adjust it for the browser from the current page's location
                     const browserPath = `../../${result.filePath}`;
                     loadNcarView(officeName, periodDisplayText, browserPath);
+
+                    // Update the status on the list page after generation
+                    const statusCell = row.querySelector('.status-cell');
+                    if (statusCell) {
+                        statusCell.innerHTML = `
+                            <span class="status-badge px-3 py-1 font-semibold leading-tight rounded-full text-xs bg-[#EE6B6E] text-white">
+                                Unresolved
+                            </span>`;
+                    }
                 } else {
                     alert('Error generating report: ' + result.message);
                 }

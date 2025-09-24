@@ -373,6 +373,15 @@ try {
 
     $relativePath = 'upload/pdf/' . $filename;
 
+    // --- Save to tbl_ncar database ---
+    try {
+        $stmt = $pdo->prepare("INSERT INTO tbl_ncar (file_path, status) VALUES (?, ?)");
+        $stmt->execute([$relativePath, 'Unresolved']);
+    } catch (PDOException $e) {
+        // Log this DB error, but don't fail the whole operation since the PDF was created.
+        error_log("Database error inserting NCAR report path: " . $e->getMessage());
+    }
+
     echo json_encode(['success' => true, 'filePath' => $relativePath]);
 } catch (Exception $e) {
     error_log("NCAR PDF Generation Failed: " . $e->getMessage());
