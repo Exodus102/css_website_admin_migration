@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 20, 2025 at 06:50 PM
+-- Generation Time: Sep 24, 2025 at 09:27 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -221,6 +221,18 @@ INSERT INTO `tbl_division` (`id`, `division_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_ncar`
+--
+
+CREATE TABLE `tbl_ncar` (
+  `id` int(11) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `status` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_questionaire`
 --
 
@@ -300,7 +312,9 @@ CREATE TABLE `tbl_report` (
 
 INSERT INTO `tbl_report` (`id`, `file_path`, `timestamp`) VALUES
 (1, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 14:54:26'),
-(2, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 15:03:11');
+(2, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 15:03:11'),
+(3, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q3.pdf', '2025-09-22 14:21:23'),
+(4, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q3.pdf', '2025-09-22 14:22:14');
 
 -- --------------------------------------------------------
 
@@ -327,24 +341,42 @@ CREATE TABLE `tbl_responses` (
 --
 
 INSERT INTO `tbl_responses` (`id`, `question_id`, `response_id`, `response`, `comment`, `analysis`, `timestamp`, `header`, `transaction_type`, `question_rendering`, `uploaded`) VALUES
-(1, -1, 1, 'Binangonan', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(2, -2, 1, 'Academic Affairs', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(3, -3, 1, 'College of Accountancy', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(4, -4, 1, 'Student', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(5, 1, 1, 'Clearance', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(6, 11, 1, '', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(7, 12, 1, '', 'This is good', '', '2025-09-20 15:02:02', 0, '0', NULL, 0),
-(8, 15, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(9, 16, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(10, 17, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(11, 18, 1, '4', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(12, 19, 1, '3', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(13, 20, 1, '2', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(14, 21, 1, '1', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
-(15, 23, 1, '5', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
-(16, 24, 1, '4', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
-(17, 25, 1, '3', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
-(18, 26, 1, '2', 'This is good', '', '2025-09-20 15:02:02', 1, '0', 'Su', 0);
+(1, -1, 1, 'Binangonan', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(2, -2, 1, 'Academic Affairs', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(3, -3, 1, 'College of Accountancy', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(4, -4, 1, 'Student', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(5, 1, 1, 'Clearance', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(6, 11, 1, '', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(7, 12, 1, '', 'This is good', 'negative', '2025-09-20 15:02:02', 0, '0', NULL, 0),
+(8, 15, 1, '5', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(9, 16, 1, '5', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(10, 17, 1, '5', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(11, 18, 1, '4', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(12, 19, 1, '3', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(13, 20, 1, '2', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(14, 21, 1, '1', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'QoS', 0),
+(15, 23, 1, '5', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(16, 24, 1, '4', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(17, 25, 1, '3', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(18, 26, 1, '2', 'This is good', 'negative', '2025-09-20 15:02:02', 1, '0', 'Su', 0),
+(19, -1, 2, 'Morong', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(20, -2, 2, 'Office of The President', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(21, -3, 2, 'Campus Management Information System', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(22, -4, 2, 'Student', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(23, 1, 2, 'asdsaa', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(24, 11, 2, 'Jenrick', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(25, 12, 2, '09158100920', 'This is terrible.', '', '2025-09-22 13:33:07', 0, '0', NULL, 0),
+(26, 15, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(27, 16, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(28, 17, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(29, 18, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(30, 19, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(31, 20, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:07', 1, '0', 'QoS', 0),
+(32, 21, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'QoS', 0),
+(33, 23, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
+(34, 24, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
+(35, 25, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
+(36, 26, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0);
 
 -- --------------------------------------------------------
 
@@ -366,7 +398,8 @@ INSERT INTO `tbl_tally_report` (`id`, `file_path`, `timestamp`) VALUES
 (1, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:48:08'),
 (2, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:51:06'),
 (3, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:52:44'),
-(4, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 15:02:29');
+(4, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 15:02:29'),
+(5, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-22 13:33:28');
 
 -- --------------------------------------------------------
 
@@ -495,6 +528,12 @@ ALTER TABLE `tbl_division`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_ncar`
+--
+ALTER TABLE `tbl_ncar`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
@@ -585,6 +624,12 @@ ALTER TABLE `tbl_division`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `tbl_ncar`
+--
+ALTER TABLE `tbl_ncar`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
@@ -600,19 +645,19 @@ ALTER TABLE `tbl_questionaireform`
 -- AUTO_INCREMENT for table `tbl_report`
 --
 ALTER TABLE `tbl_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `tbl_responses`
 --
 ALTER TABLE `tbl_responses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `tbl_tally_report`
 --
 ALTER TABLE `tbl_tally_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_unit`
@@ -630,7 +675,7 @@ ALTER TABLE `tbl_unit_mis`
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- Constraints for dumped tables
