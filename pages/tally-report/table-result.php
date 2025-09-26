@@ -254,7 +254,8 @@ try {
     $stmtCoord = $pdo->prepare("
         SELECT first_name, middle_name, last_name 
         FROM credentials 
-        WHERE type = 'CSS Coordinator' AND campus = ?
+        WHERE type = 'CSS Coordinator' AND campus = ? AND status = 'Active' 
+        ORDER BY last_name ASC
     ");
     $stmtCoord->execute([$user_campus]);
     $coordinators = $stmtCoord->fetchAll(PDO::FETCH_ASSOC);
@@ -264,7 +265,7 @@ try {
     $stmtDirector = $pdo->prepare("
         SELECT first_name, middle_name, last_name 
         FROM credentials 
-        WHERE type = 'Campus Director' AND campus = ? 
+        WHERE type = 'Campus Director' AND campus = ? AND status = 'Active'
         LIMIT 1
     ");
     $stmtDirector->execute([$user_campus]);

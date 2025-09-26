@@ -36,7 +36,7 @@ try {
 
     <?php
     include 'filters.php';
-    ?><br><br>
+    ?><br>
 
     <div class="">
         <table class="w-full">

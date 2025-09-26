@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -51,6 +52,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 $stmt = $pdo->prepare($sql);
                 if ($stmt->execute($params)) {
+                    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                    log_audit_trail($pdo, "Updated user account: " . trim("$firstName $lastName") . " ($email)");
+
                     $response['success'] = true;
                     $response['message'] = 'Account updated successfully!';
                 } else {

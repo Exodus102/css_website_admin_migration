@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
 // Include PHPMailer files
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -47,6 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $stmt = $pdo->prepare("INSERT INTO credentials (first_name, middle_name, last_name, contact_number, campus, unit, type, dp, email, password, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if ($stmt->execute([$firstName, $middleName, $lastName, $contactNumber, $campus, $unit, $type, $dp, $email, $password, $dateCreated, $status])) {
+                    
+                    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                    log_audit_trail($pdo, "Added new user: " . trim("$firstName $lastName") . " ($email)");
+
                     // Account created, now send email notification
                     $mail = new PHPMailer(true);
                     try {

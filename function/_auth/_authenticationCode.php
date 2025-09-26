@@ -2,6 +2,7 @@
 session_start();
 
 require_once '../../function/_databaseConfig/_dbConfig.php';
+require_once '../../function/_auditTrail/_audit.php'; // Include the audit trail function
 
 // Check if the user is authorized to be on this page
 if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenticated_pending']) {
@@ -28,6 +29,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 // Code is correct and valid.
                 $_SESSION['user_authenticated'] = true;
                 unset($_SESSION['user_authenticated_pending']);
+
+                // --- LOG THE LOGIN ACTION TO THE AUDIT TRAIL ---
+                log_audit_trail($pdo, 'User logged in');
 
                 // Get the user's type from the session
                 $user_type = $_SESSION['user_type'];

@@ -2,6 +2,8 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
+
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,6 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO tbl_customer_type (customer_type) VALUES (?)");
                 if ($stmt->execute([$customerType])) {
                     $response['success'] = true;
+                    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                    log_audit_trail($pdo, "Added new customer type: " . $customerType);
                     $response['message'] = 'Customer type added successfully!';
                 } else {
                     $response['message'] = 'Failed to add customer type.';

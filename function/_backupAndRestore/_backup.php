@@ -5,6 +5,8 @@ header('Content-Type: application/json');
 // Use the existing database configuration - Corrected Path
 require_once __DIR__ . '/../_databaseConfig/_dbConfig.php';
 
+require_once __DIR__ . '/../_auditTrail/_audit.php'; // Include the audit trail function
+
 // --- Configuration ---
 // IMPORTANT: Update this path to your mysqldump.exe if it's not in your system's PATH
 // Common XAMPP path: 'C:\xampp\mysql\bin\mysqldump.exe'
@@ -82,6 +84,9 @@ try {
         "INSERT INTO tbl_backup (available_backups, version, size, file_path) VALUES (?, ?, ?, ?)"
     );
     $stmt->execute([$backupFile, $version, $sizeFormatted, $backupFilePath]);
+
+    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+    log_audit_trail($pdo, "Created a new system backup: " . $backupFile);
 
     echo json_encode(['success' => true, 'message' => 'Backup created successfully!']);
 } catch (Exception $e) {

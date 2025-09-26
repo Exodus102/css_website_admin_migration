@@ -2,6 +2,8 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
+
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO tbl_division (division_name) VALUES (?)");
                 if ($stmt->execute([$divisionName])) {
                     $response['success'] = true;
+                    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                    log_audit_trail($pdo, "Added new division: " . $divisionName);
                     $response['message'] = 'Division added successfully!';
                 } else {
                     $response['message'] = 'Failed to add division.';

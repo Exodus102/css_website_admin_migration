@@ -1,6 +1,9 @@
 <?php
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
+
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -24,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt = $pdo->prepare("INSERT INTO tbl_unit (campus_name, division_name, unit_name) VALUES (?, ?, ?)");
                 if ($stmt->execute([$campusName, $divisionName, $unitName])) {
                     $response['success'] = true;
+                    // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                    log_audit_trail($pdo, "Added new unit: " . $unitName . " under division: " . $divisionName . " at " . $campusName . " campus");
                     $response['message'] = 'Unit added successfully!';
                 } else {
                     $response['message'] = 'Failed to add unit.';

@@ -2,6 +2,8 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
+require_once '../_auditTrail/_audit.php'; // Include the audit trail function
+
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -10,17 +12,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $divisionName = trim($_POST['division_name']);
 
         try {
-            $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_division WHERE division_name = ? AND id != ?");
-            $checkStmt->execute([$divisionName, $divisionId]);
-            if ($checkStmt->fetchColumn() > 0) {
-                $response['message'] = 'Another division with this name already exists.';
+            // First, get the old division name for logging
+            $oldNameStmt = $pdo->prepare("SELECT division_name FROM tbl_division WHERE id = ?");
+            $oldNameStmt->execute([$divisionId]);
+            $oldDivision = $oldNameStmt->fetch();
+
+            if (!$oldDivision) {
+                $response['message'] = 'Division not found.';
             } else {
-                $stmt = $pdo->prepare("UPDATE tbl_division SET division_name = ? WHERE id = ?");
-                if ($stmt->execute([$divisionName, $divisionId])) {
-                    $response['success'] = true;
-                    $response['message'] = 'Division updated successfully!';
+                $oldDivisionName = $oldDivision['division_name'];
+
+                $checkStmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_division WHERE division_name = ? AND id != ?");
+                $checkStmt->execute([$divisionName, $divisionId]);
+                if ($checkStmt->fetchColumn() > 0) {
+                    $response['message'] = 'Another division with this name already exists.';
                 } else {
-                    $response['message'] = 'Failed to update division.';
+                    $stmt = $pdo->prepare("UPDATE tbl_division SET division_name = ? WHERE id = ?");
+                    if ($stmt->execute([$divisionName, $divisionId])) {
+                        $response['success'] = true;
+                        // --- LOG THE ACTION TO THE AUDIT TRAIL ---
+                        log_audit_trail($pdo, "Updated division name from '$oldDivisionName' to '$divisionName'");
+                        $response['message'] = 'Division updated successfully!';
+                    } else {
+                        $response['message'] = 'Failed to update division.';
+                    }
                 }
             }
         } catch (PDOException $e) {

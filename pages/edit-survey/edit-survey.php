@@ -5,10 +5,16 @@
   require_once '../../function/_databaseConfig/_dbConfig.php';
 
   try {
+    // First, find the name of the currently active survey.
+    // This is efficient as it's only one query before the loop.
+    $activeSurveyStmt = $pdo->query("SELECT DISTINCT question_survey FROM tbl_questionaire WHERE status = 1 LIMIT 1");
+    $activeSurveyName = $activeSurveyStmt->fetchColumn();
+
+    // Then, get all questionnaire forms.
     $stmt = $pdo->query("SELECT id, question_survey, `timestamp`, date_approved, change_log FROM tbl_questionaireform ORDER BY question_survey ASC");
     $questionnaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
   } catch (PDOException $e) {
-    // You could log the error here if needed
+    // You can log the error here if needed
     // error_log($e->getMessage());
     $questionnaires = [];
   }
@@ -32,15 +38,51 @@
       <?php else : ?>
         <?php $row_number = 1; ?>
         <?php foreach ($questionnaires as $q) : ?>
+          <?php
+          // Check if the current questionnaire in the loop is the active one.
+          $isActive = ($activeSurveyName === $q['question_survey']);
+          ?>
           <tr class="bg-white">
             <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo $row_number++; ?></td>
             <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo htmlspecialchars($q['question_survey']); ?></td>
             <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo date('F j, Y, g:i a', strtotime($q['timestamp'])); ?></td>
-            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo $q['date_approved'] ? date('F j, Y, g:i a', strtotime($q['date_approved'])) : 'N/A'; ?></td>
-            <td class="border px-4 py-3 border-[#1E1E1ECC]"><?php echo htmlspecialchars($q['change_log'] ?: 'N/A'); ?></td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC] date-approved-cell">
+              <div class="date-approved-display flex justify-between items-center gap-2">
+                <span class="date-text flex-grow"><?php echo $q['date_approved'] ? date('F j, Y, g:i a', strtotime($q['date_approved'])) : 'N/A'; ?></span>
+                <button class="edit-date-btn p-1 rounded hover:bg-gray-200 transition-colors flex-shrink-0"><img src="../../resources/svg/pencil.svg" alt="Edit Date" class="h-4 w-4"></button>
+              </div>
+              <div class="date-approved-edit hidden">
+                <input type="datetime-local" value="<?php echo $q['date_approved'] ? date('Y-m-d\TH:i:s', strtotime($q['date_approved'])) : ''; ?>" class="date-input border border-gray-300 rounded px-2 py-1 w-full text-sm">
+                <div class="flex justify-end gap-2 mt-2">
+                  <button data-survey-id="<?php echo $q['id']; ?>" class="save-date-btn bg-green-100 text-green-800 px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-green-200">Save</button>
+                  <button type="button" class="cancel-date-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-gray-300">Cancel</button>
+                </div>
+              </div>
+            </td>
+            <td class="border px-4 py-3 border-[#1E1E1ECC] change-log-cell">
+              <div class="change-log-display flex justify-between items-center gap-2">
+                <span class="log-text flex-grow"><?php echo htmlspecialchars($q['change_log'] ?: 'N/A'); ?></span>
+                <button class="edit-log-btn p-1 rounded hover:bg-gray-200 transition-colors flex-shrink-0"><img src="../../resources/svg/pencil.svg" alt="Edit Log" class="h-4 w-4"></button>
+              </div>
+              <div class="change-log-edit hidden">
+                <input type="text" value="<?php echo htmlspecialchars($q['change_log']); ?>" class="log-input border border-gray-300 rounded px-2 py-1 w-full text-sm">
+                <div class="flex justify-end gap-2 mt-2">
+                  <button data-survey-id="<?php echo $q['id']; ?>" class="save-log-btn bg-green-100 text-green-800 px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-green-200">Save</button>
+                  <button type="button" class="cancel-log-btn bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-gray-300">Cancel</button>
+                </div>
+              </div>
+            </td>
             <td class="border px-4 py-3 border-[#1E1E1ECC]">
               <div class="flex justify-center items-center gap-2">
-                <button data-survey-id="<?php echo $q['id']; ?>" class="activate-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">Active</button>
+                <?php if ($isActive) : ?>
+                  <!-- If this survey is active, show a disabled "Activated" button -->
+                  <button disabled class="bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold cursor-not-allowed">
+                    Activated
+                  </button>
+                <?php else : ?>
+                  <!-- Otherwise, show the clickable "Activate" button -->
+                  <button data-survey-id="<?php echo $q['id']; ?>" class="activate-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-blue-100">Activate</button>
+                <?php endif; ?>
                 <button data-survey-id="<?php echo $q['id']; ?>" class="view-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">View</button>
                 <button data-survey-id="<?php echo $q['id']; ?>" class="edit-survey-btn bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition">Edit</button>
               </div>
@@ -104,6 +146,7 @@
     const backBtn = document.getElementById('back-to-list-btn');
     const viewBtns = document.querySelectorAll('.view-survey-btn');
     const surveyIdInput = document.getElementById('surveyId');
+    const activateBtns = document.querySelectorAll('.activate-survey-btn');
 
     if (addNewBtn) {
       addNewBtn.addEventListener('click', () => {
@@ -124,5 +167,148 @@
         document.getElementById('questions-container').innerHTML = '';
       });
     }
+
+    activateBtns.forEach(button => {
+      button.addEventListener('click', async (event) => {
+        const surveyId = event.currentTarget.dataset.surveyId;
+
+        if (!confirm('Are you sure you want to activate this survey? This will deactivate any other active survey.')) {
+          return;
+        }
+
+        try {
+          const response = await fetch('../../function/_questionaire/_activateSurvey.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              survey_id: surveyId
+            }),
+          });
+
+          const result = await response.json();
+          alert(result.message);
+
+          if (result.success) {
+            window.location.reload(); // Reload to reflect the change in button state
+          }
+
+        } catch (error) {
+          console.error('Error activating survey:', error);
+          alert('An error occurred while activating the survey. Please check the console.');
+        }
+      });
+    });
+
+    document.querySelectorAll('.change-log-cell').forEach(cell => {
+      const displayView = cell.querySelector('.change-log-display');
+      const editView = cell.querySelector('.change-log-edit');
+      const editBtn = cell.querySelector('.edit-log-btn');
+      const saveBtn = cell.querySelector('.save-log-btn');
+      const cancelBtn = cell.querySelector('.cancel-log-btn');
+      const inputField = cell.querySelector('.log-input');
+
+      editBtn.addEventListener('click', () => {
+        displayView.classList.add('hidden');
+        editView.classList.remove('hidden');
+        inputField.focus();
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        editView.classList.add('hidden');
+        displayView.classList.remove('hidden');
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        const surveyId = saveBtn.dataset.surveyId;
+        const newLogMessage = inputField.value;
+
+        // Disable button to prevent multiple clicks
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          const response = await fetch('../../function/_questionaire/_updateChangeLog.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              survey_id: surveyId,
+              change_log: newLogMessage.trim()
+            }),
+          });
+
+          const result = await response.json();
+          alert(result.message);
+
+          if (result.success) {
+            window.location.reload(); // Reload to show the updated log
+          }
+        } catch (error) {
+          console.error('Error updating change log:', error);
+          alert('An error occurred. Please check the console for details.');
+        } finally {
+          // Re-enable button
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save';
+        }
+      });
+    });
+
+    document.querySelectorAll('.date-approved-cell').forEach(cell => {
+      const displayView = cell.querySelector('.date-approved-display');
+      const editView = cell.querySelector('.date-approved-edit');
+      const editBtn = cell.querySelector('.edit-date-btn');
+      const saveBtn = cell.querySelector('.save-date-btn');
+      const cancelBtn = cell.querySelector('.cancel-date-btn');
+      const inputField = cell.querySelector('.date-input');
+
+      editBtn.addEventListener('click', () => {
+        displayView.classList.add('hidden');
+        editView.classList.remove('hidden');
+        inputField.focus();
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        editView.classList.add('hidden');
+        displayView.classList.remove('hidden');
+      });
+
+      saveBtn.addEventListener('click', async () => {
+        const surveyId = saveBtn.dataset.surveyId;
+        const newDateValue = inputField.value;
+
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          const response = await fetch('../../function/_questionaire/_updateDateApproved.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              survey_id: surveyId,
+              date_approved: newDateValue // Can be empty to set to NULL
+            }),
+          });
+
+          const result = await response.json();
+          alert(result.message);
+
+          if (result.success) {
+            window.location.reload();
+          }
+        } catch (error) {
+          console.error('Error updating approval date:', error);
+          alert('An error occurred. Please check the console for details.');
+        } finally {
+          saveBtn.disabled = false;
+          saveBtn.textContent = 'Save';
+        }
+      });
+    });
   });
 </script>
