@@ -199,6 +199,11 @@ try {
                 <span id="ncar-period-text" class="font-normal text-base">NCAR Report</span>
             </div>
         </div>
+        <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'Campus Director') : ?>
+            <div>
+                <button id="resolve-ncar-btn" class="bg-[#064089] text-white px-6 py-1 rounded disabled:bg-gray-400 disabled:cursor-not-allowed">Resolve</button>
+            </div>
+        <?php endif; ?>
     </div>
     <div id="ncar-content" class="h-[80vh]">
         <!-- PDF will be embedded here -->
@@ -258,9 +263,29 @@ try {
             const ncarContent = document.getElementById('ncar-content');
             const ncarOfficeName = document.getElementById('ncar-office-name');
             const ncarPeriodText = document.getElementById('ncar-period-text');
+            const resolveBtn = document.getElementById('resolve-ncar-btn'); // Can be null if user is not director
 
             ncarOfficeName.textContent = officeName;
             ncarPeriodText.textContent = periodText;
+
+            // Only interact with the resolve button if it exists
+            if (resolveBtn) {
+                // Set the file path on the button for the update action
+                resolveBtn.dataset.filePath = filePath.replace('../../', ''); // Store relative path
+
+                // Set the initial state of the resolve button based on the status
+                if (status === 'Resolved') {
+                    resolveBtn.textContent = 'Resolved';
+                    resolveBtn.disabled = true;
+                    resolveBtn.classList.remove('bg-[#064089]');
+                    resolveBtn.classList.add('bg-[#29AB87]'); // Green color for resolved
+                } else {
+                    resolveBtn.textContent = 'Resolve';
+                    resolveBtn.disabled = false;
+                    resolveBtn.classList.add('bg-[#064089]');
+                    resolveBtn.classList.remove('bg-[#29AB87]');
+                }
+            }
 
             // Embed the PDF using an <object> tag for better browser compatibility
             ncarContent.innerHTML = `<object data="${filePath}" type="application/pdf" width="100%" height="100%"><p>Your browser does not support embedded PDFs. You can <a href="${filePath}" target="_blank">download the PDF here</a>.</p></object>`;
@@ -330,5 +355,56 @@ try {
             // Refresh the page to show the latest status in the table
             filtersForm.submit();
         });
+
+        // --- Resolve Button Logic ---
+        const resolveBtn = document.getElementById('resolve-ncar-btn');
+        // Only add the event listener if the button exists on the page
+        if (resolveBtn) {
+            resolveBtn.addEventListener('click', async () => {
+                let filePath = resolveBtn.dataset.filePath;
+                // The file path might contain a cache-busting parameter (e.g., "?v=12345").
+                // We need to remove it to match the path stored in the database.
+                filePath = filePath.split('?')[0];
+
+                if (!filePath) {
+                    alert('Error: File path not found.');
+                    return;
+                }
+
+                if (!confirm('Are you sure you want to mark this NCAR as Resolved?')) {
+                    return;
+                }
+
+                resolveBtn.disabled = true;
+                resolveBtn.textContent = 'Resolving...';
+
+                try {
+                    const response = await fetch('../../function/_ncar/_resolveNcar.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            file_path: filePath
+                        })
+                    });
+
+                    const result = await response.json();
+                    alert(result.message);
+
+                    if (result.success) {
+                        // Visually update the button to show it's resolved
+                        resolveBtn.textContent = 'Resolved';
+                        resolveBtn.classList.remove('bg-[#064089]');
+                        resolveBtn.classList.add('bg-[#29AB87]');
+                    }
+                } catch (error) {
+                    console.error('Error resolving NCAR:', error);
+                    alert('An error occurred. Please check the console.');
+                    resolveBtn.disabled = false; // Re-enable on error
+                    resolveBtn.textContent = 'Resolve';
+                }
+            });
+        }
     });
 </script>

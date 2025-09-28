@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 24, 2025 at 09:27 PM
+-- Generation Time: Sep 28, 2025 at 07:34 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -49,9 +49,62 @@ CREATE TABLE `credentials` (
 
 INSERT INTO `credentials` (`user_id`, `first_name`, `middle_name`, `last_name`, `contact_number`, `campus`, `unit`, `type`, `dp`, `email`, `password`, `status`, `date_created`) VALUES
 (1, 'Jenrick', 'Panopio', 'Aran', '09158100920', 'Binangonan', 'University MIS', 'University MIS', '', 'aranjenrick@gmail.com', 'polskie123', 'Active', '0000-00-00'),
-(6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Campus Directors', 'Campus Director', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Active', '2025-09-12'),
+(6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Campus Directors', 'Campus Director', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Inactive', '2025-09-12'),
 (7, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Registrar', 'CSS Coordinator', '', 'ferf96989@gmail.com', 'polskie123', 'Active', '2025-09-12'),
-(8, 'Ramirr', 'Oppus', 'Villamarin', '09158100920', 'Binangonan', 'College of Computer Studies', 'CSS Coordinator', '', 'dlhor65@gmail.com', 'polskie123', 'Active', '2025-09-18');
+(8, 'Ramirr', 'Oppus', 'Villamarin', '09158100920', 'Binangonan', 'Campus Directors', 'Campus Director', '', 'dlhor65@gmail.com', 'polskie123', 'Active', '2025-09-18'),
+(9, 'Jefferson', 'Panopio', 'Aran', '09653644238', 'Binangonan', 'Internal Audit Services', 'DCC', '', 'shshshshsh@gmail.com', 'polskie123', 'Inactive', '2025-09-26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_audit_trail`
+--
+
+CREATE TABLE `tbl_audit_trail` (
+  `id` int(11) NOT NULL,
+  `timestamp` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `unit_name` varchar(100) NOT NULL,
+  `user_name` varchar(100) NOT NULL,
+  `action` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_audit_trail`
+--
+
+INSERT INTO `tbl_audit_trail` (`id`, `timestamp`, `unit_name`, `user_name`, `action`) VALUES
+(1, '2025-09-26 05:08:17', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(2, '2025-09-26 05:08:51', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(3, '2025-09-26 05:15:10', 'Registrar', 'Jenrick Aran', 'Added new user: Jefferson Aran (shshshshsh@gmail.com)'),
+(4, '2025-09-26 05:17:34', 'Registrar', 'Jenrick Aran', 'Updated user account: Jefferson Aran (shshshshsh@gmail.com)'),
+(5, '2025-09-26 05:19:51', 'Registrar', 'Jenrick Aran', 'Added new campus: Pilaypilay'),
+(6, '2025-09-26 05:24:14', 'Registrar', 'Jenrick Aran', 'Removed campus: Pilaypilay'),
+(7, '2025-09-26 05:26:19', 'Registrar', 'Jenrick Aran', 'Added new customer type: Polskie'),
+(8, '2025-09-26 05:26:34', 'Registrar', 'Jenrick Aran', 'Removed customer type: Polskie'),
+(10, '2025-09-26 05:31:31', 'Registrar', 'Jenrick Aran', 'Removed unit: Internal Audit Services from Binangonan campus'),
+(11, '2025-09-26 05:35:07', 'Registrar', 'Jenrick Aran', 'Updated campus name from \'Angono\' to \'Bilibiran\''),
+(12, '2025-09-26 05:35:28', 'Registrar', 'Jenrick Aran', 'Updated campus name from \'Bilibiran\' to \'Angono\''),
+(13, '2025-09-26 05:38:21', 'Registrar', 'Jenrick Aran', 'Added new division: polskie'),
+(14, '2025-09-26 05:38:39', 'Registrar', 'Jenrick Aran', 'Updated division name from \'polskie\' to \'maharani\''),
+(16, '2025-09-26 05:44:52', 'Registrar', 'Jenrick Aran', 'Removed unit: College of Accountancy from Binangonan campus'),
+(17, '2025-09-26 05:45:11', 'Registrar', 'Jenrick Aran', 'Removed division: maharani'),
+(19, '2025-09-26 05:47:09', 'University MIS', 'Jenrick Aran', 'User logged in'),
+(20, '2025-09-26 05:47:50', 'University MIS', 'Jenrick Aran', 'Added new unit: Abusayah under division: Academic Affairs'),
+(21, '2025-09-26 05:48:44', 'University MIS', 'Jenrick Aran', 'Updated unit from \'Abusayah\' (Division: Academic Affairs) to \'Labar\' (Division: Academic Affairs)'),
+(22, '2025-09-26 05:57:05', 'University MIS', 'Jenrick Aran', 'Created a new system backup: db_css_backup_v1.0_2025-09-26_07-57-04.sql'),
+(23, '2025-09-26 05:58:51', 'University MIS', 'Jenrick Aran', 'Deleted backup: db_css_backup_v1.0_2025-09-26_07-57-04.sql'),
+(24, '2025-09-28 04:29:09', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(25, '2025-09-28 04:30:25', 'College of Computer Studies', 'Ramirr Villamarin', 'User logged in'),
+(27, '2025-09-28 04:52:05', 'College of Computer Studies', 'Ramirr Villamarin', 'Resolved NCAR of Binangonan campus for the College of Accountancy office'),
+(28, '2025-09-28 04:55:59', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(29, '2025-09-28 05:07:28', 'College of Computer Studies', 'Ramirr Villamarin', 'User logged in'),
+(30, '2025-09-28 05:11:49', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(31, '2025-09-28 05:17:43', 'College of Computer Studies', 'Ramirr Villamarin', 'User logged in'),
+(32, '2025-09-28 05:24:33', 'College of Computer Studies', 'Ramirr Villamarin', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(33, '2025-09-28 05:25:03', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(34, '2025-09-28 05:26:21', 'Registrar', 'Jenrick Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(35, '2025-09-28 05:26:55', 'Campus Directors', 'Ramirr Villamarin', 'User logged in'),
+(36, '2025-09-28 05:27:04', 'Campus Directors', 'Ramirr Villamarin', 'Resolved NCAR of Binangonan Campus for the College of Accountancy');
 
 -- --------------------------------------------------------
 
@@ -230,6 +283,13 @@ CREATE TABLE `tbl_ncar` (
   `status` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `tbl_ncar`
+--
+
+INSERT INTO `tbl_ncar` (`id`, `file_path`, `status`) VALUES
+(1, 'upload/pdf/ncar-report_Binangonan_College-of-Accountancy_2025_q3.pdf', 'Resolved');
+
 -- --------------------------------------------------------
 
 --
@@ -271,7 +331,8 @@ INSERT INTO `tbl_questionaire` (`question_id`, `question_survey`, `section`, `qu
 (25, '2025 Questionaire_v1.2', 'Section 2', 'c. Cleanliness of the premises (Kalinisan ng kapaligiran)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
 (26, '2025 Questionaire_v1.2', 'Section 2', 'd. Processes and procedures of service delivery are customer-friendly (Kaangkupan ng mga pamamaraan sa pagbibigay ng serbisyo sa mga kliyente o bisita)', 1, 'Multiple Choice', 1, 1, 0, 'Su'),
 (27, '2025 Questionaire_v1.2', 'Section 2', '2. How did you find our service unit as to: \nAno ang masasabi mo sa aming tanggapan ayon sa:', 1, 'Description', 1, 0, 1, 'Su'),
-(28, '2025 Questionaire_v1.2', 'Section 2', 'a. Online platform used is customer-friendly (Kaangkupan ng ginamit na online platform o pamamaraan mga kliyente o bisita)', 1, 'Multiple Choice', 1, 1, 1, 'Su');
+(28, '2025 Questionaire_v1.2', 'Section 2', 'a. Online platform used is customer-friendly (Kaangkupan ng ginamit na online platform o pamamaraan mga kliyente o bisita)', 1, 'Multiple Choice', 1, 1, 1, 'Su'),
+(29, '2025 Questionaire_v1.3', 'Section 2', 'Name (Optional)', 0, 'Text', 0, 0, 2, 'None');
 
 -- --------------------------------------------------------
 
@@ -292,7 +353,8 @@ CREATE TABLE `tbl_questionaireform` (
 --
 
 INSERT INTO `tbl_questionaireform` (`id`, `question_survey`, `change_log`, `date_approved`, `timestamp`) VALUES
-(1, '2025 Questionaire_v1.2', 'Updated survey questions and/or name.', NULL, '2025-09-20 14:36:09');
+(1, '2025 Questionaire_v1.2', 'The changes are many more', '2025-09-26', '2025-09-26 00:44:47'),
+(2, '2025 Questionaire_v1.3', 'Initial survey creation.', NULL, '2025-09-28 05:13:39');
 
 -- --------------------------------------------------------
 
@@ -376,7 +438,25 @@ INSERT INTO `tbl_responses` (`id`, `question_id`, `response_id`, `response`, `co
 (33, 23, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
 (34, 24, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
 (35, 25, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
-(36, 26, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0);
+(36, 26, 2, '1', 'This is terrible.', '', '2025-09-22 13:33:08', 1, '0', 'Su', 0),
+(37, -1, 3, 'Binangonan', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(38, -2, 3, 'Academic Affairs', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(39, -3, 3, 'Graduate School', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(40, -4, 3, 'Alumni', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(41, 1, 3, 'Clearance', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(42, 11, 3, 'Jenrick', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(43, 12, 3, '09158100920', 'Pangit', 'negative', '2025-09-24 19:32:37', 0, '0', NULL, 0),
+(44, 15, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(45, 16, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(46, 17, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(47, 18, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(48, 19, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(49, 20, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(50, 21, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'QoS', 0),
+(51, 23, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
+(52, 24, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
+(53, 25, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
+(54, 26, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0);
 
 -- --------------------------------------------------------
 
@@ -399,7 +479,9 @@ INSERT INTO `tbl_tally_report` (`id`, `file_path`, `timestamp`) VALUES
 (2, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:51:06'),
 (3, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 14:52:44'),
 (4, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 15:02:29'),
-(5, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-22 13:33:28');
+(5, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-22 13:33:28'),
+(6, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-26 00:36:04'),
+(7, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-26 00:36:44');
 
 -- --------------------------------------------------------
 
@@ -424,13 +506,11 @@ INSERT INTO `tbl_unit` (`id`, `campus_name`, `division_name`, `unit_name`) VALUE
 (3, 'Binangonan', 'Office of The President', 'Campus Planning, Monitoring and Evaluation'),
 (4, 'Binangonan', 'Office of The President', 'Campus Management Information System'),
 (5, 'Binangonan', 'Top Management', 'Campus Directors'),
-(6, 'Binangonan', 'Academic Affairs', 'College of Accountancy'),
 (7, 'Binangonan', 'Academic Affairs', 'College of Business'),
 (8, 'Binangonan', 'Academic Affairs', 'College of Computer Studies'),
-(9, 'Binangonan', 'Administration and Finance Division', 'Internal Audit Services'),
-(10, 'Binangonan', 'Research, Development, Extension, and Production Development', 'Campus Research'),
 (11, 'Binangonan', 'Academic Affairs', 'College of Social Work and Community Development'),
-(12, 'Binangonan', 'Academic Affairs', 'Graduate School');
+(12, 'Binangonan', 'Academic Affairs', 'Graduate School'),
+(13, 'Binangonan', 'Academic Affairs', 'College of Accountancy');
 
 -- --------------------------------------------------------
 
@@ -471,7 +551,8 @@ INSERT INTO `tbl_unit_mis` (`id`, `division_name`, `unit_name`) VALUES
 (21, 'Academic Affairs', 'General Education Center'),
 (22, 'Academic Affairs', 'Laboratory Schools'),
 (23, 'Administration and Finance Division', 'Internal Audit Services'),
-(24, 'Research, Development, Extension, and Production Development', 'Campus Research');
+(24, 'Research, Development, Extension, and Production Development', 'Campus Research'),
+(25, 'Academic Affairs', 'Labar');
 
 -- --------------------------------------------------------
 
@@ -495,6 +576,12 @@ CREATE TABLE `two_factor_codes` (
 --
 ALTER TABLE `credentials`
   ADD PRIMARY KEY (`user_id`);
+
+--
+-- Indexes for table `tbl_audit_trail`
+--
+ALTER TABLE `tbl_audit_trail`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `tbl_backup`
@@ -591,19 +678,25 @@ ALTER TABLE `two_factor_codes`
 -- AUTO_INCREMENT for table `credentials`
 --
 ALTER TABLE `credentials`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `tbl_audit_trail`
+--
+ALTER TABLE `tbl_audit_trail`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `tbl_backup`
 --
 ALTER TABLE `tbl_backup`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_campus`
 --
 ALTER TABLE `tbl_campus`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `tbl_choices`
@@ -615,31 +708,31 @@ ALTER TABLE `tbl_choices`
 -- AUTO_INCREMENT for table `tbl_customer_type`
 --
 ALTER TABLE `tbl_customer_type`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `tbl_division`
 --
 ALTER TABLE `tbl_division`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_ncar`
 --
 ALTER TABLE `tbl_ncar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaire`
 --
 ALTER TABLE `tbl_questionaire`
-  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaireform`
 --
 ALTER TABLE `tbl_questionaireform`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `tbl_report`
@@ -651,31 +744,31 @@ ALTER TABLE `tbl_report`
 -- AUTO_INCREMENT for table `tbl_responses`
 --
 ALTER TABLE `tbl_responses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `tbl_tally_report`
 --
 ALTER TABLE `tbl_tally_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `tbl_unit`
 --
 ALTER TABLE `tbl_unit`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_unit_mis`
 --
 ALTER TABLE `tbl_unit_mis`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
 
 --
 -- Constraints for dumped tables
