@@ -1,4 +1,13 @@
 <div class="p-4" id="reports-list-container">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <span class="text-4xl font-bold font-sfpro">Reports</span><br>
     <span class="">You are viewing the generated reports of available offices for this period.</span>
 

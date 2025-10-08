@@ -5,6 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css_website_admin_migration/Tailwind/src/output.css">
+  <script>
+    // Apply saved font size on every page load
+    (function() {
+      const savedSize = localStorage.getItem('user_font_size');
+      if (savedSize) {
+        document.documentElement.style.fontSize = savedSize;
+      }
+    })();
+  </script>
   <title>Verification</title>
 </head>
 
@@ -65,4 +74,5 @@
   </div>
 
 </body>
+
 </html>

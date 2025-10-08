@@ -117,6 +117,15 @@ try {
 }
 ?>
 <div class="p-4">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-4xl font-bold text-[#1E1E1E]">Data Responses</h1>
@@ -222,8 +231,8 @@ try {
                                 <?php
                                 $analysis = htmlspecialchars($group['analysis']);
                                 $colorClass = 'bg-gray-400'; // Neutral/Default
-                                if ($analysis === 'Good') $colorClass = 'bg-green-500';
-                                if ($analysis === 'Bad') $colorClass = 'bg-red-500';
+                                if ($analysis === 'Positive' || $analysis === 'positive') $colorClass = 'bg-green-500';
+                                if ($analysis === 'Negative' || $analysis === 'negative') $colorClass = 'bg-red-500';
                                 ?>
                                 <span class="px-3 py-1 text-sm font-medium rounded-full <?php echo $colorClass; ?> text-white">
                                     <?php echo $analysis; ?>

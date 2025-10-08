@@ -102,6 +102,15 @@ try {
 }
 ?>
 <div id="ncar-list-container" class="p-4">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <div class="mb-4">
         <h1 class="text-4xl font-bold">Non-conformity and Correction Action Report</h1>
         <P class="mb-5">You are viewing the generated reports of available offices for this period.</P>

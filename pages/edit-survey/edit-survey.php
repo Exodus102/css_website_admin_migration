@@ -1,4 +1,13 @@
 <div class="p-4 overflow-hidden" id="survey-list-container">
+  <script>
+    // Apply saved font size on every page load
+    (function() {
+      const savedSize = localStorage.getItem('user_font_size');
+      if (savedSize) {
+        document.documentElement.style.fontSize = savedSize;
+      }
+    })();
+  </script>
   <h1 class="text-3xl font-bold mb-2 font-sfpro leading-5">Edit Survey</h1>
   <p class="font-sfpro">Customize your survey details and questions.</p><br>
   <?php

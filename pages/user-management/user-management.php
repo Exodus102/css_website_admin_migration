@@ -31,6 +31,15 @@ try {
 }
 ?>
 <div class="p-4 font-sfpro">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <span class="font-bold text-4xl">User Management</span><br>
     <span>Manage user accounts in the system.</span><br><br>
 

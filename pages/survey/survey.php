@@ -22,6 +22,15 @@ try {
         $stmt_choices = $pdo->prepare("SELECT choice_text FROM tbl_choices WHERE question_id = ?");
 ?>
         <div class="p-4">
+            <script>
+                // Apply saved font size on every page load
+                (function() {
+                    const savedSize = localStorage.getItem('user_font_size');
+                    if (savedSize) {
+                        document.documentElement.style.fontSize = savedSize;
+                    }
+                })();
+            </script>
             <h1 class="text-4xl font-bold font-sfpro"><?php echo htmlspecialchars($active_survey_name); ?></h1>
             <p class="font-sfpro">You are viewing the survey questionnaire currently in use. Last updated: <span class="text-[#064089]"><?php echo $last_updated; ?>.</span></p><br>
 

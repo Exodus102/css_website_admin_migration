@@ -3,8 +3,8 @@ session_start();
 
 // Ensure the user is in a pending authenticated state
 if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenticated_pending']) {
-    header("Location: ../../index.php");
-    exit();
+  header("Location: ../../index.php");
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -14,6 +14,15 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css_website_admin_migration/Tailwind/src/output.css">
+  <script>
+    // Apply saved font size on every page load
+    (function() {
+      const savedSize = localStorage.getItem('user_font_size');
+      if (savedSize) {
+        document.documentElement.style.fontSize = savedSize;
+      }
+    })();
+  </script>
   <title>Verification</title>
 </head>
 
@@ -73,4 +82,5 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
   </div>
 
 </body>
+
 </html>

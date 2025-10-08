@@ -3,9 +3,9 @@ session_start();
 
 // Check if the user is authorized to be on this page
 if (!isset($_SESSION['authorized_to_reset']) || !$_SESSION['authorized_to_reset']) {
-    $_SESSION['reset_error'] = "You are not authorized to access this page.";
-    header("Location: forgot_password.php");
-    exit();
+  $_SESSION['reset_error'] = "You are not authorized to access this page.";
+  header("Location: forgot_password.php");
+  exit();
 }
 ?>
 <!DOCTYPE html>
@@ -15,6 +15,15 @@ if (!isset($_SESSION['authorized_to_reset']) || !$_SESSION['authorized_to_reset'
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="/css_website_admin_migration/Tailwind/src/output.css">
+  <script>
+    // Apply saved font size on every page load
+    (function() {
+      const savedSize = localStorage.getItem('user_font_size');
+      if (savedSize) {
+        document.documentElement.style.fontSize = savedSize;
+      }
+    })();
+  </script>
   <title>Reset Password</title>
 </head>
 
@@ -87,4 +96,5 @@ if (!isset($_SESSION['authorized_to_reset']) || !$_SESSION['authorized_to_reset'
   </div>
 
 </body>
+
 </html>

@@ -36,6 +36,15 @@ $total_pages = ceil($total_records / $limit);
 ?>
 
 <div class="p-4">
+  <script>
+    // Apply saved font size on every page load
+    (function() {
+      const savedSize = localStorage.getItem('user_font_size');
+      if (savedSize) {
+        document.documentElement.style.fontSize = savedSize;
+      }
+    })();
+  </script>
   <h1 class="text-4xl font-bold">Audit Trail</h1>
   <P class="mb-5">Monitor updates, edits, and user activities.</P>
   <div class="overflow-x-auto">

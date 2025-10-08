@@ -9,6 +9,15 @@ $quarters = [
 ?>
 <!-- Main container for the list of quarters -->
 <div id="tally-list-container" class="p-4">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <div>
         <span class="text-4xl font-bold font-sfpro">Tally Reports</span><br>
         <span>You are viewing the generated reports of available offices for this period.</span>

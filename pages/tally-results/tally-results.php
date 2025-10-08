@@ -120,6 +120,15 @@ if ($target_campus_name) {
 }
 ?>
 <div class="p-4">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <h1 class="text-4xl font-bold">Tally Results</h1>
     <P>You are viewing the tally results of available offices for this period.</P>
     <!-- Filters Bar -->

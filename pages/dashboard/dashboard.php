@@ -1,4 +1,13 @@
 <div class="p-4">
+    <script>
+        // Apply saved font size on every page load
+        (function() {
+            const savedSize = localStorage.getItem('user_font_size');
+            if (savedSize) {
+                document.documentElement.style.fontSize = savedSize;
+            }
+        })();
+    </script>
     <!-- Main Dashboard Content -->
     <div class="">
         <!-- Welcome Section -->
