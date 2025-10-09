@@ -13,12 +13,12 @@
                     </span>
                 </p>
             </span>
-            <img src="../resources/svg/nav-arrow-right.svg" alt="" srcset="" class="">
+            <img src="../../resources/svg/nav-arrow-right.svg" alt="" srcset="" class="">
             <span class="text-2xl font-bold text-[#064089]"><?php echo htmlspecialchars($page_title); ?></span>
         </div>
     </div>
 
-    <div class="flex place-content-end items-center space-x-2 w-1/6">
+    <a href="css-coordinators-layout.php?page=profile" class="group flex place-content-end items-center space-x-2 w-1/6 hover:bg-gray-100 rounded-lg p-1 transition-colors duration-200">
         <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
             <?php
             $dp_path = $_SESSION['user_dp'] ?? '';
@@ -36,7 +36,7 @@
             ?>
         </div>
         <div class="flex flex-col text-sm">
-            <span class="font-semibold text-gray-800">
+            <span class="font-semibold text-gray-800 group-hover:underline">
                 <?php
                 $fullName = trim(($_SESSION['user_first_name'] ?? '') . ' ' . ($_SESSION['user_last_name'] ?? ''));
                 echo htmlspecialchars($fullName ?: 'User');
@@ -44,5 +44,5 @@
             </span>
             <span class="text-gray-500"><?php echo htmlspecialchars($_SESSION['user_type'] ?? 'Guest'); ?></span>
         </div>
-    </div>
+    </a>
 </header>

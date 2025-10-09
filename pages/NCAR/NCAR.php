@@ -70,6 +70,9 @@ try {
                     WHERE r_main.analysis = 'negative'
                     AND YEAR(r_main.timestamp) = :year
                     AND QUARTER(r_main.timestamp) = :quarter
+                    AND r_main.response_id IN (
+                        SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :user_campus
+                    )
                 )
             GROUP BY u.id, u.unit_name, n.status
         ";

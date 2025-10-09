@@ -114,25 +114,10 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
         </li>
         <li>
             <a href="css-coordinators-layout.php?page=qr-code" class="<?php echo $base_class; ?> <?php echo ($page === 'qr-code') ? $active_class : $inactive_class; ?>">
-                <svg class="nav-icon" width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9.375 7.375V9.25C9.375 9.59518 9.09518 9.875 8.75 9.875H6.875C6.52982 9.875 6.25 9.59518 6.25 9.25V7.375C6.25 7.02982 6.52982 6.75 6.875 6.75H8.75C9.09518 6.75 9.375 7.02982 9.375 7.375Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M6.25 13H9.375" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M15.625 13V16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12.5 19.25H15.625" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12.5 13.0111L12.51 13" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 13.0111L18.76 13" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12.5 16.1361L12.51 16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 16.1361L18.76 16.125" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 19.2611L18.76 19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12.5 9.88611L12.51 9.875" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M12.5 6.76111L12.51 6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M9.375 16.75V18.625C9.375 18.9702 9.09518 19.25 8.75 19.25H6.875C6.52982 19.25 6.25 18.9702 6.25 18.625V16.75C6.25 16.4048 6.52982 16.125 6.875 16.125H8.75C9.09518 16.125 9.375 16.4048 9.375 16.75Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 7.375V9.25C18.75 9.59518 18.4702 9.875 18.125 9.875H16.25C15.9048 9.875 15.625 9.59518 15.625 9.25V7.375C15.625 7.02982 15.9048 6.75 16.25 6.75H18.125C18.4702 6.75 18.75 7.02982 18.75 7.375Z" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 3.625H21.875V6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M18.75 22.375H21.875V19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M6.25 3.625H3.125V6.75" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M6.25 22.375H3.125V19.25" stroke="#1E1E1E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+                <!-- Default Icon (Black) -->
+                <img src="../../resources/svg/qr-code.svg" alt="QR Code Icon" class="nav-icon w-6 h-6 group-hover:hidden <?php echo ($page === 'qr-code') ? 'hidden' : 'block'; ?>">
+                <!-- Hover/Active Icon (White) -->
+                <img src="../../resources/svg/qr-code-white.svg" alt="QR Code Icon" class="nav-icon w-6 h-6 group-hover:block <?php echo ($page === 'qr-code') ? 'block' : 'hidden'; ?>">
                 QR Code
             </a>
         </li>
@@ -140,11 +125,11 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
             Settings
         </span>
         <li>
-            <a href="css-coordinators-layout.php?page=edit-survey" class="<?php echo $base_class; ?> <?php echo ($page === 'edit-survey') ? $active_class : $inactive_class; ?>">
-                <svg class="nav-icon" width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.4583 4.66699H4.16659C3.61405 4.66699 3.08415 4.88649 2.69345 5.27719C2.30275 5.66789 2.08325 6.19779 2.08325 6.75033V21.3337C2.08325 21.8862 2.30275 22.4161 2.69345 22.8068C3.08415 23.1975 3.61405 23.417 4.16659 23.417H18.7499C19.3025 23.417 19.8324 23.1975 20.2231 22.8068C20.6138 22.4161 20.8333 21.8862 20.8333 21.3337V14.042" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                    <path d="M19.2708 3.10424C19.6852 2.68984 20.2472 2.45703 20.8333 2.45703C21.4193 2.45703 21.9814 2.68984 22.3958 3.10424C22.8102 3.51864 23.043 4.08069 23.043 4.66674C23.043 5.25279 22.8102 5.81484 22.3958 6.22924L12.4999 16.1251L8.33325 17.1667L9.37492 13.0001L19.2708 3.10424Z" stroke="#1E1E1E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
+            <a href="css-coordinators-layout.php?page=edit-survey" class="group <?php echo $base_class; ?> <?php echo ($page === 'edit-survey') ? $active_class : $inactive_class; ?>">
+                <!-- Default Icon (Black) -->
+                <img src="../../resources/svg/edit-survey.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:hidden <?php echo ($page === 'edit-survey') ? 'hidden' : 'block'; ?>">
+                <!-- Hover/Active Icon (White) -->
+                <img src="../../resources/svg/edit-survey-white.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:block <?php echo ($page === 'edit-survey') ? 'block' : 'hidden'; ?>">
                 Edit Survey
             </a>
         </li>
