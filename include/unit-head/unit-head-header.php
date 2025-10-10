@@ -18,18 +18,17 @@
         </div>
     </div>
 
-    <div class="flex place-content-end items-center space-x-2 w-1/6">
+    <a href="unit-head-layout.php?page=profile" class="group flex place-content-end items-center space-x-2 w-1/6 hover:bg-gray-100 rounded-lg p-1 transition-colors duration-200">
         <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold">
             <?php
             $dp_path = $_SESSION['user_dp'] ?? '';
-            // Assuming the dp path is stored from the project root, e.g., 'uploads/dp/image.png'
             $full_dp_path = '../../' . $dp_path;
 
             if (!empty($dp_path) && file_exists($full_dp_path)) {
-                // Display the image if it exists
+                // Display the image
                 echo '<img src="' . htmlspecialchars($full_dp_path) . '" alt="User" class="w-full h-full rounded-full object-cover">';
             } else {
-                // Display the first letter of the first name as an initial
+                // Display the first letter of the first name
                 $firstName = $_SESSION['user_first_name'] ?? 'U';
                 $initial = strtoupper(substr($firstName, 0, 1));
                 echo '<span class="bg-[#064089] text-white w-full h-full rounded-full flex items-center justify-center">' . htmlspecialchars($initial) . '</span>';
@@ -37,7 +36,7 @@
             ?>
         </div>
         <div class="flex flex-col text-sm">
-            <span class="font-semibold text-gray-800">
+            <span class="font-semibold text-gray-800 group-hover:underline">
                 <?php
                 $fullName = trim(($_SESSION['user_first_name'] ?? '') . ' ' . ($_SESSION['user_last_name'] ?? ''));
                 echo htmlspecialchars($fullName ?: 'User');
@@ -45,5 +44,5 @@
             </span>
             <span class="text-gray-500"><?php echo htmlspecialchars($_SESSION['user_type'] ?? 'Guest'); ?></span>
         </div>
-    </div>
+    </a>
 </header>

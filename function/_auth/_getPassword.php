@@ -64,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $input_password = trim($_POST['pass']);
 
         // Prepare a statement to fetch the password and user details for the given email
-        $stmt = $pdo->prepare("SELECT user_id, password, first_name, last_name, email, type, status, dp, contact_number, campus, unit FROM credentials WHERE email = :email LIMIT 1");
+        $stmt = $pdo->prepare("SELECT user_id, password, first_name, last_name, middle_name, email, type, status, dp, contact_number, campus, unit FROM credentials WHERE email = :email LIMIT 1");
         $stmt->bindParam(':email', $email_from_session, PDO::PARAM_STR);
         $stmt->execute();
 
@@ -81,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_campus = $user_credentials['campus'];
             $user_contact_number = $user_credentials['contact_number'];
             $user_unit = $user_credentials['unit'];
+            $user_middle_name = $user_credentials['middle_name'];
 
             // --- Password Verification (direct string comparison) ---
             if ($input_password === $stored_password) {
@@ -143,6 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['user_contact_number'] = $user_contact_number;
                     $_SESSION['user_unit'] = $user_unit;
                     $_SESSION['user_password'] = $stored_password;
+                    $_SESSION['user_middle_name'] = $user_middle_name;
 
                     // 🔧 ensure session is written before redirect
                     session_write_close();
