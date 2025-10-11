@@ -186,7 +186,7 @@ try {
     </div>
 
     <!-- Table -->
-    <div class="overflow-x-auto bg-white border border-gray-300 rounded-lg overflow-hidden">
+    <div class="bg-white border border-gray-300 rounded-lg">
         <table class="min-w-full border-collapse">
             <thead>
                 <tr class="bg-[#064089] text-[#F1F7F9] text-sm font-semibold">

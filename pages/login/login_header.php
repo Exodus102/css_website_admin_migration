@@ -1,7 +1,25 @@
 <!-- Left Section -->
 <div class="md:w-1/2 bg-cover bg-center flex flex-col justify-around p-10 md:p-12"
   style="width:70rem; background-image:url('resources/svg/login-bg.svg'); background-size:cover; background-position:center;">
-  <img src="resources/img/new-logo.png" alt="URS Logo" class="size-32">
+  <?php
+  // This logic fetches the active logo path.
+  // It's placed here to be accessible within this header component.
+  $logo_path_header = 'resources/img/new-logo.png'; // Default fallback
+  try {
+    // We need a separate DB connection here as this file is included early.
+    $pdo_header = new PDO("mysql:host=localhost;dbname=db_css", "root", "");
+    $pdo_header->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    $stmt_header = $pdo_header->query("SELECT logo_path FROM tbl_logo WHERE status = 1 LIMIT 1");
+    $active_logo_header = $stmt_header->fetchColumn();
+    if ($active_logo_header) {
+      $logo_path_header = $active_logo_header;
+    }
+  } catch (PDOException $e) {
+    // On error, the default logo is used.
+  }
+  ?>
+  <img src="<?php echo htmlspecialchars($logo_path_header); ?>" alt="URS Logo" class="size-32 object-contain">
   <div class="">
     <!-- <img src="resources/svg/urs-logo.svg" alt="URS Logo" class="w-10 mb-4"> -->
     <h1 class="text-xl uppercase tracking-wide text-white">University of Rizal System</h1>

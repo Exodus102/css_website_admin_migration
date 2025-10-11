@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 28, 2025 at 07:34 AM
+-- Generation Time: Oct 11, 2025 at 05:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -48,10 +48,10 @@ CREATE TABLE `credentials` (
 --
 
 INSERT INTO `credentials` (`user_id`, `first_name`, `middle_name`, `last_name`, `contact_number`, `campus`, `unit`, `type`, `dp`, `email`, `password`, `status`, `date_created`) VALUES
-(1, 'Jenrick', 'Panopio', 'Aran', '09158100920', 'Binangonan', 'University MIS', 'University MIS', '', 'aranjenrick@gmail.com', 'polskie123', 'Active', '0000-00-00'),
+(1, 'Jenric', 'Panopio', 'Aran', '09158100920', 'Morong', 'Campus Management Information System', 'University MIS', '', 'aranjenrick@gmail.com', 'polskie123', 'Active', '0000-00-00'),
 (6, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Campus Directors', 'Campus Director', '', 'aaaaaa@gmail.com', 'bdsadasdsad', 'Inactive', '2025-09-12'),
-(7, 'Jenrick', 'Dela Cruz', 'Aran', '09208256071', 'Binangonan', 'Registrar', 'CSS Coordinator', '', 'ferf96989@gmail.com', 'polskie123', 'Active', '2025-09-12'),
-(8, 'Ramirr', 'Oppus', 'Villamarin', '09158100920', 'Binangonan', 'Campus Directors', 'Campus Director', '', 'dlhor65@gmail.com', 'polskie123', 'Active', '2025-09-18'),
+(7, 'Ambient', 'Ikli', 'Aran', '09208256071', 'Binangonan', 'Campus Management Information System', 'CSS Coordinator', NULL, 'ferf96989@gmail.com', 'polskie456', 'Active', '2025-09-12'),
+(8, 'Ramirr', 'Oppus', 'Villamarin', '09158100920', 'Morong', 'Campus Management Information System', 'DCC', '', 'dlhor65@gmail.com', 'polskie123', 'Active', '2025-09-18'),
 (9, 'Jefferson', 'Panopio', 'Aran', '09653644238', 'Binangonan', 'Internal Audit Services', 'DCC', '', 'shshshshsh@gmail.com', 'polskie123', 'Inactive', '2025-09-26');
 
 -- --------------------------------------------------------
@@ -104,7 +104,51 @@ INSERT INTO `tbl_audit_trail` (`id`, `timestamp`, `unit_name`, `user_name`, `act
 (33, '2025-09-28 05:25:03', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
 (34, '2025-09-28 05:26:21', 'Registrar', 'Jenrick Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
 (35, '2025-09-28 05:26:55', 'Campus Directors', 'Ramirr Villamarin', 'User logged in'),
-(36, '2025-09-28 05:27:04', 'Campus Directors', 'Ramirr Villamarin', 'Resolved NCAR of Binangonan Campus for the College of Accountancy');
+(36, '2025-09-28 05:27:04', 'Campus Directors', 'Ramirr Villamarin', 'Resolved NCAR of Binangonan Campus for the College of Accountancy'),
+(37, '2025-09-28 10:44:34', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(38, '2025-10-06 23:25:14', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(39, '2025-10-07 12:09:23', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(40, '2025-10-08 05:59:10', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(41, '2025-10-08 07:05:20', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(42, '2025-10-08 07:30:01', 'Registrar', 'Jenrick Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(43, '2025-10-08 07:30:47', 'Campus Directors', 'Ramirr Villamarin', 'User logged in'),
+(44, '2025-10-08 13:58:46', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(45, '2025-10-08 14:40:10', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(46, '2025-10-08 14:46:26', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(47, '2025-10-08 14:48:22', 'Registrar', 'Jenrick Aran', 'User logged in'),
+(48, '2025-10-08 15:07:09', 'Registrar', 'Jenrick Aran', 'Updated own profile information.'),
+(49, '2025-10-08 15:09:25', 'Registrar', 'Jenrick Aran', 'Updated own profile information.'),
+(50, '2025-10-08 15:10:45', 'Registrar', 'Jenrick Aran', 'Updated own profile information.'),
+(51, '2025-10-08 15:11:05', 'Registrar', 'Ambient Aran', 'Updated own profile information.'),
+(52, '2025-10-08 15:13:28', 'Registrar', 'Ambient Aran', 'Updated own profile information.'),
+(53, '2025-10-08 15:13:43', 'Registrar', 'Ambient Aran', 'Updated own profile information.'),
+(54, '2025-10-08 16:15:57', 'Registrar', 'Ambient Aran', 'Updated own profile picture.'),
+(55, '2025-10-08 16:19:40', 'Registrar', 'Ambient Aran', 'User logged in'),
+(56, '2025-10-08 16:40:22', 'Registrar', 'Ambient Aran', 'Updated user account: Ambient Aran (ferf96989@gmail.com)'),
+(57, '2025-10-08 16:40:57', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(58, '2025-10-08 16:47:52', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ambient Aran (ferf96989@gmail.com)'),
+(59, '2025-10-08 16:48:14', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(60, '2025-10-09 06:39:07', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(61, '2025-10-09 07:16:46', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Jenrick Aran (aranjenrick@gmail.com)'),
+(62, '2025-10-10 09:06:05', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(63, '2025-10-10 09:12:30', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(64, '2025-10-10 09:13:09', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(65, '2025-10-10 09:54:42', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(66, '2025-10-10 09:58:47', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(67, '2025-10-10 10:00:53', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(68, '2025-10-10 10:01:33', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(69, '2025-10-10 10:19:35', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(70, '2025-10-10 10:24:15', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(71, '2025-10-10 10:27:32', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(72, '2025-10-10 10:28:03', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(73, '2025-10-10 10:31:19', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Ramirr Villamarin (dlhor65@gmail.com)'),
+(74, '2025-10-10 10:31:38', 'Campus Management Information System', 'Ramirr Villamarin', 'User logged in'),
+(75, '2025-10-10 13:05:27', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(76, '2025-10-10 13:05:47', 'Campus Management Information System', 'Ambient Aran', 'Updated user account: Jenric Aran (aranjenrick@gmail.com)'),
+(77, '2025-10-11 02:12:41', 'Campus Management Information System', 'Ambient Aran', 'User logged in'),
+(78, '2025-10-11 03:05:54', 'Campus Management Information System', 'Ambient Aran', 'Uploaded a new system logo: logo_1760151954.png'),
+(79, '2025-10-11 03:09:24', 'Campus Management Information System', 'Ambient Aran', 'Uploaded a new system logo: logo_1760152164.png'),
+(80, '2025-10-11 03:25:22', 'Campus Management Information System', 'Ambient Aran', 'User logged in');
 
 -- --------------------------------------------------------
 
@@ -274,6 +318,26 @@ INSERT INTO `tbl_division` (`id`, `division_name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tbl_logo`
+--
+
+CREATE TABLE `tbl_logo` (
+  `id` int(11) NOT NULL,
+  `logo_path` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tbl_logo`
+--
+
+INSERT INTO `tbl_logo` (`id`, `logo_path`, `status`) VALUES
+(1, 'resources/img/logo_1760151954.png', 0),
+(2, 'resources/img/logo_1760152164.png', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_ncar`
 --
 
@@ -288,7 +352,9 @@ CREATE TABLE `tbl_ncar` (
 --
 
 INSERT INTO `tbl_ncar` (`id`, `file_path`, `status`) VALUES
-(1, 'upload/pdf/ncar-report_Binangonan_College-of-Accountancy_2025_q3.pdf', 'Resolved');
+(1, 'upload/pdf/ncar-report_Binangonan_College-of-Accountancy_2025_q3.pdf', 'Resolved'),
+(2, 'upload/pdf/ncar-report_Binangonan_Campus-Directors_2025_q3.pdf', 'Unresolved'),
+(3, 'upload/pdf/ncar-report_Morong_Campus-Management-Information-System_2025_q4.pdf', 'Unresolved');
 
 -- --------------------------------------------------------
 
@@ -376,7 +442,8 @@ INSERT INTO `tbl_report` (`id`, `file_path`, `timestamp`) VALUES
 (1, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 14:54:26'),
 (2, 'upload/pdf/report_Binangonan_College-of-Accountancy_2025_q3.pdf', '2025-09-20 15:03:11'),
 (3, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q3.pdf', '2025-09-22 14:21:23'),
-(4, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q3.pdf', '2025-09-22 14:22:14');
+(4, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q3.pdf', '2025-09-22 14:22:14'),
+(5, 'upload/pdf/report_Binangonan_Campus-Directors_2025_q4.pdf', '2025-10-06 23:27:13');
 
 -- --------------------------------------------------------
 
@@ -456,7 +523,79 @@ INSERT INTO `tbl_responses` (`id`, `question_id`, `response_id`, `response`, `co
 (51, 23, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
 (52, 24, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
 (53, 25, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
-(54, 26, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0);
+(54, 26, 3, '3', 'Pangit', 'negative', '2025-09-24 19:32:37', 1, '0', 'Su', 0),
+(55, -1, 4, 'Binangonan', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(56, -2, 4, 'Top Management', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(57, -3, 4, 'Campus Directors', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(58, -4, 4, 'Parent', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(59, 1, 4, 'Clearance', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(60, 11, 4, '', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(61, 12, 4, '', 'pangit', 'negative', '2025-09-28 10:47:39', 0, '0', NULL, 0),
+(62, 15, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(63, 16, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(64, 17, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(65, 18, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(66, 19, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(67, 20, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(68, 21, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'QoS', 0),
+(69, 23, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'Su', 0),
+(70, 24, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'Su', 0),
+(71, 25, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'Su', 0),
+(72, 26, 4, '5', 'pangit', 'negative', '2025-09-28 10:47:39', 1, '0', 'Su', 0),
+(73, -1, 5, 'Binangonan', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(74, -2, 5, 'Top Management', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(75, -3, 5, 'Campus Directors', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(76, -4, 5, 'Faculty', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(77, 1, 5, 'Clearance', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(78, 11, 5, '', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(79, 12, 5, '', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 0, '0', NULL, 0),
+(80, 15, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(81, 16, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(82, 17, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(83, 18, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(84, 19, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(85, 20, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(86, 21, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'QoS', 0),
+(87, 23, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'Su', 0),
+(88, 24, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'Su', 0),
+(89, 25, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'Su', 0),
+(90, 26, 5, '1', 'mabait ang mga tao', 'positive', '2025-09-28 10:48:33', 1, '0', 'Su', 0),
+(91, -1, 6, 'Morong', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(92, -2, 6, 'Office of The President', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(93, -3, 6, 'Campus Management Information System', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(94, -4, 6, 'Parent', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(95, 1, 6, 'asd', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(96, 11, 6, 'Jenrick', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(97, 12, 6, '09158100920', 'pangit', 'negative', '2025-10-08 16:28:02', 0, '0', NULL, 0),
+(98, 15, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(99, 16, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(100, 17, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(101, 18, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(102, 19, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(103, 20, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(104, 21, 6, '5', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'QoS', 0),
+(105, 23, 6, '4', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'Su', 0),
+(106, 24, 6, '4', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'Su', 0),
+(107, 25, 6, '4', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'Su', 0),
+(108, 26, 6, '4', 'pangit', 'negative', '2025-10-08 16:28:02', 1, '0', 'Su', 0),
+(109, -1, 7, 'Binangonan', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(110, -2, 7, 'Academic Affairs', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(111, -3, 7, 'College of Accountancy', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(112, -4, 7, 'Student', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(113, 1, 7, 'Heello', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(114, 11, 7, '', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(115, 12, 7, '', 'panget magturo', 'negative', '2025-10-10 13:33:18', 0, '0', NULL, 0),
+(116, 15, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(117, 16, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(118, 17, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(119, 18, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(120, 19, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(121, 20, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(122, 21, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'QoS', 0),
+(123, 23, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'Su', 0),
+(124, 24, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'Su', 0),
+(125, 25, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'Su', 0),
+(126, 26, 7, '5', 'panget magturo', 'negative', '2025-10-10 13:33:18', 1, '0', 'Su', 0);
 
 -- --------------------------------------------------------
 
@@ -481,7 +620,11 @@ INSERT INTO `tbl_tally_report` (`id`, `file_path`, `timestamp`) VALUES
 (4, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-20 15:02:29'),
 (5, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-22 13:33:28'),
 (6, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-26 00:36:04'),
-(7, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-26 00:36:44');
+(7, 'upload/pdf/tally-report_Binangonan_2025_q3.pdf', '2025-09-26 00:36:44'),
+(8, 'upload/pdf/tally-report_Binangonan_2025_q1.pdf', '2025-10-06 23:27:52'),
+(9, 'upload/pdf/tally-report_Morong_2025_q4.pdf', '2025-10-08 16:41:26'),
+(10, 'upload/pdf/tally-report_Morong_2025_q3.pdf', '2025-10-08 16:42:29'),
+(11, 'upload/pdf/tally-report_Morong_2025_q4.pdf', '2025-10-08 16:42:44');
 
 -- --------------------------------------------------------
 
@@ -615,6 +758,12 @@ ALTER TABLE `tbl_division`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_logo`
+--
+ALTER TABLE `tbl_logo`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tbl_ncar`
 --
 ALTER TABLE `tbl_ncar`
@@ -684,7 +833,7 @@ ALTER TABLE `credentials`
 -- AUTO_INCREMENT for table `tbl_audit_trail`
 --
 ALTER TABLE `tbl_audit_trail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
 
 --
 -- AUTO_INCREMENT for table `tbl_backup`
@@ -717,10 +866,16 @@ ALTER TABLE `tbl_division`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tbl_logo`
+--
+ALTER TABLE `tbl_logo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `tbl_ncar`
 --
 ALTER TABLE `tbl_ncar`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tbl_questionaire`
@@ -738,19 +893,19 @@ ALTER TABLE `tbl_questionaireform`
 -- AUTO_INCREMENT for table `tbl_report`
 --
 ALTER TABLE `tbl_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_responses`
 --
 ALTER TABLE `tbl_responses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- AUTO_INCREMENT for table `tbl_tally_report`
 --
 ALTER TABLE `tbl_tally_report`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `tbl_unit`
@@ -768,7 +923,7 @@ ALTER TABLE `tbl_unit_mis`
 -- AUTO_INCREMENT for table `two_factor_codes`
 --
 ALTER TABLE `two_factor_codes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- Constraints for dumped tables

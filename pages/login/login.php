@@ -7,8 +7,9 @@
     <div class="w-full h-full flex flex-col items-center justify-around">
       <!-- Logo -->
       <div class="flex items-center gap-3">
-        <!-- <img src="resources/svg/ursatisfaction-logo.svg" alt="URSatisfaction Logo" class="w-20 h-20"> -->
-        <img src="resources/img/new-logo.png" alt="" srcset="">
+        <?php
+        include 'pages/login/logo.php';
+        ?>
         <div class="text-left">
           <h2 class="font-bold text-blue-800">URSatisfaction</h2>
           <p class="text-xs text-gray-500">We comply so URSatisfied</p>

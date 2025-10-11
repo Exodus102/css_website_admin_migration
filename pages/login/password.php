@@ -46,8 +46,9 @@ if ($remaining <= 0 && $lockout_time > 0) {
       <div class="w-full h-full flex flex-col items-center justify-around">
         <!-- Logo -->
         <div class="flex items-center gap-3">
-          <!-- <img src="resources/svg/ursatisfaction-logo.svg" alt="URSatisfaction Logo" class="w-20 h-20"> -->
-          <img src="../../resources/img/new-logo.png" alt="" srcset="">
+          <?php
+          include 'logo.php';
+          ?>
           <div class="text-left">
             <h2 class="font-bold text-blue-800">URSatisfaction</h2>
             <p class="text-xs text-gray-500">We comply so URSatisfied</p>
@@ -116,7 +117,7 @@ if ($remaining <= 0 && $lockout_time > 0) {
               <input type="password" name="pass" id="pass" required
                 class="peer w-full px-3 pt-3 pb-1 border rounded-md 
                         focus:outline-none focus:ring-0 
-                        <?php echo $wrong_password ? 'border-red-600 focus:border-red-600' : 'border-[#064089] focus:border-[#064089]'; ?>"
+                        <?php echo $error ? 'border-red-600 focus:border-red-600' : 'border-[#064089] focus:border-[#064089]'; ?>"
                 placeholder=" " <?php echo $remaining > 0 ? 'disabled' : ''; ?> />
 
               <label for="pass"

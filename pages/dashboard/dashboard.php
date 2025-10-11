@@ -48,7 +48,7 @@ if ($user_campus) {
         $stmt_chart->execute([':campus' => $user_campus]);
         while ($row = $stmt_chart->fetch(PDO::FETCH_ASSOC)) {
             $office_labels[] = $row['unit_name'];
-            $office_data[] = $row['response_count'];
+            $office_data[] = (int)$row['response_count'];
         }
 
         // Fetch user type data for the pie chart
@@ -146,11 +146,11 @@ if ($user_campus) {
 
                 <!-- Monthly Responses Chart -->
                 <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-3xl">Monthly Responses</h2>
-                    </div>
-                    <div class="relative h-64 overflow-x-auto">
-                        <canvas id="barChart"></canvas>
+                    <h2 class="text-3xl mb-2">Monthly Responses</h2>
+                    <div class="overflow-x-auto">
+                        <div class="relative h-64 min-w-full">
+                            <canvas id="barChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,11 +210,16 @@ if ($user_campus) {
         // Bar Chart for Monthly Responses
         const barCtx = document.getElementById('barChart');
         if (barCtx) {
-            // Dynamically set canvas width for scrollability
-            const minBarWidth = 80; // min width in pixels for each bar, increased for more space
-            const chartWidth = Math.max(barCtx.parentElement.clientWidth, officeLabels.length * minBarWidth);
-            barCtx.parentElement.style.width = '100%'; // Ensure parent has a defined width
-            barCtx.width = chartWidth;
+            const officeLabels = <?php echo json_encode($office_labels); ?>;
+            const officeData = <?php echo json_encode($office_data); ?>;
+
+            const barCount = officeLabels.length;
+            const barAndGapWidth = 80; // pixels per bar (controls scroll amount)
+            const chartWidth = Math.max(barCount * barAndGapWidth, 600); // 600 = min width
+
+            // Get the wrapper div that should scroll
+            const scrollWrapper = barCtx.closest('.overflow-x-auto');
+            barCtx.width = chartWidth; // chart width larger than wrapper triggers scroll
 
             new Chart(barCtx.getContext('2d'), {
                 type: 'bar',
@@ -225,27 +230,40 @@ if ($user_campus) {
                         data: officeData,
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1
+                        borderWidth: 1,
+                        barPercentage: 0.5,
+                        categoryPercentage: 0.7
                     }]
                 },
                 options: {
-                    responsive: true,
+                    responsive: false, // required for scroll to work
                     maintainAspectRatio: false,
                     scales: {
                         x: {
                             ticks: {
-                                maxRotation: 0, // Prevents label rotation
-                                minRotation: 0, // Prevents label rotation
-                                autoSkip: false, // Ensures all labels are shown
-                                color: '#1E1E1E'
+                                autoSkip: false,
+                                maxRotation: 0,
+                                minRotation: 0,
+                                color: '#1E1E1E',
+                                font: {
+                                    size: 12,
+                                    family: 'Arial'
+                                }
+                            },
+                            grid: {
+                                display: false
                             }
                         },
                         y: {
                             beginAtZero: true,
+                            min: 0,
                             max: 100,
                             ticks: {
                                 stepSize: 10,
                                 color: '#1E1E1E'
+                            },
+                            grid: {
+                                color: 'rgba(0,0,0,0.1)'
                             }
                         }
                     },
@@ -257,6 +275,7 @@ if ($user_campus) {
                 }
             });
         }
+
 
         // Pie Chart for User Types
         const pieCtx = document.getElementById('pieChart');
