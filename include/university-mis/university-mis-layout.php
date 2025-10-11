@@ -30,7 +30,7 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
 
         <?php include "university-mis-navigation.php"; ?>
 
-        <main class="flex-1 p-5">
+        <main class="flex-1 p-5 w-4/5">
             <h1 class="text-3xl font-bold mb-6">
             </h1>
             <?php

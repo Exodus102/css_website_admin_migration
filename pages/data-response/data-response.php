@@ -116,7 +116,7 @@ try {
     error_log("Error fetching data for data-response: " . $e->getMessage());
 }
 ?>
-<div class="p-4">
+<div class="p-4 w-full h-full">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -127,7 +127,7 @@ try {
         })();
     </script>
     <!-- Header -->
-    <div class="mb-6">
+    <div class="mb-6 w-full">
         <h1 class="text-4xl font-bold text-[#1E1E1E]">Data Responses</h1>
         <p class="text-[#1E1E1E]">
             You are viewing the responses from the survey questionnaire currently in use.
@@ -135,7 +135,7 @@ try {
     </div>
 
     <!-- Filters -->
-    <div class="flex items-end justify-between mb-6">
+    <div class="flex items-end mb-6 w-full justify-between">
         <div class="flex items-end gap-1">
             <span class="font-semibold text-gray-700">FILTERS:</span>
 
@@ -186,8 +186,8 @@ try {
     </div>
 
     <!-- Table -->
-    <div class="bg-white border border-gray-300 rounded-lg">
-        <table class="min-w-full border-collapse">
+    <div class="bg-white border border-gray-300 rounded-lg w-full overflow-x-auto">
+        <table class="border-collapse w-full">
             <thead>
                 <tr class="bg-[#064089] text-[#F1F7F9] text-sm font-semibold">
                     <th class="px-4 py-2 border border-gray-300">ID</th>

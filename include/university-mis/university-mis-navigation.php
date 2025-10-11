@@ -4,7 +4,7 @@ $active_class = 'bg-[#064089] text-white active-nav-link';
 $inactive_class = 'hover:bg-[#064089] hover:text-[#F1F7F9]';
 $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors duration-200 flex items-center gap-2';
 ?>
-<nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col md:w-80 w-full rounded-lg shadow-2xl">
+<nav class="bg-[#F1F7F9] text-black min-h-screen p-4 flex flex-col w-1/5 rounded-lg shadow-2xl">
     <ul class="space-y-1 flex-grow mt-8">
         <li>
             <a href="university-mis-layout.php?page=dashboard" class="<?php echo $base_class; ?> <?php echo ($page === 'dashboard') ? $active_class : $inactive_class; ?>">
