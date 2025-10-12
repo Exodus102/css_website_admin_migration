@@ -1,4 +1,4 @@
-<div class="flex-1 p-4 min-h-screen">
+<div class="flex-1 p-4">
   <script>
     // Apply saved font size on every page load
     (function() {

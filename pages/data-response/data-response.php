@@ -116,7 +116,7 @@ try {
     error_log("Error fetching data for data-response: " . $e->getMessage());
 }
 ?>
-<div class="p-4 w-full h-full">
+<div class="p-4 w-full lg:h-full">
     <script>
         // Apply saved font size on every page load
         (function() {

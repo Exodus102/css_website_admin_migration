@@ -102,7 +102,7 @@ if ($user_campus) {
         })();
     </script>
     <!-- Main Dashboard Content -->
-    <div class="">
+    <div class="w-full">
         <!-- Welcome Section -->
         <div class="">
             <h1 class="text-3xl font-bold">Welcome, <?php echo htmlspecialchars($_SESSION['user_first_name'] ?? 'User'); ?>!</h1>
@@ -110,10 +110,10 @@ if ($user_campus) {
         </div>
 
         <!-- Key Metrics Cards and Charts -->
-        <div class="flex flex-col lg:flex-row gap-6 shadow-around mt-6">
+        <div class="flex flex-col lg:flex-row gap-6 shadow-around mt-6 lg:w-2/3">
 
             <!-- Left Column: Metrics and Bar Char -->
-            <div class="flex-1 ">
+            <div class="flex flex-col w-full">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
@@ -145,10 +145,10 @@ if ($user_campus) {
                 </div>
 
                 <!-- Monthly Responses Chart -->
-                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl">
+                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
                     <h2 class="text-3xl mb-2">Monthly Responses</h2>
-                    <div class="overflow-x-auto">
-                        <div class="relative h-64 min-w-full">
+                    <div class="overflow-x-auto w-full">
+                        <div class="relative h-64" id="barChartContainer">
                             <canvas id="barChart"></canvas>
                         </div>
                     </div>
@@ -156,7 +156,7 @@ if ($user_campus) {
             </div>
 
             <!-- Right Column: User Types Pie Chart -->
-            <div class="lg:w-1/3 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col">
+            <div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold ">User Types</h2>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -170,7 +170,7 @@ if ($user_campus) {
                 ?>
                 <p class="text-xs mb-4">As of <?php echo date('F j, Y \a\t h:i A'); ?></p>
                 <div class="flex-grow flex items-center justify-center min-h-0">
-                    <div class="relative h-64 w-64">
+                    <div class="relative w-64 h-64 lg:w-28 lg:h-28 xl:w-64 xl:h-64">
                         <canvas id="pieChart"></canvas>
                     </div>
                 </div>
@@ -212,14 +212,12 @@ if ($user_campus) {
         if (barCtx) {
             const officeLabels = <?php echo json_encode($office_labels); ?>;
             const officeData = <?php echo json_encode($office_data); ?>;
+            const barChartContainer = document.getElementById('barChartContainer');
 
             const barCount = officeLabels.length;
-            const barAndGapWidth = 80; // pixels per bar (controls scroll amount)
-            const chartWidth = Math.max(barCount * barAndGapWidth, 600); // 600 = min width
-
-            // Get the wrapper div that should scroll
-            const scrollWrapper = barCtx.closest('.overflow-x-auto');
-            barCtx.width = chartWidth; // chart width larger than wrapper triggers scroll
+            const barAndGapWidth = 300; // pixels per bar (controls scroll amount)
+            const chartWidth = Math.max(barCount * barAndGapWidth, barChartContainer.parentElement.clientWidth);
+            barChartContainer.style.width = `${chartWidth}px`;
 
             new Chart(barCtx.getContext('2d'), {
                 type: 'bar',
@@ -231,12 +229,12 @@ if ($user_campus) {
                         backgroundColor: 'rgba(54, 162, 235, 0.6)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1,
-                        barPercentage: 0.5,
-                        categoryPercentage: 0.7
+                        barPercentage: 0.5, // A more standard bar width
+                        categoryPercentage: 0.7 // A more standard gap
                     }]
                 },
                 options: {
-                    responsive: false, // required for scroll to work
+                    responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         x: {
