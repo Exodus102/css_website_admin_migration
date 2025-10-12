@@ -33,8 +33,8 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
 
         <?php include "unit-head-navigation.php"; ?>
 
-        <main class="flex-1 p-5 w-4/5">
-            <h1 class="text-3xl font-bold mb-6">
+        <main class="flex-1 lg:p-5 w-4/5">
+            <h1 class="lg:text-3xl lg:font-bold lg:mb-6">
             </h1>
             <?php
             $filePath = "../../pages/{$page}/{$page}.php";

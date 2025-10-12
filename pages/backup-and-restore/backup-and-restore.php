@@ -9,7 +9,7 @@ try {
     // error_log("Could not fetch backups: " . $e->getMessage());
 }
 ?>
-<div class="p-4">
+<div class="lg:p-4 px-4 pb-4 pt-10 lg:px-0 lg:pb-0 lg:pt-0">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -66,7 +66,7 @@ try {
                     <?php endif; ?>
                 </tbody>
             </table><br>
-            <button id="restore-btn" class="bg-[#D6D7DC] px-4 rounded flex border border-[#1E1E1E] items-center gap-1">
+            <button id="restore-btn" class="bg-[#D6D7DC] px-4 rounded flex border border-[#1E1E1E] items-center gap-1 w-full lg:w-auto justify-center lg:justify-normal">
                 <img src="../../resources/svg/refresh.svg" alt="Restore" class="h-5 w-5">Restore
             </button>
         </div>
@@ -76,7 +76,7 @@ try {
     <div class="bg-transparent border border-black rounded-md p-4" id="backup-section">
         <h2 class="text-lg font-semibold">Data Backup</h2>
         <p class="text-[#1E1E1E] text-sm mb-3">Create a new backup file of this system’s current version.</p>
-        <button id="backup-btn" class="bg-[#D6D7DC] px-4 rounded flex border border-[#1E1E1E] items-center gap-1">
+        <button id="backup-btn" class="bg-[#D6D7DC] px-4 rounded flex border border-[#1E1E1E] items-center gap-1 w-full lg:w-auto justify-center lg:justify-normal">
             <img src="../../resources/svg/backup.svg" alt="Restore" class="h-5 w-5">Backup
         </button>
     </div>

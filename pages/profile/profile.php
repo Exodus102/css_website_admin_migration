@@ -13,7 +13,7 @@
     </p><br>
 
     <!-- Profile content with two boxes -->
-    <div class="flex flex-col lg:flex-row gap-6 lg:items-start">
+    <div class="flex flex-col-reverse lg:flex-row gap-6 lg:items-start">
 
         <!-- First box (longer) -->
         <?php
