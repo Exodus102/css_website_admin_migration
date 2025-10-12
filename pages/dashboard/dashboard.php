@@ -226,8 +226,8 @@ if ($user_campus) {
                     datasets: [{
                         label: 'Responses',
                         data: officeData,
-                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
+                        backgroundColor: '#064089',
+                        borderColor: '#064089',
                         borderWidth: 1,
                         barPercentage: 0.5, // A more standard bar width
                         categoryPercentage: 0.7 // A more standard gap
