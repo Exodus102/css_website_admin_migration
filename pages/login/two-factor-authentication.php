@@ -28,12 +28,12 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
 
 <body>
 
-  <div class="min-h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
+  <div class="h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
 
     <?php include '2fa_header.php'; ?>
 
     <!-- Reduced padding for center section -->
-    <div class="md:w-1/2">
+    <div class="w-full lg:w-2/5 h-full">
       <div class="w-full h-full flex flex-col items-center justify-around">
         <!-- Logo -->
         <div class="flex items-center gap-3">
@@ -54,7 +54,7 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
           </p>
 
           <!-- Verification Form -->
-          <form action="../../function/_auth/_authenticationCode.php" method="POST" class="space-y-3 px-28">
+          <form action="../../function/_auth/_authenticationCode.php" method="POST" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
 
             <!-- Floating Label Input -->
             <div class="relative">

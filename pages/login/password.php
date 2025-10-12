@@ -37,12 +37,12 @@ if ($remaining <= 0 && $lockout_time > 0) {
 </head>
 
 <body>
-  <div class="min-h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
+  <div class="h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
 
     <?php include 'password_header.php'; ?>
 
     <!-- reduced padding -->
-    <div class="md:w-1/2">
+    <div class="w-full lg:w-2/5 h-full">
       <div class="w-full h-full flex flex-col items-center justify-around">
         <!-- Logo -->
         <div class="flex items-center gap-3">
@@ -112,7 +112,7 @@ if ($remaining <= 0 && $lockout_time > 0) {
           <?php endif; ?>
 
           <!-- Password form -->
-          <form action="../../function/_auth/_getPassword.php" method="post" class="space-y-3 w-full px-28">
+          <form action="../../function/_auth/_getPassword.php" method="post" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
             <div class="relative">
               <input type="password" name="pass" id="pass" required
                 class="peer w-full px-3 pt-3 pb-1 border rounded-md 
@@ -129,7 +129,7 @@ if ($remaining <= 0 && $lockout_time > 0) {
             </div>
 
             <!-- Show password + Forgot password -->
-            <div class="flex items-center justify-between text-sm">
+            <div class="flex flex-col xl:flex-row items-start justify-between text-sm gap-3 xl:gap-0">
               <div class="flex items-center gap-2 text-gray-700">
                 <input type="checkbox" id="showPass" onclick="togglePassword()" class="cursor-pointer" <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
                 <label for="showPass" class="cursor-pointer">Show password</label>

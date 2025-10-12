@@ -1,6 +1,6 @@
 <!-- Left Section -->
-<div class="md:w-1/2 bg-cover bg-center flex flex-col justify-around p-10 md:p-12"
-  style="width:70rem; background-image:url('../../resources/svg/login-bg.svg'); background-size:cover; background-position:center;">
+<div class="hidden lg:flex lg:w-3/5 xl:w-[70rem] bg-cover bg-center flex-col justify-around p-10 lg:p-12"
+  style="background-image:url('../../resources/svg/login-bg.svg'); background-size:cover; background-position:center;">
   <?php
   // This logic fetches the active logo path.
   // It's placed here to be accessible within this header component.

@@ -1,10 +1,10 @@
-<div class="h-screen flex flex-col md:flex-row bg-[#f2f7fa]">
+<div class="h-screen flex flex-col lg:flex-row bg-[#f2f7fa] ">
 
   <?php include 'pages/login/login_header.php'; ?>
 
   <!-- reduced padding -->
-  <div class="md:w-1/2">
-    <div class="w-full h-full flex flex-col items-center justify-around">
+  <div class="w-full lg:w-2/5 h-full">
+    <div class="w-full h-full flex flex-col items-center justify-between py-8 md:justify-around md:py-0">
       <!-- Logo -->
       <div class="flex items-center gap-3">
         <?php
@@ -24,7 +24,7 @@
         </p>
 
         <!-- Email-only form -->
-        <form action="function/_auth/_getEmail.php" method="post" class="space-y-3 w-full px-28">
+        <form action="function/_auth/_getEmail.php" method="post" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
 
           <!-- Floating Label Input -->
           <div class="relative">
