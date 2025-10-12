@@ -809,6 +809,10 @@ video {
   height: 0.125rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-12 {
   height: 3rem;
 }
@@ -1014,6 +1018,10 @@ video {
   min-width: 288px;
 }
 
+.min-w-\[90px\] {
+  min-width: 90px;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -1113,10 +1121,6 @@ video {
   align-items: center;
 }
 
-.justify-start {
-  justify-content: flex-start;
-}
-
 .justify-end {
   justify-content: flex-end;
 }
@@ -1159,10 +1163,6 @@ video {
 
 .gap-9 {
   gap: 2.25rem;
-}
-
-.gap-0 {
-  gap: 0px;
 }
 
 .gap-x-2 {
@@ -1564,11 +1564,6 @@ video {
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
-}
-
-.px-28 {
-  padding-left: 7rem;
-  padding-right: 7rem;
 }
 
 .px-3 {
@@ -2453,10 +2448,6 @@ body {
     flex-direction: row;
   }
 
-  .md\:justify-center {
-    justify-content: center;
-  }
-
   .md\:justify-around {
     justify-content: space-around;
   }
@@ -2467,16 +2458,6 @@ body {
 
   .md\:p-6 {
     padding: 1.5rem;
-  }
-
-  .md\:px-3 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-  }
-
-  .md\:px-28 {
-    padding-left: 7rem;
-    padding-right: 7rem;
   }
 
   .md\:py-0 {
@@ -2512,24 +2493,16 @@ body {
     width: 66.666667%;
   }
 
-  .lg\:w-3\/4 {
-    width: 75%;
-  }
-
-  .lg\:w-1\/2 {
-    width: 50%;
-  }
-
   .lg\:w-2\/5 {
     width: 40%;
   }
 
-  .lg\:w-3\/5 {
-    width: 60%;
+  .lg\:w-3\/4 {
+    width: 75%;
   }
 
-  .lg\:w-2\/4 {
-    width: 50%;
+  .lg\:w-3\/5 {
+    width: 60%;
   }
 
   .lg\:flex-row {
@@ -2540,22 +2513,6 @@ body {
     align-items: flex-start;
   }
 
-  .lg\:items-center {
-    align-items: center;
-  }
-
-  .lg\:justify-between {
-    justify-content: space-between;
-  }
-
-  .lg\:gap-0 {
-    gap: 0px;
-  }
-
-  .lg\:gap-2 {
-    gap: 0.5rem;
-  }
-
   .lg\:p-12 {
     padding: 3rem;
   }
@@ -2563,22 +2520,9 @@ body {
   .lg\:p-5 {
     padding: 1.25rem;
   }
-
-  .lg\:px-28 {
-    padding-left: 7rem;
-    padding-right: 7rem;
-  }
 }
 
 @media (min-width: 1280px) {
-  .xl\:flex {
-    display: flex;
-  }
-
-  .xl\:w-1\/2 {
-    width: 50%;
-  }
-
   .xl\:w-\[70rem\] {
     width: 70rem;
   }
@@ -2587,34 +2531,11 @@ body {
     flex-direction: row;
   }
 
-  .xl\:items-start {
-    align-items: flex-start;
-  }
-
-  .xl\:gap-2 {
-    gap: 0.5rem;
-  }
-
-  .xl\:gap-3 {
-    gap: 0.75rem;
-  }
-
   .xl\:gap-0 {
     gap: 0px;
   }
 
   .xl\:px-28 {
-    padding-left: 7rem;
-    padding-right: 7rem;
-  }
-}
-
-@media (min-width: 1536px) {
-  .\32xl\:flex-row {
-    flex-direction: row;
-  }
-
-  .\32xl\:px-28 {
     padding-left: 7rem;
     padding-right: 7rem;
   }

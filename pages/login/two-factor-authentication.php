@@ -54,7 +54,7 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
           </p>
 
           <!-- Verification Form -->
-          <form action="../../function/_auth/_authenticationCode.php" method="POST" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
+          <form action="../../function/_auth/_authenticationCode.php" method="POST" id="tfaForm" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
 
             <!-- Floating Label Input -->
             <div class="relative">
@@ -80,8 +80,8 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
 
             <!-- Verify Button -->
             <div class="flex justify-end">
-              <button type="submit"
-                class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266]">
+              <button type="submit" id="verifyBtn"
+                class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] flex items-center justify-center min-w-[90px]">
                 Verify Code
               </button>
             </div>
@@ -101,6 +101,46 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
     </div>
   </div>
 
+  <!-- Full-screen Loading Overlay -->
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="flex flex-col items-center">
+      <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="mt-4 text-white text-lg">Verifying...</p>
+    </div>
+  </div>
+
+  <script>
+    const tfaForm = document.getElementById("tfaForm");
+    const verifyBtn = document.getElementById("verifyBtn");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    if (tfaForm && verifyBtn && loadingOverlay) {
+      tfaForm.addEventListener("submit", (e) => {
+        const codeInput = document.getElementById('code');
+        // Prevent loader from showing on an empty form submission
+        if (!codeInput.value.trim()) {
+          return;
+        }
+
+        // Disable the button and show the full-screen overlay
+        verifyBtn.disabled = true;
+        loadingOverlay.classList.remove("hidden");
+      });
+
+      // Handle back-navigation
+      window.addEventListener('pageshow', function(event) {
+        // The event.persisted property is true if the page is from the bfcache
+        if (event.persisted) {
+          // Hide the overlay and re-enable the button
+          loadingOverlay.classList.add('hidden');
+          verifyBtn.disabled = false;
+        }
+      });
+    }
+  </script>
 </body>
 
 </html>

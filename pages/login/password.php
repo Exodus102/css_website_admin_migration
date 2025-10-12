@@ -81,7 +81,7 @@ if ($remaining <= 0 && $lockout_time > 0) {
             Welcome, <?php echo htmlspecialchars($first_name_for_display); ?>
           </h3>
           <p class="text-sm text-center mb-4">
-            <a href="javascript:history.back()" class="text-gray-600 underline hover:text-[#064089]">not you?</a>
+            <a href="../../index.php" class="text-gray-600 underline hover:text-[#064089]">not you?</a>
           </p>
 
           <!-- 🔹 Error message -->
@@ -112,7 +112,7 @@ if ($remaining <= 0 && $lockout_time > 0) {
           <?php endif; ?>
 
           <!-- Password form -->
-          <form action="../../function/_auth/_getPassword.php" method="post" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
+          <form action="../../function/_auth/_getPassword.php" method="post" id="passwordForm" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
             <div class="relative">
               <input type="password" name="pass" id="pass" required
                 class="peer w-full px-3 pt-3 pb-1 border rounded-md 
@@ -139,8 +139,8 @@ if ($remaining <= 0 && $lockout_time > 0) {
 
             <!-- Next Button -->
             <div class="flex justify-end">
-              <button type="submit"
-                class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] "
+              <button type="submit" id="nextBtn"
+                class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] flex items-center justify-center min-w-[90px]"
                 <?php echo $remaining > 0 ? 'disabled' : ''; ?>>
                 Next
               </button>
@@ -157,6 +157,17 @@ if ($remaining <= 0 && $lockout_time > 0) {
           </p>
         </footer>
       </div>
+    </div>
+  </div>
+
+  <!-- Full-screen Loading Overlay -->
+  <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+    <div class="flex flex-col items-center">
+      <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <p class="mt-4 text-white text-lg">Loading...</p>
     </div>
   </div>
 
@@ -192,6 +203,34 @@ if ($remaining <= 0 && $lockout_time > 0) {
           if (timerEl) timerEl.parentElement.innerHTML = "You may now try again.";
         }
       }, 1000);
+    }
+
+    const passwordForm = document.getElementById("passwordForm");
+    const nextBtn = document.getElementById("nextBtn");
+    const loadingOverlay = document.getElementById("loadingOverlay");
+
+    if (passwordForm && nextBtn && loadingOverlay) {
+      passwordForm.addEventListener("submit", (e) => {
+        const passwordInput = document.getElementById('pass');
+        // Prevent loader from showing on an empty form submission
+        if (!passwordInput.value.trim()) {
+          return;
+        }
+
+        // Disable the button and show the full-screen overlay
+        nextBtn.disabled = true;
+        loadingOverlay.classList.remove("hidden");
+      });
+
+      // Handle back-navigation (e.g., from 2FA page)
+      window.addEventListener('pageshow', function(event) {
+        // The event.persisted property is true if the page is from the bfcache
+        if (event.persisted) {
+          // Hide the overlay and re-enable the button
+          loadingOverlay.classList.add('hidden');
+          nextBtn.disabled = false;
+        }
+      });
     }
   </script>
 

