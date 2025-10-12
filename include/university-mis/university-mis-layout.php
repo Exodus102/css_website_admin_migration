@@ -26,6 +26,9 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
         <?php include "university-mis-header.php"; ?>
     </div>
 
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden lg:hidden"></div>
+
     <div class="flex h-[calc(100vh-4rem)]">
 
         <?php include "university-mis-navigation.php"; ?>
@@ -43,6 +46,36 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
             ?>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const hamburgerBtn = document.getElementById('hamburger-btn');
+            const sideNav = document.getElementById('side-nav');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+
+            const toggleSidebar = () => {
+                sidebarOverlay.classList.toggle('hidden');
+                sideNav.classList.toggle('-translate-x-full');
+            };
+
+            if (hamburgerBtn && sideNav && sidebarOverlay) {
+                hamburgerBtn.addEventListener('click', () => {
+                    toggleSidebar();
+                });
+
+                sidebarOverlay.addEventListener('click', () => {
+                    toggleSidebar();
+                });
+
+                // Close sidebar when a nav link is clicked on mobile
+                sideNav.addEventListener('click', (e) => {
+                    if (e.target.closest('a') && window.innerWidth < 1024) {
+                        toggleSidebar();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
