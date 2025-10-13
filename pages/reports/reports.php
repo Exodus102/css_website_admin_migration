@@ -23,7 +23,7 @@
             <tbody id="reports-table-body">
                 <?php if (!empty($units)) : ?>
                     <?php foreach ($units as $unit) : ?>
-                        <tr class="bg-[#F1F7F9] office-row" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
+                        <tr class="bg-white office-row" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
                             <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($unit['unit_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2 text-center">
                                 <div class="flex justify-center gap-2">
