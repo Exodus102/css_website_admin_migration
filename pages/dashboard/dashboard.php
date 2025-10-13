@@ -147,7 +147,7 @@ if ($user_campus) {
                 <!-- Monthly Responses Chart -->
                 <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
                     <h2 class="text-3xl mb-2">Monthly Responses</h2>
-                    <div class="overflow-x-auto w-full">
+                    <div id="scroll-container" class="overflow-x-auto w-full no-scrollbar cursor-grab active:cursor-grabbing">
                         <div class="relative h-64" id="barChartContainer">
                             <canvas id="barChart"></canvas>
                         </div>
@@ -305,6 +305,37 @@ if ($user_campus) {
                         }
                     }
                 }
+            });
+        }
+
+        // --- Drag-to-scroll for Bar Chart ---
+        const slider = document.getElementById('scroll-container');
+        if (slider) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                // No need to add/remove classes if using active:cursor-grabbing
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            slider.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault(); // Prevent text selection while dragging
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // The '2' is a speed multiplier, adjust as needed
+                slider.scrollLeft = scrollLeft - walk;
             });
         }
     });
