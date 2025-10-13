@@ -65,7 +65,16 @@
 </div>
 
 <!-- Add Account Dialog -->
-<dialog id="add-account-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
+<dialog id="add-account-dialog" class="relative p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
+    <!-- Loading Overlay for Dialog -->
+    <div id="add-account-loader" class="hidden absolute inset-0 bg-white bg-opacity-75 z-10 flex items-center justify-center rounded-md">
+        <div class="flex flex-col items-center">
+            <svg class="animate-spin h-10 w-10 text-[#064089]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    </div>
     <form id="add-account-form" method="POST" class="space-y-4">
         <h3 class="font-bold text-lg mb-4 text-center">Add New Account</h3>
 
@@ -142,34 +151,43 @@
 </dialog>
 
 <!-- Edit Account Dialog -->
-<dialog id="edit-account-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+<dialog id="edit-account-dialog" class="relative p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
+    <!-- Loading Overlay for Dialog -->
+    <div id="edit-account-loader" class="hidden absolute inset-0 bg-white bg-opacity-75 z-10 flex items-center justify-center rounded-md">
+        <div class="flex flex-col items-center">
+            <svg class="animate-spin h-10 w-10 text-[#064089]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+    </div>
     <form id="edit-account-form" method="POST" class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">Edit Account</h3>
+        <h3 class="font-bold text-lg mb-4 text-center">Edit Account</h3>
         <input type="hidden" id="edit-user-id" name="user_id">
 
         <div>
             <label for="edit-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="edit-first-name" name="first_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <input type="text" id="edit-first-name" name="first_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="edit-middle-name" class="block text-sm font-medium text-gray-700">Middle Name</label>
-            <input type="text" id="edit-middle-name" name="middle_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <input type="text" id="edit-middle-name" name="middle_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="edit-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" id="edit-last-name" name="last_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <input type="text" id="edit-last-name" name="last_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="edit-contact-number" class="block text-sm font-medium text-gray-700">Contact Number</label>
-            <input type="tel" id="edit-contact-number" name="contact_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <input type="tel" id="edit-contact-number" name="contact_number" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="edit-campus" class="block text-sm font-medium text-gray-700">Campus</label>
-            <select id="edit-campus" name="campus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-campus" name="campus" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <?php foreach ($campuses as $campus) : ?>
                     <option value="<?php echo htmlspecialchars($campus); ?>"><?php echo htmlspecialchars($campus); ?></option>
                 <?php endforeach; ?>
@@ -178,14 +196,14 @@
 
         <div>
             <label for="edit-unit" class="block text-sm font-medium text-gray-700">Unit</label>
-            <select id="edit-unit" name="unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-unit" name="unit" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Select a campus first</option>
             </select>
         </div>
 
         <div>
             <label for="edit-user-type" class="block text-sm font-medium text-gray-700">User Type</label>
-            <select id="edit-user-type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-user-type" name="type" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="Campus Director">Campus Director</option>
                 <option value="CSS Head">CSS Head</option>
                 <option value="University MIS">University MIS</option>
@@ -197,25 +215,25 @@
 
         <div>
             <label for="edit-email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" id="edit-email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <input type="email" id="edit-email" name="email" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="edit-password" class="block text-sm font-medium text-gray-700">Password (leave blank to keep current)</label>
-            <input type="password" id="edit-password" name="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+            <input type="password" id="edit-password" name="password" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="edit-status" class="block text-sm font-medium text-gray-700">Status</label>
-            <select id="edit-status" name="status" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-status" name="status" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="Active">Active</option>
                 <option value="Inactive">Inactive</option>
             </select>
         </div>
 
         <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-edit-account" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update Account</button>
+            <button type="button" id="cancel-edit-account" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Update Account</button>
         </div>
     </form>
 </dialog>
@@ -261,6 +279,8 @@
         const addAccountForm = document.getElementById('add-account-form');
         addAccountForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const loader = document.getElementById('add-account-loader');
+            loader.classList.remove('hidden');
 
             const formData = new FormData(addAccountForm);
             try {
@@ -276,6 +296,8 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while adding the account.');
+            } finally {
+                loader.classList.add('hidden');
             }
         });
 
@@ -322,6 +344,9 @@
 
         editAccountForm.addEventListener('submit', async (event) => {
             event.preventDefault();
+            const loader = document.getElementById('edit-account-loader');
+            loader.classList.remove('hidden');
+
             const formData = new FormData(editAccountForm);
 
             try {
@@ -337,6 +362,8 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('An error occurred while updating the account.');
+            } finally {
+                loader.classList.add('hidden');
             }
         });
 
