@@ -12,7 +12,7 @@
     <span class="">You are viewing the generated reports of available offices for this period.</span>
 
     <?php include "filters.php"; ?><br>
-    <div>
+    <div class="overflow-x-auto">
         <table class="w-full">
             <thead class="bg-[#064089] text-white font-normal">
                 <tr>
@@ -25,9 +25,11 @@
                     <?php foreach ($units as $unit) : ?>
                         <tr class="bg-[#F1F7F9] office-row" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
                             <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($unit['unit_name']); ?></td>
-                            <td class="border border-[#1E1E1ECC] p-2 text-center flex gap-2 justify-center">
-                                <button class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
-                                <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
+                            <td class="border border-[#1E1E1ECC] p-2 text-center">
+                                <div class="flex justify-center gap-2">
+                                    <button class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
+                                    <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

@@ -135,11 +135,11 @@ try {
     </div>
 
     <!-- Filters -->
-    <div class="flex items-end mb-6 w-full justify-between">
-        <div class="flex items-end gap-1">
+    <div class="flex xl:items-end mb-6 w-full justify-between flex-col xl:flex-row gap-4 xl:gap-0">
+        <div class="flex lg:items-end gap-1 lg:flex-row flex-col">
             <span class="font-semibold text-gray-700">FILTERS:</span>
 
-            <div class="w-72">
+            <div class="lg:w-72 w-full">
                 <label for="filter_division" class="block text-xs font-medium text-[#48494A]">DIVISION</label>
                 <select name="filter_division" id="filter_division" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC]">
                     <option value="">All Divisions</option>
@@ -148,7 +148,7 @@ try {
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="w-72">
+            <div class="lg:w-72 w-full">
                 <label for="filter_unit" class="block text-xs font-medium text-[#48494A]">OFFICE</label>
                 <select name="filter_unit" id="filter_unit" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC]">
                     <option value="">All Offices</option>
@@ -274,25 +274,24 @@ try {
     </div>
 
     <!-- Upload CSV Dialog -->
-    <dialog id="upload-csv-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+    <dialog id="upload-csv-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
         <form id="upload-csv-form" method="POST" class="space-y-4">
-            <h3 class="font-bold text-lg mb-4">Upload CSV File</h3>
-            <p class="text-sm text-gray-600">Select a CSV file containing response data. Ensure the columns match the required format and order.</p>
-            <div>
-                <label for="csv-file-input" class="block text-sm font-medium text-gray-700">CSV File</label>
-                <input type="file" id="csv-file-input" name="csv_file" class="mt-1 block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100" accept=".csv" required>
+            <h3 class="font-bold text-lg mb-4 text-center">Upload CSV File</h3>
+            <p class="text-sm text-gray-600 text-center">Select a CSV file containing response data. Ensure the columns match the required format and order.</p>
+            <div id="csv-drop-zone" class="flex flex-col items-center justify-center w-full">
+                <label for="csv-file-input" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors bg-[#749DC8]/20">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                        <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                        </svg>
+                        <p id="csv-drop-zone-text" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                        <p class="text-xs text-gray-500">CSV files only (MAX. 5MB)</p>
+                    </div>
+                    <input type="file" id="csv-file-input" name="csv_file" class="hidden" accept=".csv" required>
+                </label>
             </div>
-            <div class="mt-6 flex justify-end gap-4">
-                <button type="button" id="cancel-upload-csv" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50">
-                    <span id="upload-submit-text">Upload</span>
-                </button>
-            </div>
+            <!-- Buttons removed for automatic upload -->
+            <button type="button" id="cancel-upload-csv" class="hidden">Cancel</button> <!-- Hidden but kept for programmatic closing if needed -->
         </form>
     </dialog>
 
@@ -320,6 +319,8 @@ try {
             const uploadCsvDialog = document.getElementById('upload-csv-dialog');
             const uploadCsvForm = document.getElementById('upload-csv-form');
             const cancelUploadCsvBtn = document.getElementById('cancel-upload-csv');
+            const csvDropZone = document.getElementById('csv-drop-zone');
+            const csvDropZoneText = document.getElementById('csv-drop-zone-text');
             const csvFileInput = document.getElementById('csv-file-input');
 
             /**
@@ -450,38 +451,80 @@ try {
                 });
             }
 
-            if (uploadCsvForm) {
-                uploadCsvForm.addEventListener('submit', async (event) => {
-                    event.preventDefault();
+            const handleCsvUpload = async () => {
+                if (!csvFileInput.files || csvFileInput.files.length === 0) {
+                    // This case should ideally not be hit with auto-upload, but it's good practice.
+                    alert('Please select a CSV file to upload.');
+                    return;
+                }
 
-                    if (!csvFileInput.files || csvFileInput.files.length === 0) {
-                        alert('Please select a CSV file to upload.');
-                        return;
+                // Update UI to show upload is in progress
+                csvDropZoneText.innerHTML = `<span class="font-semibold text-blue-600">Uploading ${csvFileInput.files[0].name}...</span>`;
+
+                const formData = new FormData(uploadCsvForm);
+
+                try {
+                    const response = await fetch('../../function/_dataResponse/_uploadCsv.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const result = await response.json();
+                    alert(result.message); // Show success or error message from server
+                    if (result.success) {
+                        window.location.reload(); // Reload the page on successful upload
                     }
+                } catch (error) {
+                    alert('An error occurred during the upload process. Please check the console for details.');
+                    console.error('Upload Error:', error);
+                    // Reset the text on error
+                    csvDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
+                } finally {
+                    // Close the dialog regardless of outcome
+                    uploadCsvDialog.close();
+                }
+            };
 
-                    const submitButton = uploadCsvForm.querySelector('button[type="submit"]');
-                    submitButton.disabled = true;
-                    submitButton.querySelector('#upload-submit-text').textContent = 'Uploading...';
 
-                    const formData = new FormData(uploadCsvForm);
+            // --- Drag and Drop Logic ---
+            if (csvDropZone && csvFileInput && csvDropZoneText) {
+                const preventDefaults = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                };
 
-                    try {
-                        const response = await fetch('../../function/_dataResponse/_uploadCsv.php', {
-                            method: 'POST',
-                            body: formData
-                        });
-                        const result = await response.json();
-                        alert(result.message);
-                        if (result.success) {
-                            window.location.reload();
-                        }
-                    } catch (error) {
-                        alert('An error occurred during the upload process. Please check the console for details.');
-                        console.error('Upload Error:', error);
-                    } finally {
-                        submitButton.disabled = false;
-                        submitButton.querySelector('#upload-submit-text').textContent = 'Upload';
-                        uploadCsvDialog.close();
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    csvDropZone.addEventListener(eventName, preventDefaults, false);
+                });
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    csvDropZone.addEventListener(eventName, () => {
+                        csvDropZone.querySelector('label').classList.add('border-blue-500', 'bg-blue-50');
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    csvDropZone.addEventListener(eventName, () => {
+                        csvDropZone.querySelector('label').classList.remove('border-blue-500', 'bg-blue-50');
+                    }, false);
+                });
+
+                csvDropZone.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    if (files.length > 0) {
+                        csvFileInput.files = files;
+                        // Manually trigger change event for any listeners
+                        csvFileInput.dispatchEvent(new Event('change'));
+                    }
+                }, false);
+
+                csvFileInput.addEventListener('change', () => {
+                    if (csvFileInput.files.length > 0) {
+                        csvDropZoneText.innerHTML = `<span class="font-semibold text-green-600">${csvFileInput.files[0].name}</span> selected`;
+                        // Automatically trigger the upload
+                        handleCsvUpload();
+                    } else {
+                        csvDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
                     }
                 });
             }

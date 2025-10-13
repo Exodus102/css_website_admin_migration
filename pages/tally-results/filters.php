@@ -22,12 +22,12 @@ try {
 ?>
 <form id="tally-filters-form" method="GET" action="">
     <input type="hidden" name="page" value="tally-results">
-    <div class="bg-[#E6E7EC] p-4 mb-4">
-        <div class="flex flex-wrap items-end gap-2">
-            <span class="font-semibold text-[#1E1E1E] self-center">FILTERS:</span>
+    <div class="bg-[#E6E7EC] lg:pt-4 mb-4 pt-4">
+        <div class="flex lg:flex-row lg:items-end gap-2 flex-col">
+            <span class="font-semibold text-[#1E1E1E] lg:self-center">FILTERS:</span>
 
             <!-- Division -->
-            <div class="flex flex-col  w-44">
+            <div class="flex flex-col w-full lg:w-44">
                 <label for="filter_division" class="text-xs text-[#48494A] uppercase">Division</label>
                 <select id="filter_division" name="filter_division" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">All Divisions</option>
@@ -40,7 +40,7 @@ try {
             </div>
 
             <!-- Year -->
-            <div class="flex flex-col  w-20">
+            <div class="flex flex-col w-full lg:w-20">
                 <label for="filter_year" class="text-xs text-[#48494A] uppercase">Year</label>
                 <select id="filter_year" name="filter_year" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="" hidden>Year</option>
@@ -55,7 +55,7 @@ try {
             </div>
 
             <!-- Quarter -->
-            <div class="flex flex-col  w-28">
+            <div class="flex flex-col w-full lg:w-28">
                 <label for="filter_quarter" class="text-xs text-[#48494A] uppercase">Quarter</label>
                 <select id="filter_quarter" name="filter_quarter" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Quarter</option>
@@ -67,7 +67,7 @@ try {
             </div>
 
             <!-- Month -->
-            <div class="flex flex-col  w-30">
+            <div class="flex flex-col lg:w-30">
                 <label for="filter_month" class="text-xs text-[#48494A] uppercase">Month</label>
                 <select id="filter_month" name="filter_month" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">View All Months</option>

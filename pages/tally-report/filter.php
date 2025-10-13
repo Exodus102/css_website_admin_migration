@@ -15,9 +15,9 @@ try {
     // error_log("Error fetching years for tally report filter: " . $e->getMessage());
 }
 ?>
-<div class="flex items-center gap-1 mt-3 w-3/4">
+<div class="flex lg:items-center gap-1 mt-3 w-full lg:w-3/4 flex-col lg:flex-row">
     <span class="font-semibold">FILTERS:</span>
-    <div class="flex-groww w-28">
+    <div class="flex-groww lg:w-28 w-full">
         <label for="filter_year" class="block text-xs font-medium text-[#48494A]">YEAR</label>
         <select name="filter_year" id="filter_year" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
             <option value="" hidden>Year</option>

@@ -200,20 +200,22 @@ if ($target_campus_name) {
                                     </span>
                                 </td>
                             <?php endif; ?>
-                            <td class="border border-gray-300 p-3 text-center flex justify-center">
-                                <?php
-                                $query_params = [
-                                    'filter_campus' => $filter_campus_id,
-                                    'filter_division' => $filter_division_id,
-                                    'filter_year' => $filter_year,
-                                    'filter_quarter' => $filter_quarter,
-                                    'filter_month' => $filter_month,
-                                    'unit_id' => $row['unit_id'],
-                                ];
-                                $download_url = '../../pages/tally-results/generate-tally-results.php?' . http_build_query(array_filter($query_params));
-                                ?>
-                                <a href="<?php echo htmlspecialchars($download_url); ?>" target="_blank" class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition flex justify-center items-center hover:bg-[#c2ccd6]">
-                                    <img src="../../resources/svg/download-outline.svg" alt="Download Icon"> Download</a>
+                            <td class="border border-gray-300 p-3 text-center">
+                                <div class="flex justify-center">
+                                    <?php
+                                    $query_params = [
+                                        'filter_campus' => $filter_campus_id,
+                                        'filter_division' => $filter_division_id,
+                                        'filter_year' => $filter_year,
+                                        'filter_quarter' => $filter_quarter,
+                                        'filter_month' => $filter_month,
+                                        'unit_id' => $row['unit_id'],
+                                    ];
+                                    $download_url = '../../pages/tally-results/generate-tally-results.php?' . http_build_query(array_filter($query_params));
+                                    ?>
+                                    <a href="<?php echo htmlspecialchars($download_url); ?>" target="_blank" class="bg-[#D9E2EC] text-[#064089] px-4 py-1 rounded-full text-xs font-semibold transition flex justify-center items-center hover:bg-[#c2ccd6]">
+                                        <img src="../../resources/svg/download-outline.svg" alt="Download Icon"> Download</a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

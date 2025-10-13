@@ -37,9 +37,11 @@ $quarters = [
                 <?php foreach ($quarters as $q_num => $q_name) : ?>
                     <tr class="bg-white">
                         <td class="border border-[#1E1E1ECC] p-3"><?php echo htmlspecialchars($q_name); ?></td>
-                        <td class="border border-[#1E1E1ECC] p-3 text-center flex justify-center gap-2">
-                            <button data-quarter="<?php echo $q_num; ?>" class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
-                            <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
+                        <td class="border border-[#1E1E1ECC] p-3 text-center gap-2">
+                            <div class="flex justify-center gap-2">
+                                <button data-quarter="<?php echo $q_num; ?>" class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
+                                <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
