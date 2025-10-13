@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const addQuestionBtn = document.getElementById("addQuestionBtn");
   const questionTypeDialog = document.getElementById("questionTypeDialog");
   const closeDialogBtn = document.getElementById("closeDialogBtn");
+  const cancelDialogBtn = document.getElementById("cancelDialogBtn");
   const questionsContainer = document.getElementById("questions-container");
   const surveyForm = document.getElementById("surveyForm");
 
@@ -14,6 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
   if (closeDialogBtn && questionTypeDialog) {
     closeDialogBtn.addEventListener("click", () => {
       questionTypeDialog.close();
+    });
+  }
+
+  if (cancelDialogBtn && questionTypeDialog) {
+    cancelDialogBtn.addEventListener("click", () => {
+      questionTypeDialog.close(); // Also close the dialog
     });
   }
 
@@ -63,153 +70,189 @@ document.addEventListener("DOMContentLoaded", () => {
       case "dropdown":
         questionContent = `
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Dropdown Question</h3>
-                        <button type="button" class="remove-question-btn text-red-500 hover:text-red-700 font-bold">&times; Remove</button>
+                        <h3 class="text-lg font-semibold text-[#064089]">Dropdown Question</h3>
+                        <button type="button" class="remove-question-btn text-red-600 hover:text-red-800 font-semibold text-sm flex items-center gap-1"><img src="../../resources/svg/trash-bin.svg" class="h-4 w-4" alt="Remove"> Remove</button>
                     </div>
                     <div>
-                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700">Question Text</label>
-                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder:text-gray-500">
                     </div>
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700">Choices</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Choices</label>
                         <div class="choices-container space-y-2 mt-1">
                             <!-- Choices will be added here -->
                         </div>
-                        <button type="button" class="add-choice-btn mt-2 text-sm text-blue-600 hover:text-blue-800">+ Add Choice</button>
+                        <button type="button" class="add-choice-btn mt-2 text-sm text-white bg-[#064089] hover:bg-blue-800 px-3 py-1 rounded-md font-semibold">+ Add Choice</button>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700">Transaction Type</label>
-                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
                             <option value="2" selected>Both</option>                        </select>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
-                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700 mb-1">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="None" selected>None</option>
                             <option value="QoS">QoS</option>
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
-                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
-                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <div class="flex items-center lg:justify-end justify-center mt-4 pt-4 border-t gap-x-6">
+                        <label for="${questionId}-header" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Header</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-header" class="sr-only peer header-toggle" />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
                         </label>
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
-                        <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        <label for="${questionId}-required" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Required</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-required" class="sr-only peer required-toggle" checked />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
+                        </label>
                     </div>
                 `;
         break;
       case "text":
         questionContent = `
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Text Question</h3>
-                        <button type="button" class="remove-question-btn text-red-500 hover:text-red-700 font-bold">&times; Remove</button>
+                        <h3 class="text-lg font-semibold text-[#064089]">Text Question</h3>
+                        <button type="button" class="remove-question-btn text-red-600 hover:text-red-800 font-semibold text-sm flex items-center gap-1"><img src="../../resources/svg/trash-bin.svg" class="h-4 w-4" alt="Remove"> Remove</button>
                     </div>
                     <div>
-                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700">Question Text</label>
-                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder:text-gray-500">
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700">Transaction Type</label>
-                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
                             <option value="2" selected>Both</option>
                         </select>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
-                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700 mb-1">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="None" selected>None</option>
                             <option value="QoS">QoS</option>
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
-                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
-                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <div class="flex items-center justify-center lg:justify-end mt-4 pt-4 border-t gap-x-6">
+                        <label for="${questionId}-header" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Header</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-header" class="sr-only peer header-toggle" />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
                         </label>
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
-                        <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        <label for="${questionId}-required" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Required</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-required" class="sr-only peer required-toggle" checked />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
+                        </label>
                     </div>
                 `;
         break;
       case "description":
         questionContent = `
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Description</h3>
-                        <button type="button" class="remove-question-btn text-red-500 hover:text-red-700 font-bold">&times; Remove</button>
+                        <h3 class="text-lg font-semibold text-[#064089]">Description</h3>
+                        <button type="button" class="remove-question-btn text-red-600 hover:text-red-800 font-semibold text-sm flex items-center gap-1"><img src="../../resources/svg/trash-bin.svg" class="h-4 w-4" alt="Remove"> Remove</button>
                     </div>
                     <div>
-                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700">Description Text</label>
-                        <textarea id="${questionId}-text" placeholder="Enter your description" rows="4" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"></textarea>
+                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700 mb-1">Description Text</label>
+                        <textarea id="${questionId}-text" placeholder="Enter your description" rows="4" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder:text-gray-500"></textarea>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700">Transaction Type</label>
-                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
                             <option value="2" selected>Both</option>
                         </select>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
-                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700 mb-1">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="None" selected>None</option>
                             <option value="QoS">QoS</option>
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
-                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
-                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <div class="flex items-center justify-center lg:justify-end mt-4 pt-4 border-t gap-x-6">
+                        <label for="${questionId}-header" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Header</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-header" class="sr-only peer header-toggle" />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
                         </label>
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
-                        <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        <label for="${questionId}-required" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Required</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-required" class="sr-only peer required-toggle" checked />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
+                        </label>
                     </div>
                 `;
         break;
       case "multiple-choice":
         questionContent = `
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold">Multiple Choice Question</h3>
-                        <button type="button" class="remove-question-btn text-red-500 hover:text-red-700 font-bold">&times; Remove</button>
+                        <h3 class="text-lg font-semibold text-[#064089]">Multiple Choice Question</h3>
+                        <button type="button" class="remove-question-btn text-red-600 hover:text-red-800 font-semibold text-sm flex items-center gap-1"><img src="../../resources/svg/trash-bin.svg" class="h-4 w-4" alt="Remove"> Remove</button>
                     </div>
                     <div>
-                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700">Question Text</label>
-                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-text" class="block text-sm font-medium text-gray-700 mb-1">Question Text</label>
+                        <input type="text" id="${questionId}-text" placeholder="Enter your question" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder:text-gray-500">
                     </div>
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700">Choices</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Choices</label>
                         <div class="choices-container space-y-2 mt-1">
                             <!-- Choices will be added here -->
                         </div>
-                        <button type="button" class="add-choice-btn mt-2 text-sm text-blue-600 hover:text-blue-800">+ Add Choice</button>
+                        <button type="button" class="add-choice-btn mt-2 text-sm text-white bg-[#064089] hover:bg-blue-800 px-3 py-1 rounded-md font-semibold">+ Add Choice</button>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700">Transaction Type</label>
-                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-transaction-type" class="block text-sm font-medium text-gray-700 mb-1">Transaction Type</label>
+                        <select id="${questionId}-transaction-type" class="transaction-type-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="0">Face-to-Face</option>
                             <option value="1">Online</option>
                             <option value="2" selected>Both</option>
                         </select>
                     </div>
                     <div class="mt-4">
-                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700">Question Rendering</label>
-                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
+                        <label for="${questionId}-question-rendering" class="block text-sm font-medium text-gray-700 mb-1">Question Rendering</label>
+                        <select id="${questionId}-question-rendering" class="question-rendering-select mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
                             <option value="None" selected>None</option>
                             <option value="QoS">QoS</option>
                             <option value="Su">Su</option>
                         </select>
                     </div>
-                    <div class="flex items-center justify-end mt-4 pt-4 border-t gap-x-4">
-                        <label for="${questionId}-header" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Header
-                        <input type="checkbox" id="${questionId}-header" class="header-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                    <div class="flex items-center justify-center lg:justify-end mt-4 pt-4 border-t gap-x-6">
+                        <label for="${questionId}-header" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Header</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-header" class="sr-only peer header-toggle" />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
                         </label>
-                        <label for="${questionId}-required" class="text-sm font-medium text-gray-700 flex items-center gap-x-2">Required</label>
-                        <input type="checkbox" id="${questionId}-required" class="required-toggle h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" checked>
+                        <label for="${questionId}-required" class="flex items-center cursor-pointer">
+                            <span class="mr-3 text-sm font-medium text-gray-700">Required</span>
+                            <div class="relative">
+                                <input type="checkbox" id="${questionId}-required" class="sr-only peer required-toggle" checked />
+                                <div class="w-10 h-6 bg-[#E6E7EC] rounded-full border border-[#1E1E1E] peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#064089]"></div>
+                            </div>
+                        </label>
                     </div>
                 `;
         break;
@@ -291,8 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const choiceWrapper = document.createElement("div");
     choiceWrapper.className = "flex items-center gap-2";
     choiceWrapper.innerHTML = `
-            <input type="text" placeholder="Enter a choice" class="flex-grow rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm">
-            <button type="button" class="remove-choice-btn text-red-500 hover:text-red-700 text-xl font-bold">&times;</button>
+            <input type="text" placeholder="Enter a choice" class="flex-grow rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-2 px-3 h-10 focus:border-blue-500 focus:ring-blue-500 sm:text-sm placeholder:text-gray-500">
+            <button type="button" class="remove-choice-btn text-red-600 hover:text-red-800"><img src="../../resources/svg/trash-bin.svg" class="h-5 w-5" alt="Remove"></button>
         `;
     if (choiceText) {
       choiceWrapper.querySelector('input[type="text"]').value = choiceText;

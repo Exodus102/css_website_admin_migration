@@ -15,9 +15,9 @@ try {
         <table class="border border-[#1E1E1ECC] w-full">
             <thead class="bg-[#064089] text-white font-normal">
                 <tr>
-                    <th class="border border-[#1E1E1ECC] font-normal">#</th>
-                    <th class="border border-[#1E1E1ECC] font-normal">Campus</th>
-                    <th class="border border-[#1E1E1ECC] font-normal">Actions</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-16">#</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 text-left">Campus</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-48">Actions</th>
                 </tr>
             </thead>
             <tbody id="campus-table-body">
@@ -29,8 +29,8 @@ try {
                     <?php $count = 1; ?>
                     <?php foreach ($campuses as $campus) : ?>
                         <tr data-campus-id="<?php echo $campus['id']; ?>" class="bg-[#F1F7F9]">
-                            <td class="border border-[#1E1E1ECC] text-center"><?php echo $count++; ?></td>
-                            <td class="border border-[#1E1E1ECC] px-2"><?php echo htmlspecialchars($campus['campus_name']); ?></td>
+                            <td class="border border-[#1E1E1ECC] text-center p-2"><?php echo $count++; ?></td>
+                            <td class="border border-[#1E1E1ECC] px-2 p-2"><?php echo htmlspecialchars($campus['campus_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2">
                                 <div class="flex justify-center items-center gap-2">
                                     <button data-id="<?php echo $campus['id']; ?>" data-name="<?php echo htmlspecialchars($campus['campus_name']); ?>" class="edit-campus-btn flex items-center gap-1 bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-[#c2ccd6]">

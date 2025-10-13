@@ -45,9 +45,9 @@ try {
         <table class="border border-[#1E1E1ECC] w-full">
             <thead class="bg-[#064089] text-white font-normal">
                 <tr>
-                    <th class="border border-[#1E1E1ECC] font-normal ">#</th>
-                    <th class="border border-[#1E1E1ECC] font-normal ">Unit</th>
-                    <th class="border border-[#1E1E1ECC] font-normal ">Actions</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-16">#</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 text-left">Unit</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-48">Actions</th>
                 </tr>
             </thead>
             <tbody id="unit-table-body">

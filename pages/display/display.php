@@ -1,7 +1,14 @@
 <div class="p-4 h-full lg:h-auto">
     <script>
-        // Apply saved font size on every page load
+        // Apply saved theme and font size on every page load
         (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'light') {
+                document.body.classList.remove('dark');
+            } else if (theme === 'dark') {
+                document.body.classList.add('dark');
+            }
+
             const savedSize = localStorage.getItem('user_font_size');
             if (savedSize) {
                 document.documentElement.style.fontSize = savedSize;
@@ -43,10 +50,10 @@
                     <div class="w-3/4 mx-auto">
                         <h3 class="text-lg font-bold mb-2">Theme</h3>
                         <div class="flex lg:flex-row flex-col gap-4 justify-center">
-                            <button id="" class="flex-1 justify-center bg-[#D6D7DC] border border-[#1E1E1E] py-1 rounded shadow-sm text-sm flex items-center h-7 gap-2">
+                            <button id="theme-default-btn" class="flex-1 justify-center bg-[#D6D7DC] border border-[#1E1E1E] py-1 rounded shadow-sm text-sm flex items-center h-7 gap-2">
                                 <p class="font-bold">Default</p>
                             </button>
-                            <button id="" class="flex-1 justify-center bg-[#0D2442] py-1 rounded shadow-sm text-sm flex items-center h-7 gap-2">
+                            <button id="theme-dark-btn" class="flex-1 justify-center bg-[#0D2442] py-1 rounded shadow-sm text-sm flex items-center h-7 gap-2">
                                 <p class="font-bold text-white">Lights Out</p>
                             </button>
                         </div>
@@ -81,6 +88,8 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const sliderPoints = document.querySelectorAll('.font-size-point');
+        const defaultThemeBtn = document.getElementById('theme-default-btn');
+        const darkThemeBtn = document.getElementById('theme-dark-btn');
         const rootElement = document.documentElement;
 
         // Function to update the visual state of the slider
@@ -112,6 +121,21 @@
         if (savedSize) {
             sliderPoints.forEach(p => {
                 updateSliderVisuals(savedSize);
+            });
+        }
+
+        // --- Theme Switching Logic ---
+        if (defaultThemeBtn) {
+            defaultThemeBtn.addEventListener('click', () => {
+                document.body.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            });
+        }
+
+        if (darkThemeBtn) {
+            darkThemeBtn.addEventListener('click', () => {
+                document.body.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
             });
         }
 
