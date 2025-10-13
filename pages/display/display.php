@@ -58,23 +58,23 @@
 </div>
 
 <!-- Upload Logo Dialog -->
-<dialog id="upload-logo-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+<dialog id="upload-logo-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
     <form id="upload-logo-form" method="POST" class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">Change System Logo</h3>
-        <p class="text-sm text-gray-600">Select an image file (PNG, JPG, GIF). The recommended size is square (e.g., 200x200 pixels). Max file size: 2MB.</p>
-        <div>
-            <label for="logo-file-input" class="block text-sm font-medium text-gray-700">Logo File</label>
-            <input type="file" id="logo-file-input" name="logo_file" class="mt-1 block w-full text-sm text-gray-500
-                    file:mr-4 file:py-2 file:px-4
-                    file:rounded-full file:border-0
-                    file:text-sm file:font-semibold
-                    file:bg-blue-50 file:text-blue-700
-                    hover:file:bg-blue-100" accept="image/png, image/jpeg, image/gif" required>
+        <h3 class="font-bold text-lg mb-4 text-center">Change System Logo</h3>
+        <p class="text-sm text-gray-600 text-center">Select an image file (PNG, JPG, GIF). The recommended size is square (e.g., 200x200 pixels). Max file size: 2MB.</p>
+        <div id="logo-drop-zone" class="flex flex-col items-center justify-center w-full">
+            <label for="logo-file-input" class="flex flex-col items-center justify-center w-full h-48 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors bg-[#749DC8]/20">
+                <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                    <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2" />
+                    </svg>
+                    <p id="logo-drop-zone-text" class="mb-2 text-sm text-gray-500"><span class="font-semibold">Click to upload</span> or drag and drop</p>
+                    <p class="text-xs text-gray-500">PNG, JPG, GIF (MAX. 2MB)</p>
+                </div>
+                <input type="file" id="logo-file-input" name="logo_file" class="hidden" accept="image/png, image/jpeg, image/gif" required>
+            </label>
         </div>
-        <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-upload-logo" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center gap-2 disabled:opacity-50">Upload</button>
-        </div>
+        <button type="button" id="cancel-upload-logo" class="hidden">Cancel</button>
     </form>
 </dialog>
 
@@ -121,6 +121,8 @@
         const uploadLogoForm = document.getElementById('upload-logo-form');
         const cancelUploadLogoBtn = document.getElementById('cancel-upload-logo');
         const logoFileInput = document.getElementById('logo-file-input');
+        const logoDropZone = document.getElementById('logo-drop-zone');
+        const logoDropZoneText = document.getElementById('logo-drop-zone-text');
 
         if (changeLogoBtn) {
             changeLogoBtn.addEventListener('click', () => uploadLogoDialog.showModal());
@@ -138,39 +140,75 @@
             });
         }
 
-        if (uploadLogoForm) {
-            uploadLogoForm.addEventListener('submit', async (event) => {
-                event.preventDefault();
+        const handleLogoUpload = async () => {
+            if (!logoFileInput.files || logoFileInput.files.length === 0) {
+                alert('Please select an image file to upload.');
+                return;
+            }
 
-                if (!logoFileInput.files || logoFileInput.files.length === 0) {
-                    alert('Please select a file to upload.');
-                    return;
+            logoDropZoneText.innerHTML = `<span class="font-semibold text-blue-600">Uploading ${logoFileInput.files[0].name}...</span>`;
+
+            const formData = new FormData(uploadLogoForm);
+
+            try {
+                const response = await fetch('../../function/_display/_uploadLogo.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                alert(result.message);
+                if (result.success) {
+                    window.location.reload(); // Reload to reflect changes
+                } else {
+                    logoDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
                 }
+            } catch (error) {
+                alert('An error occurred during the upload. Please check the console.');
+                console.error('Upload Error:', error);
+                logoDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
+            } finally {
+                uploadLogoDialog.close();
+            }
+        };
 
-                const submitButton = uploadLogoForm.querySelector('button[type="submit"]');
-                const originalButtonText = submitButton.textContent;
-                submitButton.disabled = true;
-                submitButton.textContent = 'Uploading...';
+        // --- Drag and Drop Logic for Logo ---
+        if (logoDropZone && logoFileInput && logoDropZoneText) {
+            const preventDefaults = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+            };
 
-                const formData = new FormData(uploadLogoForm);
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                logoDropZone.addEventListener(eventName, preventDefaults, false);
+            });
 
-                try {
-                    const response = await fetch('../../function/_display/_uploadLogo.php', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    const result = await response.json();
-                    alert(result.message);
-                    if (result.success) {
-                        window.location.reload(); // Reload to reflect changes
-                    }
-                } catch (error) {
-                    alert('An error occurred during the upload. Please check the console.');
-                    console.error('Upload Error:', error);
-                } finally {
-                    submitButton.disabled = false;
-                    submitButton.textContent = originalButtonText;
-                    uploadLogoDialog.close();
+            ['dragenter', 'dragover'].forEach(eventName => {
+                logoDropZone.addEventListener(eventName, () => {
+                    logoDropZone.querySelector('label').classList.add('border-blue-500', 'bg-blue-50');
+                }, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                logoDropZone.addEventListener(eventName, () => {
+                    logoDropZone.querySelector('label').classList.remove('border-blue-500', 'bg-blue-50');
+                }, false);
+            });
+
+            logoDropZone.addEventListener('drop', (e) => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    logoFileInput.files = files;
+                    logoFileInput.dispatchEvent(new Event('change'));
+                }
+            }, false);
+
+            logoFileInput.addEventListener('change', () => {
+                if (logoFileInput.files.length > 0) {
+                    logoDropZoneText.innerHTML = `<span class="font-semibold text-green-600">${logoFileInput.files[0].name}</span> selected`;
+                    handleLogoUpload();
+                } else {
+                    logoDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
                 }
             });
         }

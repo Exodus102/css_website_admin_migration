@@ -30,7 +30,7 @@ try {
     // error_log($e->getMessage());
 }
 ?>
-<div class="p-4 font-sfpro">
+<div class="md:p-4 px-4 pb-4 pt-10 font-sfpro h-full lg:h-auto w-full">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -47,8 +47,8 @@ try {
     include 'filters.php';
     ?><br>
 
-    <div class="">
-        <table class="w-full">
+    <div class="w-full overflow-x-auto">
+        <table class="">
             <thead class="bg-[#064089] text-white font-normal">
                 <tr>
                     <th class="border border-[#1E1E1ECC] font-normal py-2">Campus</th>

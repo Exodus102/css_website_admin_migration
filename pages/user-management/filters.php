@@ -1,5 +1,5 @@
-<div class="w-10/12">
-    <div class="flex gap-2">
+<div class="w-full lg:w-10/12">
+    <div class="flex-col lg:flex-row flex gap-2">
         <div class="relative flex-grow">
             <input type="text" id="search-input" placeholder="Search" class="border border-[#1E1E1E] py-1 pl-4 pr-10 rounded focus:border-blue-500 focus:ring-blue-500 w-full bg-[#E6E7EC] placeholder:text-[#1E1E1E]/80">
             <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -9,9 +9,9 @@
         <button id="add-account-btn" class="bg-[#D6D7DC] px-4 py-1 rounded border border-[#1E1E1E]">+ <span class="font-semibold">Add Account</span></button>
     </div>
 
-    <div class="flex items-center flex-wrap gap-2 mt-4 text-sm">
+    <div class="flex-col flex lg:items-center lg:flex-row gap-2 mt-4 text-sm">
         <span class="font-semibold">FILTERS:</span>
-        <div class="flex-grow">
+        <div class="flex-grow w-full lg:w-auto">
             <label for="campus-filter" class="block text-xs font-medium text-[#48494A]">CAMPUS</label>
             <select name="campus_filter" id="campus-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] h-7">
                 <option value="" hidden>Campus</option>
@@ -21,9 +21,9 @@
             </select>
         </div>
 
-        <div class="flex-grow" style="flex-grow: 2;">
+        <div class="flex-grow w-full lg:w-auto" style="flex-grow: 2;">
             <label for="unit-filter" class="block text-xs font-medium text-[#48494A]">UNIT</label>
-            <select name="unit_filter" id="unit-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-48 bg-[#E6E7EC] h-7">
+            <select name="unit_filter" id="unit-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full lg:w-48 bg-[#E6E7EC] h-7">
                 <option value="" hidden>Unit</option>
                 <?php foreach ($units as $unit) : ?>
                     <option value="<?php echo htmlspecialchars($unit); ?>"><?php echo htmlspecialchars($unit); ?></option>
@@ -31,7 +31,7 @@
             </select>
         </div>
 
-        <div class="flex-grow" style="flex-grow: 2;">
+        <div class="flex-grow w-full lg:w-auto" style="flex-grow: 2;">
             <label for="usertype-filter" class="block text-xs font-medium text-[#48494A]">USER TYPE</label>
             <select name="usertype_filter" id="usertype-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] h-7">
                 <option value="" hidden>User Type</option>
@@ -44,16 +44,16 @@
             </select>
         </div>
 
-        <div class="flex-grow">
+        <div class="flex-grow w-full lg:w-auto">
             <label for="date-from" class="block text-xs font-medium text-[#48494A]">DATE FROM</label>
             <input type="date" id="date-from" name="date_from" class="border border-[#1E1E1E] px-2 rounded w-full bg-[#E6E7EC] h-7 text-[#E6E7EC] focus:text-[#1E1E1E] valid:text-[#1E1E1E]">
         </div>
-        <div class="flex-grow">
+        <div class="flex-grow w-full lg:w-auto">
             <label for="date-to" class="block text-xs font-medium text-[#48494A]">DATE TO</label>
             <input type="date" id="date-to" name="date_to" class="border border-[#1E1E1E] px-2 rounded w-full bg-[#E6E7EC] h-7 text-[#E6E7EC] focus:text-[#1E1E1E] valid:text-[#1E1E1E]">
         </div>
 
-        <div class="flex-grow">
+        <div class="flex-grow w-full lg:w-auto">
             <label for="status-filter" class="block text-xs font-medium text-[#48494A]">STATUS</label>
             <select name="status_filter" id="status-filter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] h-7">
                 <option value="" hidden>Status</option>
@@ -65,33 +65,33 @@
 </div>
 
 <!-- Add Account Dialog -->
-<dialog id="add-account-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+<dialog id="add-account-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
     <form id="add-account-form" method="POST" class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">Add New Account</h3>
+        <h3 class="font-bold text-lg mb-4 text-center">Add New Account</h3>
 
         <div>
             <label for="add-first-name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="add-first-name" name="first_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="text" id="add-first-name" name="first_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="add-middle-name" class="block text-sm font-medium text-gray-700">Middle Name</label>
-            <input type="text" id="add-middle-name" name="middle_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <input type="text" id="add-middle-name" name="middle_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="add-last-name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" id="add-last-name" name="last_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="text" id="add-last-name" name="last_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="add-contact-number" class="block text-sm font-medium text-gray-700">Contact Number</label>
-            <input type="tel" id="add-contact-number" name="contact_number" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <input type="tel" id="add-contact-number" name="contact_number" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="add-campus" class="block text-sm font-medium text-gray-700">Campus</label>
-            <select id="add-campus" name="campus" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <select id="add-campus" name="campus" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Select Campus</option>
                 <?php foreach ($campuses as $campus) : ?>
                     <option value="<?php echo htmlspecialchars($campus); ?>"><?php echo htmlspecialchars($campus); ?></option>
@@ -101,14 +101,14 @@
 
         <div>
             <label for="add-unit" class="block text-sm font-medium text-gray-700">Unit</label>
-            <select id="add-unit" name="unit" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <select id="add-unit" name="unit" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Select a campus first</option>
             </select>
         </div>
 
         <div>
             <label for="add-user-type" class="block text-sm font-medium text-gray-700">User Type</label>
-            <select id="add-user-type" name="type" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <select id="add-user-type" name="type" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Select User Type</option>
                 <option value="Campus Director">Campus Director</option>
                 <option value="CSS Head">CSS Head</option>
@@ -121,22 +121,22 @@
 
         <div>
             <label for="add-email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="email" id="add-email" name="email" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="email" id="add-email" name="email" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="add-password" class="block text-sm font-medium text-gray-700">Password</label>
-            <input type="password" id="add-password" name="password" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="password" id="add-password" name="password" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
 
         <div>
             <label for="add-date-created" class="block text-sm font-medium text-gray-700">Date Created</label>
-            <input type="date" id="add-date-created" name="date_created" value="<?php echo date('Y-m-d'); ?>" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500" required>
+            <input type="date" id="add-date-created" name="date_created" value="<?php echo date('Y-m-d'); ?>" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required readonly>
         </div>
 
         <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-add-account" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Account</button>
+            <button type="button" id="cancel-add-account" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Save Account</button>
         </div>
     </form>
 </dialog>
