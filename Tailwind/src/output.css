@@ -1018,6 +1018,10 @@ video {
   width: 100%;
 }
 
+.w-40 {
+  width: 10rem;
+}
+
 .min-w-\[288px\] {
   min-width: 288px;
 }
@@ -1086,20 +1090,16 @@ video {
   animation: spin 1s linear infinite;
 }
 
+.cursor-grab {
+  cursor: grab;
+}
+
 .cursor-not-allowed {
   cursor: not-allowed;
 }
 
 .cursor-pointer {
   cursor: pointer;
-}
-
-.cursor-grab {
-  cursor: grab;
-}
-
-.resize {
-  resize: both;
 }
 
 .list-inside {
@@ -2312,6 +2312,11 @@ body {
   background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1));
 }
 
+.hover\:bg-blue-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(191 219 254 / var(--tw-bg-opacity, 1));
+}
+
 .hover\:bg-blue-700:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
@@ -2713,6 +2718,10 @@ body {
     width: auto;
   }
 
+  .lg\:w-40 {
+    width: 10rem;
+  }
+
   .lg\:max-w-lg {
     max-width: 32rem;
   }
@@ -2750,8 +2759,16 @@ body {
     justify-content: flex-end;
   }
 
+  .lg\:justify-between {
+    justify-content: space-between;
+  }
+
   .lg\:gap-4 {
     gap: 1rem;
+  }
+
+  .lg\:gap-0 {
+    gap: 0px;
   }
 
   .lg\:self-center {

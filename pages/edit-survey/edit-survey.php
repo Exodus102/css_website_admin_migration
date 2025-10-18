@@ -1,3 +1,19 @@
+<?php
+require_once '../../function/_databaseConfig/_dbConfig.php';
+
+// Fetch the current analysis status
+$analysis_is_active = 0; // Default to disabled
+try {
+  // Assumes a single row with id=1 in tbl_active controls this setting
+  $stmt = $pdo->query("SELECT is_active FROM tbl_active WHERE id = 1 LIMIT 1");
+  $result = $stmt->fetchColumn();
+  if ($result !== false) {
+    $analysis_is_active = (int)$result;
+  }
+} catch (PDOException $e) {
+  error_log("Could not fetch analysis status: " . $e->getMessage());
+}
+?>
 <div class="p-4 overflow-hidden" id="survey-list-container">
   <script>
     // Apply saved font size on every page load
@@ -8,11 +24,22 @@
       }
     })();
   </script>
-  <h1 class="text-3xl font-bold mb-2 font-sfpro leading-5">Edit Survey</h1>
-  <p class="font-sfpro">Customize your survey details and questions.</p><br>
+  <div class="flex lg:flex-row lg:justify-between lg:items-center flex-col mb-2">
+    <div>
+      <h1 class="text-3xl font-bold mb-2 font-sfpro leading-5">Edit Survey</h1>
+      <p class="font-sfpro">Customize your survey details and questions.</p><br>
+    </div>
+    <div>
+      <button id="toggle-analysis-btn" data-active="<?php echo $analysis_is_active; ?>" class="bg-[#D9E2EC] text-[#064089] px-4 py-2 rounded-md font-semibold transition hover:bg-blue-200 w-full lg:w-40">
+        <?php echo $analysis_is_active ? 'Disable Analysis' : 'Enable Analysis'; ?>
+      </button>
+    </div>
+  </div>
   <?php
-  require_once '../../function/_databaseConfig/_dbConfig.php';
-
+  // The DB connection is already included at the top.
+  // We can now proceed with the rest of the page logic.
+  ?>
+  <?php
   try {
     // First, find the name of the currently active survey.
     // This is efficient as it's only one query before the loop.
@@ -157,6 +184,48 @@
 <script src="../../JavaScript/pages/edit-survey/new-questionaire-page.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
+    const toggleAnalysisBtn = document.getElementById('toggle-analysis-btn');
+
+    if (toggleAnalysisBtn) {
+      toggleAnalysisBtn.addEventListener('click', async () => {
+        const currentlyActive = toggleAnalysisBtn.dataset.active === '1';
+        const newStatus = currentlyActive ? 0 : 1;
+
+        const originalText = toggleAnalysisBtn.textContent;
+        toggleAnalysisBtn.disabled = true;
+        toggleAnalysisBtn.textContent = 'Updating...';
+
+        try {
+          const response = await fetch('../../function/_analysis/_toggleAnalysis.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              is_active: newStatus
+            }),
+          });
+
+          const result = await response.json();
+          alert(result.message);
+
+          if (result.success) {
+            // Update button state and text
+            toggleAnalysisBtn.dataset.active = newStatus;
+            toggleAnalysisBtn.textContent = newStatus === 1 ? 'Disable Analysis' : 'Enable Analysis';
+          } else {
+            toggleAnalysisBtn.textContent = originalText; // Revert on failure
+          }
+        } catch (error) {
+          console.error('Error toggling analysis status:', error);
+          alert('An error occurred. Please check the console.');
+          toggleAnalysisBtn.textContent = originalText; // Revert on error
+        } finally {
+          toggleAnalysisBtn.disabled = false;
+        }
+      });
+    }
+
     const listView = document.getElementById('survey-list-container');
     const creatorView = document.getElementById('questionnaire-creator-container');
     const addNewBtn = document.getElementById('add-new-questionnaire-btn');
