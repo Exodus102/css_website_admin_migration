@@ -187,9 +187,11 @@ try {
                                 </span>
                             </td>
                             <td class="border border-gray-300 p-3 text-center action-cell">
-                                <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
-                                    <img src="../../resources/svg/eye-icon.svg" alt="">View
-                                </button>
+                                <div class="flex justify-center">
+                                    <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
+                                        <img src="../../resources/svg/eye-icon.svg" alt="">View
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

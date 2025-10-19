@@ -3,8 +3,25 @@
         <div class="hidden md:flex items-center gap-9 text-gray-500">
             <img src="../../resources/svg/hamburger.svg" alt="" class="w-7 h-7">
             <span class="lg:flex gap-2 hidden">
-                <!-- <img src="../../resources/svg/ursatisfaction-logo.svg" alt="" class="w-12 h-12"> -->
-                <img src="../../resources/img/new-logo.png" alt="" srcset="" class="size-14">
+                <?php
+                // This logic fetches the active logo path.
+                // It's placed here to be self-contained within the header.
+                $logo_path = '../../resources/img/new-logo.png'; // Default fallback logo
+                try {
+                    // We need to include the DB config here as the header is loaded before the page content.
+                    require_once __DIR__ . '/../../function/_databaseConfig/_dbConfig.php';
+
+                    $stmt = $pdo->query("SELECT logo_path FROM tbl_logo WHERE status = 1 LIMIT 1");
+                    $active_logo_path = $stmt->fetchColumn();
+
+                    if ($active_logo_path) {
+                        $logo_path = '../../' . $active_logo_path;
+                    }
+                } catch (PDOException $e) {
+                    // On error, the default logo is used. You could log the error here.
+                }
+                ?>
+                <img src="<?php echo htmlspecialchars($logo_path); ?>" alt="URSatisfaction Logo" class="size-14 object-contain">
                 <p class="flex flex-col">
                     <span class="font-bold text-[#064089]">URSatisfaction</span>
                     <span class="flex flex-col text-xs text-[#064089] leading-none">
