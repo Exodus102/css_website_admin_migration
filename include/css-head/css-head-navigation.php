@@ -7,7 +7,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
 <nav class="z-30 bg-[#F1F7F9] text-black p-4 flex-col w-64 lg:w-1/5 rounded-r-lg lg:rounded-lg shadow-2xl fixed lg:relative lg:flex top-0 left-0 h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-x-auto" id="side-nav">
     <ul class="space-y-1 flex-grow lg:pt-12">
         <li>
-            <a href="css-head-layout.php?=dashboard" class="<?php echo $base_class; ?> <?php echo ($page === 'dashboard') ? $active_class : $inactive_class; ?>">
+            <a href="css-head-layout.php?page=dashboard-css-head" class="<?php echo $base_class; ?> <?php echo ($page === 'dashboard-css-head') ? $active_class : $inactive_class; ?>">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M4.16667 14.0417H10.4167C10.9896 14.0417 11.4583 13.5729 11.4583 13V4.66667C11.4583 4.09375 10.9896 3.625 10.4167 3.625H4.16667C3.59375 3.625 3.125 4.09375 3.125 4.66667V13C3.125 13.5729 3.59375 14.0417 4.16667 14.0417ZM4.16667 22.375H10.4167C10.9896 22.375 11.4583 21.9062 11.4583 21.3333V17.1667C11.4583 16.5937 10.9896 16.125 10.4167 16.125H4.16667C3.59375 16.125 3.125 16.5937 3.125 17.1667V21.3333C3.125 21.9062 3.59375 22.375 4.16667 22.375ZM14.5833 22.375H20.8333C21.4062 22.375 21.875 21.9062 21.875 21.3333V13C21.875 12.4271 21.4062 11.9583 20.8333 11.9583H14.5833C14.0104 11.9583 13.5417 12.4271 13.5417 13V21.3333C13.5417 21.9062 14.0104 22.375 14.5833 22.375ZM13.5417 4.66667V8.83333C13.5417 9.40625 14.0104 9.875 14.5833 9.875H20.8333C21.4062 9.875 21.875 9.40625 21.875 8.83333V4.66667C21.875 4.09375 21.4062 3.625 20.8333 3.625H14.5833C14.0104 3.625 13.5417 4.09375 13.5417 4.66667Z" fill="#1E1E1E" />
                 </svg>
@@ -107,29 +107,6 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
             Settings
         </span>
         <li>
-            <a href="css-head-layout.php?page=edit-survey" class="group <?php echo $base_class; ?> <?php echo ($page === 'edit-survey') ? $active_class : $inactive_class; ?>">
-                <img src="../../resources/svg/edit-survey.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:hidden <?php echo ($page === 'edit-survey') ? 'hidden' : 'block'; ?>">
-                <img src="../../resources/svg/edit-survey-white.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:block <?php echo ($page === 'edit-survey') ? 'block' : 'hidden'; ?>">
-                Edit Survey
-            </a>
-        </li>
-        <li>
-            <a href="css-head-layout.php?page=user-management" class="group <?php echo $base_class; ?> <?php echo ($page === 'user-management') ? $active_class : $inactive_class; ?>">
-                <svg width="24" height="24" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg">
-                    <g clip-path="url(#clip0_180_355)">
-                        <path class="fill-current" d="M17.1875 9.375C17.1875 10.6182 16.6936 11.8105 15.8146 12.6896C14.9355 13.5686 13.7432 14.0625 12.5 14.0625C11.2568 14.0625 10.0645 13.5686 9.18544 12.6896C8.30636 11.8105 7.8125 10.6182 7.8125 9.375C7.8125 8.1318 8.30636 6.93951 9.18544 6.06044C10.0645 5.18136 11.2568 4.6875 12.5 4.6875C13.7432 4.6875 14.9355 5.18136 15.8146 6.06044C16.6936 6.93951 17.1875 8.1318 17.1875 9.375Z" />
-                        <path class="fill-current" fill-rule="evenodd" clip-rule="evenodd" d="M0 12.5C0 9.18479 1.31696 6.00537 3.66117 3.66117C6.00537 1.31696 9.18479 0 12.5 0C15.8152 0 18.9946 1.31696 21.3388 3.66117C23.683 6.00537 25 9.18479 25 12.5C25 15.8152 23.683 18.9946 21.3388 21.3388C18.9946 23.683 15.8152 25 12.5 25C9.18479 25 6.00537 23.683 3.66117 21.3388C1.31696 18.9946 0 15.8152 0 12.5ZM12.5 1.5625C10.4403 1.56261 8.42245 2.14432 6.67875 3.24067C4.93506 4.33702 3.53638 5.90345 2.64369 7.75968C1.75101 9.6159 1.4006 11.6865 1.63281 13.7331C1.86502 15.7796 2.6704 17.7191 3.95625 19.3281C5.06563 17.5406 7.50781 15.625 12.5 15.625C17.4922 15.625 19.9328 17.5391 21.0438 19.3281C22.3296 17.7191 23.135 15.7796 23.3672 13.7331C23.5994 11.6865 23.249 9.6159 22.3563 7.75968C21.4636 5.90345 20.0649 4.33702 18.3212 3.24067C16.5776 2.14432 14.5597 1.56261 12.5 1.5625Z" />
-                    </g>
-                    <defs>
-                        <clipPath id="clip0_180_355">
-                            <rect width="25" height="25" fill="white" />
-                        </clipPath>
-                    </defs>
-                </svg>
-                User Management
-            </a>
-        </li>
-        <li>
             <a href="css-head-layout.php?page=entity-management" class="group <?php echo $base_class; ?> <?php echo ($page === 'entity-management') ? $active_class : $inactive_class; ?>">
                 <svg width="19" height="18" viewBox="0 0 19 18" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M3.25 0.25C1.86929 0.25 0.75 1.36929 0.75 2.75V5.25C0.75 6.63071 1.86929 7.75 3.25 7.75H5.75C7.13071 7.75 8.25 6.63071 8.25 5.25V2.75C8.25 1.36929 7.13071 0.25 5.75 0.25H3.25Z" />
@@ -182,40 +159,6 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                     5.29159 17.2497Z" />
                 </svg>
                 Backup & Restore
-            </a>
-        </li>
-        <li>
-            <a href="css-head-layout.php?page=audit-trail" class="group <?php echo $base_class; ?> <?php echo ($page === 'audit-trail') ? $active_class : $inactive_class; ?>">
-                <svg class="" width="23" height="22" viewBox="0 0 23 22" xmlns="http://www.w3.org/2000/svg">
-                    <path class="fill-current" d="M13.6938 9.95801H17.8115C18.3803 9.95801 18.8407 10.4247 
-                    18.8407 10.9997C18.8407 11.5747 18.3803 12.0413 17.8115 
-                    12.0413H12.6647C12.5287 12.0405 12.3942 12.0129 12.2689 
-                    11.9601C12.1436 11.9073 12.0299 11.8304 11.9343 11.7337C11.8388 
-                    11.6369 11.7632 11.5223 11.7119 11.3964C11.6606 11.2705 11.6347 
-                    11.1356 11.6355 10.9997V4.74967C11.6355 4.17467 12.0959 3.70801 
-                    12.6647 3.70801C13.2334 3.70801 13.6938 4.17467 13.6938 
-                    4.74967V9.95801ZM19.9438 3.63405C21.8812 5.59533 22.9648 
-                    8.24288 22.9584 10.9997C22.9584 16.7528 18.3501 21.4163 12.6647 
-                    21.4163V19.333C17.2126 19.333 20.9001 15.6018 20.9001 10.9997C20.9054 
-                    8.79398 20.0381 6.6757 18.4876 5.10697C17.7278 4.33378 16.8215 3.71974 
-                    15.8217 3.30069C14.8219 2.88165 13.7487 2.666 12.6647 2.66634C8.97299 
-                    2.66634 5.84799 5.12467 4.8032 8.51217L6.21153 7.55072C6.32349 7.47428 
-                    6.44954 7.42089 6.58233 7.39364C6.71513 7.3664 6.85201 7.36585 6.98502 
-                    7.39202C7.11803 7.4182 7.2445 7.47057 7.35707 7.54611C7.46964 7.62164 
-                    7.56606 7.71881 7.6407 7.83197C7.79349 8.0612 7.84997 8.34135 7.79793 
-                    8.61188C7.74589 8.88241 7.58951 9.12161 7.36258 9.2778L3.94903 
-                    11.608C3.83708 11.6844 3.71103 11.7378 3.57824 11.7651C3.44544 
-                    11.7923 3.30856 11.7929 3.17555 11.7667C3.04254 11.7405 2.91607 
-                    11.6881 2.8035 11.6126C2.69093 11.5371 2.59451 11.4399 2.51987 
-                    11.3268L0.218826 7.87259C0.0657111 7.64327 0.00904822 7.36288 
-                    0.061099 7.0921C0.11315 6.82132 0.269728 6.58193 0.496951 
-                    6.42572C0.608908 6.34928 0.734954 6.29589 0.867748 6.26864C1.00054 
-                    6.2414 1.13743 6.24085 1.27044 6.26702C1.40345 6.2932 1.52992 6.34558 
-                    1.64249 6.42111C1.75506 6.49664 1.85147 6.59381 1.92612 6.70697L2.80008 
-                    8.01842C4.0657 3.71842 8.0032 0.583008 12.6647 0.583008C15.5074 0.583008 18.0813 
-                    1.74967 19.9438 3.63405Z" />
-                </svg>
-                Audit Trail
             </a>
         </li>
         <li>

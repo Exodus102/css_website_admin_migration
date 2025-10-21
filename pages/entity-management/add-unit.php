@@ -82,12 +82,12 @@ try {
 </div>
 
 <!-- Add Unit Dialog -->
-<dialog id="add-unit-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+<dialog id="add-unit-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
     <form id="add-unit-form" method="POST" class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">Add Unit</h3>
+        <h3 class="font-bold text-lg mb-4 text-center">Add New Unit</h3>
         <div>
             <label for="add-division-name" class="block text-sm font-medium text-gray-700">DVISION</label>
-            <select id="add-division-name" name="division_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="add-division-name" name="division_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Name of Division</option>
                 <?php foreach ($divisions as $division) : ?>
                     <option value="<?php echo htmlspecialchars($division); ?>"><?php echo htmlspecialchars($division); ?></option>
@@ -96,25 +96,25 @@ try {
         </div>
         <div>
             <label for="add-unit-name" class="block text-sm font-medium text-gray-700">Unit Name</label>
-            <select id="add-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="add-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="" hidden>Select Unit</option>
             </select>
         </div>
-        <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-add-unit" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+        <div class="mt-6 flex justify-end gap-2">
+            <button type="button" id="cancel-add-unit" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Save</button>
         </div>
     </form>
 </dialog>
 
 <!-- Edit Unit Dialog -->
-<dialog id="edit-unit-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md">
+<dialog id="edit-unit-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
     <form id="edit-unit-form" method="POST" class="space-y-4">
-        <h3 class="font-bold text-lg mb-4">Edit Unit</h3>
+        <h3 class="font-bold text-lg mb-4 text-center">Edit Unit</h3>
         <input type="hidden" id="edit-unit-id" name="unit_id">
         <div>
             <label for="edit-division-name" class="block text-sm font-medium text-gray-700">DIVISION</label>
-            <select id="edit-division-name" name="division_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-division-name" name="division_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="">Name of Division</option>
                 <?php foreach ($divisions as $division) : ?>
                     <option value="<?php echo htmlspecialchars($division); ?>"><?php echo htmlspecialchars($division); ?></option>
@@ -123,13 +123,13 @@ try {
         </div>
         <div>
             <label for="edit-unit-name" class="block text-sm font-medium text-gray-700">Unit Name</label>
-            <select id="edit-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" required>
+            <select id="edit-unit-name" name="unit_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="">Select Unit</option>
             </select>
         </div>
-        <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-edit-unit" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
+        <div class="mt-6 flex justify-end gap-2">
+            <button type="button" id="cancel-edit-unit" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Update</button>
         </div>
     </form>
 </dialog>

@@ -18,7 +18,7 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
     <title>Customer Satisfaction</title>
 </head>
 
-<body class="bg-[#E6E7EC] font-sans leading-normal tracking-normal">
+<body class="bg-[#E6E7EC] font-sans leading-normal tracking-normal overflow-hidden">
     <div class="h-16 relative">
         <?php include "dcc-header.php"; ?>
     </div>
@@ -31,7 +31,7 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
 
         <?php include "dcc-navigation.php"; ?>
 
-        <main class="flex-1 lg:p-5 w-4/5">
+        <main class="flex-1 lg:p-5 w-4/5 overflow-y-auto">
             <h1 class="lg:text-3xl lg:font-bold lg:mb-6">
             </h1>
             <?php

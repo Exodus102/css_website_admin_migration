@@ -15,9 +15,9 @@ try {
         <table class="border border-[#1E1E1ECC] w-full">
             <thead class="bg-[#064089] text-white font-normal">
                 <tr>
-                    <th class="border border-[#1E1E1ECC] font-normal">#</th>
-                    <th class="border border-[#1E1E1ECC] font-normal">Campus</th>
-                    <th class="border border-[#1E1E1ECC] font-normal">Actions</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-16">#</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 text-left">Campus</th>
+                    <th class="border border-[#1E1E1ECC] font-normal p-2 w-48">Actions</th>
                 </tr>
             </thead>
             <tbody id="campus-table-body">
@@ -29,8 +29,8 @@ try {
                     <?php $count = 1; ?>
                     <?php foreach ($campuses as $campus) : ?>
                         <tr data-campus-id="<?php echo $campus['id']; ?>" class="bg-[#F1F7F9]">
-                            <td class="border border-[#1E1E1ECC] text-center"><?php echo $count++; ?></td>
-                            <td class="border border-[#1E1E1ECC] px-2"><?php echo htmlspecialchars($campus['campus_name']); ?></td>
+                            <td class="border border-[#1E1E1ECC] text-center p-2"><?php echo $count++; ?></td>
+                            <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($campus['campus_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2">
                                 <div class="flex justify-center items-center gap-2">
                                     <button data-id="<?php echo $campus['id']; ?>" data-name="<?php echo htmlspecialchars($campus['campus_name']); ?>" class="edit-campus-btn flex items-center gap-1 bg-[#D9E2EC] text-[#064089] px-3 py-1 rounded-md text-xs font-semibold transition hover:bg-[#c2ccd6]">
@@ -52,32 +52,32 @@ try {
 </div>
 
 <!-- Add Campus Dialog -->
-<dialog id="add-campus-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50">
-    <form id="add-campus-form" method="POST">
-        <h3 class="font-bold text-lg mb-4">Add Campus</h3>
+<dialog id="add-campus-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
+    <form id="add-campus-form" method="POST" class="space-y-4">
+        <h3 class="font-bold text-lg mb-4 text-center">Add New Campus</h3>
         <div>
             <label for="campus-name" class="block text-sm font-medium text-gray-700">CAMPUS</label>
-            <input type="text" id="campus-name" name="campus_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" placeholder="Name of New Campus" required>
+            <input type="text" id="campus-name" name="campus_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" placeholder="Name of New Campus" required>
         </div>
-        <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-add-campus" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+        <div class="mt-6 flex justify-end gap-2">
+            <button type="button" id="cancel-add-campus" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Save</button>
         </div>
     </form>
 </dialog>
 
 <!-- Edit Campus Dialog -->
-<dialog id="edit-campus-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50">
-    <form id="edit-campus-form" method="POST">
-        <h3 class="font-bold text-lg mb-4">Edit Campus</h3>
+<dialog id="edit-campus-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-md bg-[#F1F7F9]">
+    <form id="edit-campus-form" method="POST" class="space-y-4">
+        <h3 class="font-bold text-lg mb-4 text-center">Edit Campus</h3>
         <input type="hidden" id="edit-campus-id" name="campus_id">
         <div>
             <label for="edit-campus-name" class="block text-sm font-medium text-gray-700">Campus Name</label>
-            <input type="text" id="edit-campus-name" name="campus_name" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" required>
+            <input type="text" id="edit-campus-name" name="campus_name" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
         </div>
-        <div class="mt-6 flex justify-end gap-4">
-            <button type="button" id="cancel-edit-campus" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
-            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Update</button>
+        <div class="mt-6 flex justify-end gap-2">
+            <button type="button" id="cancel-edit-campus" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+            <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700">Update</button>
         </div>
     </form>
 </dialog>
