@@ -8,6 +8,8 @@ $divisions = [];
 $units_by_name = [];
 $units = [];
 $years = [];
+$active_questions = [];
+$customer_types = [];
 $user_campus = $_SESSION['user_campus'] ?? null;
 
 try {
@@ -31,6 +33,20 @@ try {
             $units_by_name[$unit['unit_name']] = $unit;
         }
     }
+
+    // Fetch all customer types for the dropdown
+    $stmtCustomerTypes = $pdo->query("SELECT customer_type FROM tbl_customer_type ORDER BY customer_type ASC");
+    $customer_types = $stmtCustomerTypes->fetchAll(PDO::FETCH_COLUMN);
+
+    // Fetch active, answerable questions for the "Add Response" dialog.
+    // Includes Multiple Choice, Dropdown, and Text types, but excludes Description.
+    $stmt_active_questions = $pdo->prepare("
+        SELECT question_id, question 
+        FROM tbl_questionaire 
+        WHERE status = 1 AND question_type != 'Description' AND question_id != 1
+        ORDER BY question_id ASC");
+    $stmt_active_questions->execute();
+    $active_questions = $stmt_active_questions->fetchAll(PDO::FETCH_ASSOC);
 
     // Step 1: Fetch raw response data, filtered by the user's campus.
     if ($user_campus) {
@@ -178,11 +194,17 @@ try {
             </div>
         </div>
 
-        <!-- Upload CSV button -->
-        <button id="upload-csv-btn" class="bg-[#D6D7DC] border border-[#1E1E1E] px-4 py-2 rounded shadow-sm text-sm flex items-center h-7">
-            <img src="../../resources/svg/upload-data-window.svg" alt="" srcset="">
-            Upload CSV
-        </button>
+        <div class="flex items-center gap-2">
+            <!-- Add Response button -->
+            <button id="add-response-btn" class="bg-[#D6D7DC] border border-[#1E1E1E] px-4 py-2 rounded shadow-sm text-sm flex items-center h-7">
+                Add Response
+            </button>
+            <!-- Upload CSV button -->
+            <button id="upload-csv-btn" class="bg-[#D6D7DC] border border-[#1E1E1E] px-4 py-2 rounded shadow-sm text-sm flex items-center h-7">
+                <img src="../../resources/svg/upload-data-window.svg" alt="Upload CSV" class="mr-2">
+                Upload CSV
+            </button>
+        </div>
     </div>
 
     <!-- Table -->
@@ -271,6 +293,8 @@ try {
                 Next Page &gt;
             </button>
         </div>
+
+
     </div>
 
     <!-- Upload CSV Dialog -->
@@ -304,7 +328,76 @@ try {
         </form>
     </dialog>
 
+    <!-- Add Response Dialog -->
+    <dialog id="add-response-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-7xl bg-[#F1F7F9]">
+        <form id="add-response-form" method="POST" class="space-y-4">
+            <h3 class="font-bold text-lg mb-4 text-center">Add New Response</h3>
+            <div class="max-h-[60vh] overflow-x-auto p-1 border rounded-md bg-white">
+                <table class="min-w-full border-collapse">
+                    <thead class="bg-gray-100 sticky top-0 z-10">
+                        <tr id="add-response-header">
+                            <th class="p-2 text-left font-semibold text-gray-700 border whitespace-nowrap min-w-[200px] break-words align-top">Division</th>
+                            <th class="p-2 text-left font-semibold text-gray-700 border whitespace-nowrap min-w-[200px] break-words align-top">Office</th>
+                            <th class="p-2 text-left font-semibold text-gray-700 border whitespace-nowrap min-w-[200px] break-words align-top">Customer Type</th>
+                            <th class="p-2 text-left font-semibold text-gray-700 border whitespace-nowrap min-w-[200px] break-words align-top">Purpose of Visit</th>
+                            <?php foreach ($active_questions as $question) : ?>
+                                <th class="p-2 text-left font-semibold text-gray-700 border whitespace-nowrap min-w-[200px] break-words align-top"><?php echo htmlspecialchars($question['question']); ?></th>
+                            <?php endforeach; ?>
+                        </tr>
+                    </thead>
+                    <tbody id="add-response-body">
+                        <?php if (empty($active_questions)) : ?>
+                            <tr>
+                                <td class="p-4 text-center text-gray-500">No active, answerable questions found to create a response.</td>
+                            </tr>
+                        <?php else : ?>
+                            <tr class="response-entry-row">
+                                <td class="p-1 border align-top">
+                                    <select name="answers[0][-2]" class="response-division-select w-full rounded px-2 py-1 h-full bg-white border border-gray-300" required>
+                                        <option value="" hidden>Select Division</option>
+                                        <?php foreach ($divisions as $division) : ?>
+                                            <option value="<?php echo htmlspecialchars($division['division_name']); ?>"><?php echo htmlspecialchars($division['division_name']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td class="p-1 border align-top">
+                                    <select name="answers[0][-3]" class="response-office-select w-full rounded px-2 py-1 h-full bg-white border border-gray-300" required>
+                                        <option value="" hidden>Select Office</option>
+                                    </select>
+                                </td>
+                                <td class="p-1 border align-top">
+                                    <select name="answers[0][-4]" class="w-full rounded px-2 py-1 h-full bg-white border border-gray-300" required>
+                                        <option value="" hidden>Select Customer Type</option>
+                                        <?php foreach ($customer_types as $type) : ?>
+                                            <option value="<?php echo htmlspecialchars($type); ?>"><?php echo htmlspecialchars($type); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+                                <td class="p-1 border align-top">
+                                    <input type="text" name="answers[0][1]" class="w-full border-gray-300 rounded px-2 py-1 h-full">
+                                </td>
+                                <?php foreach ($active_questions as $question) : ?>
+                                    <td class="p-1 border align-top"><input type="text" name="answers[0][<?php echo $question['question_id']; ?>]" class="w-full border-gray-300 rounded px-2 py-1 h-full"></td>
+                                <?php endforeach; ?>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-6 flex justify-between items-center">
+                <button type="button" id="add-new-response-row" class="px-4 py-2 bg-green-100 text-green-800 rounded shadow-sm text-sm hover:bg-green-200 font-semibold" <?php echo empty($active_questions) ? 'disabled' : ''; ?>>+ Add New Row</button>
+                <div>
+                    <button type="button" id="cancel-add-response" class="px-4 py-2 bg-[#D6D7DC] border border-[#1E1E1E] rounded shadow-sm text-sm hover:bg-gray-300">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-[#064089] text-white rounded shadow-sm text-sm hover:bg-blue-700" <?php echo empty($active_questions) ? 'disabled' : ''; ?>>Save Response</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
+
     <script>
+        // Expose PHP data to JavaScript
+        const allUnitsForAddResponse = <?php echo json_encode($units_by_name); ?>;
+
         document.addEventListener('DOMContentLoaded', () => {
             const divisionFilter = document.getElementById('filter_division');
             const unitFilter = document.getElementById('filter_unit');
@@ -331,6 +424,13 @@ try {
             const csvDropZone = document.getElementById('csv-drop-zone');
             const csvDropZoneText = document.getElementById('csv-drop-zone-text');
             const csvFileInput = document.getElementById('csv-file-input');
+
+            // --- Add Response Logic ---
+            const addResponseBtn = document.getElementById('add-response-btn');
+            const addResponseDialog = document.getElementById('add-response-dialog');
+            const cancelAddResponseBtn = document.getElementById('cancel-add-response');
+            const addResponseForm = document.getElementById('add-response-form');
+            const addNewRowBtn = document.getElementById('add-new-response-row');
 
             /**
              * Filters the Office dropdown based on the selected Division.
@@ -534,6 +634,127 @@ try {
                         handleCsvUpload();
                     } else {
                         csvDropZoneText.innerHTML = `<span class="font-semibold">Click to upload</span> or drag and drop`;
+                    }
+                });
+            }
+
+            // --- Add Response Event Listeners ---
+            if (addResponseBtn) {
+                addResponseBtn.addEventListener('click', () => addResponseDialog.showModal());
+            }
+            if (cancelAddResponseBtn) {
+                cancelAddResponseBtn.addEventListener('click', () => addResponseDialog.close());
+            }
+            if (addResponseDialog) {
+                addResponseDialog.addEventListener('click', (e) => {
+                    if (e.target === addResponseDialog) {
+                        addResponseDialog.close();
+                    }
+                });
+            }
+
+            // --- Dynamic Office Dropdown for "Add Response" Dialog ---
+            const addResponseBody = document.getElementById('add-response-body');
+            if (addResponseBody) {
+                addResponseBody.addEventListener('change', (e) => {
+                    if (e.target && e.target.classList.contains('response-division-select')) {
+                        const selectedDivisionName = e.target.value;
+                        const row = e.target.closest('tr');
+                        const officeSelect = row.querySelector('.response-office-select');
+
+                        // Clear existing options
+                        officeSelect.innerHTML = '<option value="" hidden>Select Office</option>';
+
+                        // Populate with units that match the selected division
+                        for (const unitName in allUnitsForAddResponse) {
+                            const unitData = allUnitsForAddResponse[unitName];
+                            // Find the division name from the main divisions array
+                            const divisionInfo = <?php echo json_encode($divisions); ?>.find(d => d.id === unitData.division_id);
+                            if (divisionInfo && divisionInfo.division_name === selectedDivisionName) {
+                                const option = new Option(unitName, unitName);
+                                officeSelect.appendChild(option);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // --- Add New Row for Response ---
+            if (addNewRowBtn) {
+                addNewRowBtn.addEventListener('click', () => {
+                    const tableBody = document.getElementById('add-response-body');
+                    const firstRow = tableBody.querySelector('tr.response-entry-row');
+                    if (!firstRow) return;
+
+                    const newRow = firstRow.cloneNode(true);
+                    const newIndex = tableBody.querySelectorAll('tr.response-entry-row').length;
+
+                    // Reset office dropdown
+                    const officeSelect = newRow.querySelector('.response-office-select');
+                    if (officeSelect) {
+                        officeSelect.innerHTML = '<option value="" hidden>Select Office</option>';
+                    }
+
+                    // Clear input/select values and update names for the new row
+                    newRow.querySelectorAll('input, select').forEach(input => {
+                        if (input.type !== 'select-one') input.value = '';
+                        input.value = '';
+                        // Update the name attribute to reflect the new row index
+                        input.name = input.name.replace(/\[\d+\]/, `[${newIndex}]`);
+                    });
+
+                    tableBody.appendChild(newRow);
+                });
+            }
+
+            if (addResponseForm) {
+                addResponseForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const rowCount = addResponseForm.querySelectorAll('tbody tr').length;
+                    if (!confirm(`Are you sure you want to add these ${rowCount} response(s)?`)) {
+                        return;
+                    }
+
+                    const responseRows = addResponseForm.querySelectorAll('tbody tr.response-entry-row');
+
+                    try {
+                        // Process each row as a separate response, sending one request per row.
+                        for (const row of responseRows) {
+                            const rowData = new FormData();
+                            const fields = row.querySelectorAll('input[name^="answers"], select[name^="answers"]');
+
+                            // Manually add the campus data, which isn't in the form grid.
+                            rowData.append('answers[-1]', '<?php echo $user_campus; ?>');
+
+                            // Collect all answers for the current row
+                            fields.forEach(field => {
+                                // The name is "answers[ROW_INDEX][QUESTION_ID]"
+                                const match = field.name.match(/\[\d+\]\[(-?\d+)\]/);
+                                if (match && match[1]) {
+                                    const questionId = match[1];
+                                    const answer = field.value;
+                                    // Append to FormData using array syntax for PHP
+                                    rowData.append(`answers[${questionId}]`, answer);
+                                }
+                            });
+
+                            // Send one request for the entire row
+                            const response = await fetch('../../function/_dataResponse/_addManualResponse.php', {
+                                method: 'POST',
+                                body: rowData
+                            });
+
+                            if (!response.ok) {
+                                // If any row fails, stop and report the error.
+                                throw new Error(`Server responded with status: ${response.status}`);
+                            }
+                        }
+
+                        alert(`${rowCount} response(s) added successfully!`);
+                        window.location.reload();
+                    } catch (error) {
+                        alert('An error occurred while saving the responses. Please check the console.');
+                        console.error('Add Response Error:', error);
                     }
                 });
             }

@@ -616,6 +616,10 @@ video {
   position: relative;
 }
 
+.sticky {
+  position: sticky;
+}
+
 .inset-0 {
   inset: 0px;
 }
@@ -897,6 +901,10 @@ video {
   height: 100vh;
 }
 
+.max-h-\[60vh\] {
+  max-height: 60vh;
+}
+
 .min-h-0 {
   min-height: 0px;
 }
@@ -1022,6 +1030,14 @@ video {
   width: 100%;
 }
 
+.w-\[250px\] {
+  width: 250px;
+}
+
+.min-w-\[200px\] {
+  min-width: 200px;
+}
+
 .min-w-\[288px\] {
   min-width: 288px;
 }
@@ -1032,6 +1048,10 @@ video {
 
 .min-w-full {
   min-width: 100%;
+}
+
+.max-w-7xl {
+  max-width: 80rem;
 }
 
 .max-w-md {
@@ -1256,6 +1276,14 @@ video {
   overflow-y: auto;
 }
 
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
+.break-words {
+  overflow-wrap: break-word;
+}
+
 .rounded {
   border-radius: 0.25rem;
 }
@@ -1287,6 +1315,10 @@ video {
 
 .border-t {
   border-top-width: 1px;
+}
+
+.border-b {
+  border-bottom-width: 1px;
 }
 
 .border-dashed {
@@ -1348,6 +1380,10 @@ video {
 
 .border-transparent {
   border-color: transparent;
+}
+
+.border-\[\] {
+  border-color: ;
 }
 
 .bg-\[\#064089\] {
@@ -1707,6 +1743,10 @@ video {
 
 .text-center {
   text-align: center;
+}
+
+.align-top {
+  vertical-align: top;
 }
 
 .align-middle {
@@ -2576,6 +2616,10 @@ body {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .md\:flex-row {
     flex-direction: row;
   }
@@ -2832,10 +2876,6 @@ body {
 
   .xl\:items-end {
     align-items: flex-end;
-  }
-
-  .xl\:items-center {
-    align-items: center;
   }
 
   .xl\:gap-0 {
