@@ -1,7 +1,7 @@
 <header class="absolute top-0 right-0 bg-[#F1F7F9] shadow-md p-4 flex items-center w-full lg:z-50 z-0">
     <div class="flex items-center space-x-4 w-5/6">
         <div class="flex items-center gap-9 text-gray-500">
-            <button id="hamburger-btn" class="focus:outline-none">
+            <button id="hamburger-btn" class="focus:outline-none flex lg:hidden">
                 <img src="../../resources/svg/hamburger.svg" alt="Menu" class="w-7 h-7">
             </button>
             <span class="lg:flex gap-2 hidden">

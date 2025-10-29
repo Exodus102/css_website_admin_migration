@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 $stmt = $pdo->prepare("INSERT INTO credentials (first_name, middle_name, last_name, contact_number, campus, unit, type, dp, email, password, date_created, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if ($stmt->execute([$firstName, $middleName, $lastName, $contactNumber, $campus, $unit, $type, $dp, $email, $password, $dateCreated, $status])) {
-                    
+
                     // --- LOG THE ACTION TO THE AUDIT TRAIL ---
                     log_audit_trail($pdo, "Added new user: " . trim("$firstName $lastName") . " ($email)");
 

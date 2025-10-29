@@ -127,8 +127,88 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     $mail->isHTML(true);
                     $mail->Subject = 'Your 2-Step Verification Code';
-                    $mail->Body    = "Hello {$user_first_name}, <br><br>Your verification code is: <b>{$verificationCode}</b><br><br>This code is valid for 10 minutes.";
+
+                    $mail->Body = "
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <style>
+    body {
+      background-color: #f4f6f8;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      color: #333333;
+    }
+    .email-container {
+      max-width: 500px;
+      margin: 40px auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #4F75FF, #6439FF);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .content {
+      padding: 30px 25px;
+      text-align: center;
+    }
+    .content p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .code-box {
+      background-color: #f0f3ff;
+      border: 1px solid #d1d9ff;
+      color: #4F75FF;
+      font-size: 24px;
+      letter-spacing: 4px;
+      font-weight: bold;
+      margin: 20px 0;
+      padding: 12px 0;
+      border-radius: 8px;
+      display: inline-block;
+      width: 80%;
+    }
+    .footer {
+      text-align: center;
+      font-size: 12px;
+      color: #888888;
+      padding: 20px 10px;
+      border-top: 1px solid #eeeeee;
+    }
+  </style>
+</head>
+<body>
+  <div class='email-container'>
+    <div class='header'>
+      2-Step Verification
+    </div>
+    <div class='content'>
+      <p>Hello <b>{$user_first_name}</b>,</p>
+      <p>Use the verification code below to complete your sign-in process.</p>
+      <div class='code-box'>{$verificationCode}</div>
+      <p>This code is valid for <b>10 minutes</b>. Please don’t share it with anyone.</p>
+    </div>
+    <div class='footer'>
+      © " . date('Y') . " Customer Satisfaction Survey System. All rights reserved.
+    </div>
+  </div>
+</body>
+</html>
+";
+
                     $mail->AltBody = "Hello {$user_first_name}, Your verification code is: {$verificationCode}. This code is valid for 10 minutes.";
+
 
                     $mail->send();
 

@@ -12,10 +12,10 @@ $response = ['success' => false, 'message' => 'An unknown error occurred.'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 'answers' will be an associative array of [question_id => answer]
-    $answers = $_POST['answers'] ?? null;
-    $userCampus = $_SESSION['user_campus'] ?? null;
+    $all_answers = $_POST['answers'] ?? null;
+    $userCampus = $_POST['user_campus'] ?? $_SESSION['user_campus'] ?? null;
 
-    if (!$answers || !is_array($answers) || !$userCampus) {
+    if (!$all_answers || !is_array($all_answers) || !$userCampus) {
         $response['message'] = 'Missing required data (answers or campus).';
         echo json_encode($response);
         exit;
@@ -24,64 +24,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-        // 1. Get the next available response_id. This is crucial to group all answers.
+        // Get the starting response_id
         $stmt_max_id = $pdo->query("SELECT MAX(response_id) FROM tbl_responses");
-        $new_response_id = ($stmt_max_id->fetchColumn() ?: 0) + 1;
+        $current_max_id = ($stmt_max_id->fetchColumn() ?: 0);
+        $new_response_id_start = $current_max_id + 1;
 
-        // 2. Prepare the statement for inserting multiple answers.
-        // The full set of columns is used here, matching _uploadCsv.php
-        $stmt_insert = $pdo->prepare(
-            "INSERT INTO tbl_responses (response_id, question_id, response, comment, analysis, timestamp, header, transaction_type, question_rendering, uploaded) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)"
-        );
+        // Loop through each row of answers from the form
+        foreach ($all_answers as $rowIndex => $answers) {
+            $new_response_id = $new_response_id_start + $rowIndex;
 
-        // Prepare statement to fetch question details
-        $stmt_get_question_details = $pdo->prepare("
-            SELECT header, transaction_type, question_rendering
-            FROM tbl_questionaire
-            WHERE question_id = ?
-        ");
+            // Extract comment and analysis for THIS specific row
+            $comment_value = $answers['comment'] ?? '';
+            $analysis_value = $answers['analysis'] ?? '';
+            unset($answers['comment'], $answers['analysis']);
 
-        // Loop through the submitted answers and insert each one with the SAME response_id.
-        foreach ($answers as $questionId => $answer) {
-            // Ensure we don't insert empty values, but allow '0'.
-            if ($answer !== null && $answer !== '') {
-                $header = 0; // Default for metadata and non-header questions
-                $transactionType = 2; // Default to 'Both' for metadata
-                $questionRendering = null; // Default for metadata
-                $comment = ''; // No comment field in manual entry yet
-                $analysis = ''; // No analysis field in manual entry yet
-                $uploaded = 0; // 0 for manual entry, 1 for CSV upload
+            // Manually add the campus data for this row
+            $answers[-1] = $userCampus;
 
-                if ($questionId > 0) { // It's an actual question
-                    $stmt_get_question_details->execute([$questionId]);
-                    $details = $stmt_get_question_details->fetch(PDO::FETCH_ASSOC);
-                    if ($details) {
-                        $header = $details['header'];
-                        $transactionType = $details['transaction_type'];
-                        $questionRendering = $details['question_rendering'];
+            // Prepare statement to fetch question details
+            $stmt_get_question_details = $pdo->prepare("
+                SELECT header, transaction_type, question_rendering
+                FROM tbl_questionaire
+                WHERE question_id = ?
+            ");
+
+            // Prepare the insert statement
+            $stmt_insert = $pdo->prepare(
+                "INSERT INTO tbl_responses (response_id, question_id, response, comment, analysis, timestamp, header, transaction_type, question_rendering, uploaded) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)"
+            );
+
+            // Loop through the answers for the current row
+            foreach ($answers as $questionId => $answer) {
+                if ($answer !== null) {
+                    $header = 0;
+                    $transactionType = 2;
+                    $questionRendering = null;
+                    $uploaded = 0;
+
+                    if ($questionId > 0) {
+                        $stmt_get_question_details->execute([$questionId]);
+                        $details = $stmt_get_question_details->fetch(PDO::FETCH_ASSOC);
+                        if ($details) {
+                            $header = $details['header'];
+                            $transactionType = $details['transaction_type'];
+                            $questionRendering = $details['question_rendering'];
+                        }
                     }
-                } else { // It's metadata (-1: Campus, -2: Division, -3: Office)
-                    // For metadata, we use default values for these columns
-                    // The values for header, transaction_type, question_rendering are already set to defaults above.
-                    // The actual metadata value is in $answer.
-                }
 
-                $stmt_insert->execute([
-                    $new_response_id,
-                    $questionId,
-                    $answer,
-                    $comment,
-                    $analysis,
-                    $header,
-                    $transactionType,
-                    $questionRendering,
-                    $uploaded
-                ]);
+                    $stmt_insert->execute([
+                        $new_response_id,
+                        $questionId,
+                        $answer,
+                        $comment_value,
+                        $analysis_value,
+                        $header,
+                        $transactionType,
+                        $questionRendering,
+                        $uploaded
+                    ]);
+                }
             }
         }
-        $pdo->commit();
+
+        $pdo->commit(); // Commit the transaction after all rows are processed
         $response['success'] = true;
-        $response['message'] = 'Response row added successfully!';
+        $response['message'] = count($all_answers) . ' response(s) added successfully!';
     } catch (PDOException $e) {
         $pdo->rollBack();
         $response['message'] = 'Database error: ' . $e->getMessage();
