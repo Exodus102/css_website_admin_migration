@@ -121,7 +121,7 @@
                 <option value="" hidden>Select User Type</option>
                 <option value="Campus Director">Campus Director</option>
                 <option value="CSS Head">CSS Head</option>
-                <option value="University MIS">University MIS</option>
+                <option value="University MIS">Admin</option>
                 <option value="CSS Coordinator">CSS Coordinator</option>
                 <option value="Unit Head">Unit Head</option>
                 <option value="DCC">DCC</option>
@@ -206,7 +206,7 @@
             <select id="edit-user-type" name="type" class="mt-1 block w-full rounded-md border border-[#1E1E1E] bg-[#E6E7EC] py-1 px-2 h-7 focus:border-blue-500 focus:ring-blue-500" required>
                 <option value="Campus Director">Campus Director</option>
                 <option value="CSS Head">CSS Head</option>
-                <option value="University MIS">University MIS</option>
+                <option value="University MIS">Admin</option>
                 <option value="CSS Coordinator">CSS Coordinator</option>
                 <option value="Unit Head">Unit Head</option>
                 <option value="DCC">DCC</option>

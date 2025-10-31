@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 $clearStmt->execute([$user_id]);
 
                 // Redirect based on user type
-                if ($user_type === 'University MIS') {
+                if ($user_type === 'Admin') {
                     header("Location: ../../include/university-mis/university-mis-layout.php");
                 } elseif ($user_type === 'CSS Coordinator') {
                     header("Location: ../../include/css-coordinators/css-coordinators-layout.php");

@@ -10,6 +10,11 @@ $pie_labels = [];
 $pie_data = [];
 $pie_chart_legend_data = [];
 $active_survey_version = 'N/A';
+$total_monthly_responses = 0;
+$response_rate = 0;
+$vs_last_month = 0;
+$vs_last_month_display = '0';
+$campus_offices = []; // To store offices for the dropdown
 
 if ($user_campus) {
     try {
@@ -30,6 +35,52 @@ if ($user_campus) {
         ");
         $stmt_respondents->execute([$user_campus]);
         $respondents_count = $stmt_respondents->fetchColumn();
+
+        // Fetch total monthly responses for the entire campus (for the second box initial value)
+        $stmt_monthly_total = $pdo->prepare("
+            SELECT COUNT(DISTINCT r.response_id)
+            FROM tbl_responses r
+            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
+            WHERE u.campus_name = :campus
+            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
+        ");
+        $stmt_monthly_total->execute([':campus' => $user_campus]);
+        $total_monthly_responses = $stmt_monthly_total->fetchColumn();
+
+        // Fetch last month's total responses for the entire campus
+        $stmt_last_month_total = $pdo->prepare("
+            SELECT COUNT(DISTINCT r.response_id)
+            FROM tbl_responses r
+            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
+            WHERE u.campus_name = :campus
+            AND YEAR(r.timestamp) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) 
+            AND MONTH(r.timestamp) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+        ");
+        $stmt_last_month_total->execute([':campus' => $user_campus]);
+        $last_month_total_responses = $stmt_last_month_total->fetchColumn();
+        $vs_last_month = $total_monthly_responses - $last_month_total_responses;
+        $vs_last_month_display = ($vs_last_month > 0) ? '+' . $vs_last_month : $vs_last_month;
+
+        // Fetch positive responses for the current month for the entire campus
+        $stmt_positive = $pdo->prepare("
+            SELECT COUNT(DISTINCT r.response_id)
+            FROM tbl_responses r
+            WHERE r.analysis = 'positive'
+            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
+            AND r.response_id IN (
+                SELECT r_inner.response_id
+                FROM tbl_responses r_inner
+                JOIN tbl_unit u_inner ON r_inner.response = u_inner.unit_name AND r_inner.question_id = -3
+                WHERE u_inner.campus_name = :campus
+            )
+        ");
+        $stmt_positive->execute([':campus' => $user_campus]);
+        $positive_responses_total = $stmt_positive->fetchColumn();
+
+        // Calculate initial response rate
+        if ($total_monthly_responses > 0) {
+            $response_rate = round(($positive_responses_total / $total_monthly_responses) * 100);
+        }
 
         // Fetch monthly response data per office for the bar chart
         $stmt_chart = $pdo->prepare("
@@ -86,6 +137,10 @@ if ($user_campus) {
                 $active_survey_version = $survey_name;
             }
         }
+
+        $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
+        $stmt_offices->execute([$user_campus]);
+        $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
     } catch (PDOException $e) {
         error_log("Error fetching dashboard counts: " . $e->getMessage());
     }
@@ -110,7 +165,7 @@ if ($user_campus) {
         </div>
 
         <!-- Key Metrics Cards and Charts -->
-        <div class="flex flex-col lg:flex-row gap-6 shadow-around mt-6 lg:w-2/3">
+        <div class="flex flex-col lg:flex-row gap-6 shadow-around mt-6 lg:w-full">
 
             <!-- Left Column: Metrics and Bar Char -->
             <div class="flex flex-col w-full">
@@ -144,13 +199,41 @@ if ($user_campus) {
                     </div>
                 </div>
 
-                <!-- Monthly Responses Chart -->
-                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
-                    <h2 class="text-3xl mb-2">Monthly Responses</h2>
-                    <div id="scroll-container" class="overflow-x-auto w-full no-scrollbar cursor-grab active:cursor-grabbing">
-                        <div class="relative h-64" id="barChartContainer">
-                            <canvas id="barChart"></canvas>
+                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full">
+                    <h2 class="text-3xl mb-4 font-bold">Monthly Responses</h2>
+                    <!-- 4 boxes -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                            <h3 class="text-md font-semibold">Total Responses</h3>
+                            <p class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
                         </div>
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                            <h3 class="text-md font-semibold">Monthly Response</h3>
+                            <p id="monthly-response-count" class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
+                        </div>
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                            <h3 class="text-md font-semibold">Response Rate</h3>
+                            <p id="response-rate" class="text-4xl font-bold text-black">
+                                <?php echo htmlspecialchars($response_rate); ?>%
+                            </p>
+                        </div>
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                            <h3 class="text-md font-semibold">vs Last Month</h3>
+                            <p id="vs-last-month" class="text-4xl font-bold text-black">
+                                <?php echo htmlspecialchars($vs_last_month_display); ?>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div class="mt-6">
+                        <label for="office-select" class="block text-sm font-medium text-gray-700">Select an Office for Details</label>
+                        <select id="office-select" name="office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
+                            <option value="" hidden>Office</option>
+                            <?php foreach ($campus_offices as $office) : ?>
+                                <option value="<?php echo htmlspecialchars($office); ?>"><?php echo htmlspecialchars($office); ?></option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -196,83 +279,17 @@ if ($user_campus) {
                 <?php endif; ?>
             </div>
         </div>
+
+        <div class="w-full">
+            
+        </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // --- Data from PHP ---
-        const officeLabels = <?php echo json_encode($office_labels); ?>;
-        const officeData = <?php echo json_encode($office_data); ?>;
         const pieLabels = <?php echo json_encode($pie_labels); ?>;
         const pieData = <?php echo json_encode($pie_data); ?>;
-
-        // Bar Chart for Monthly Responses
-        const barCtx = document.getElementById('barChart');
-        if (barCtx) {
-            const officeLabels = <?php echo json_encode($office_labels); ?>;
-            const officeData = <?php echo json_encode($office_data); ?>;
-            const barChartContainer = document.getElementById('barChartContainer');
-
-            const barCount = officeLabels.length;
-            const barAndGapWidth = 300; // pixels per bar (controls scroll amount)
-            const chartWidth = Math.max(barCount * barAndGapWidth, barChartContainer.parentElement.clientWidth);
-            barChartContainer.style.width = `${chartWidth}px`;
-
-            new Chart(barCtx.getContext('2d'), {
-                type: 'bar',
-                data: {
-                    labels: officeLabels,
-                    datasets: [{
-                        label: 'Responses',
-                        data: officeData,
-                        backgroundColor: '#064089',
-                        borderColor: '#064089',
-                        borderWidth: 1,
-                        barPercentage: 0.5, // A more standard bar width
-                        categoryPercentage: 0.7 // A more standard gap
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            ticks: {
-                                autoSkip: false,
-                                maxRotation: 0,
-                                minRotation: 0,
-                                color: '#1E1E1E',
-                                font: {
-                                    size: 12,
-                                    family: 'Arial'
-                                }
-                            },
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            min: 0,
-                            max: 100,
-                            ticks: {
-                                stepSize: 10,
-                                color: '#1E1E1E'
-                            },
-                            grid: {
-                                color: 'rgba(0,0,0,0.1)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            });
-        }
 
 
         // Pie Chart for User Types
@@ -308,34 +325,44 @@ if ($user_campus) {
             });
         }
 
-        // --- Drag-to-scroll for Bar Chart ---
-        const slider = document.getElementById('scroll-container');
-        if (slider) {
-            let isDown = false;
-            let startX;
-            let scrollLeft;
+        // --- Office Dropdown Logic for Monthly Response Box ---
+        const officeSelect = document.getElementById('office-select');
+        const monthlyResponseCountEl = document.getElementById('monthly-response-count');
+        const responseRateEl = document.getElementById('response-rate');
+        const vsLastMonthEl = document.getElementById('vs-last-month');
 
-            slider.addEventListener('mousedown', (e) => {
-                isDown = true;
-                // No need to add/remove classes if using active:cursor-grabbing
-                startX = e.pageX - slider.offsetLeft;
-                scrollLeft = slider.scrollLeft;
-            });
+        if (officeSelect && monthlyResponseCountEl && responseRateEl && vsLastMonthEl) {
+            officeSelect.addEventListener('change', async () => {
+                const selectedOffice = officeSelect.value;
+                const url = `../../function/_dashboard/_getMonthlyOfficeResponse.php?office=${encodeURIComponent(selectedOffice)}`;
 
-            slider.addEventListener('mouseleave', () => {
-                isDown = false;
-            });
+                // Show a loading state
+                monthlyResponseCountEl.textContent = '...';
+                responseRateEl.textContent = '...';
+                vsLastMonthEl.textContent = '...';
 
-            slider.addEventListener('mouseup', () => {
-                isDown = false;
-            });
+                try {
+                    const response = await fetch(url);
+                    const data = await response.json();
 
-            slider.addEventListener('mousemove', (e) => {
-                if (!isDown) return;
-                e.preventDefault(); // Prevent text selection while dragging
-                const x = e.pageX - slider.offsetLeft;
-                const walk = (x - startX) * 2; // The '2' is a speed multiplier, adjust as needed
-                slider.scrollLeft = scrollLeft - walk;
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    // Update all three boxes
+                    monthlyResponseCountEl.textContent = data.current_month_count.toLocaleString();
+
+                    responseRateEl.textContent = `${data.response_rate}%`;
+                    responseRateEl.className = `text-4xl font-bold text-black`;
+
+                    vsLastMonthEl.textContent = data.vs_last_month;
+                    vsLastMonthEl.className = `text-4xl font-bold text-black`;
+
+                } catch (error) {
+                    console.error('Failed to fetch monthly response count:', error);
+                    monthlyResponseCountEl.textContent = 'Error';
+                    responseRateEl.textContent = 'Error';
+                    vsLastMonthEl.textContent = 'Error';
+                }
             });
         }
     });
