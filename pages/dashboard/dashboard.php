@@ -14,6 +14,8 @@ $total_monthly_responses = 0;
 $response_rate = 0;
 $vs_last_month = 0;
 $vs_last_month_display = '0';
+$trend_labels = [];
+$trend_data = [];
 $campus_offices = []; // To store offices for the dropdown
 
 if ($user_campus) {
@@ -141,6 +143,31 @@ if ($user_campus) {
         $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
         $stmt_offices->execute([$user_campus]);
         $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
+    } catch (PDOException $e) {
+        error_log("Error fetching dashboard counts: " . $e->getMessage());
+    }
+
+    // --- Fetch Data for Trend Line Chart (Monthly responses for the current year) ---
+    try {
+        // Default to Annual view on page load
+        $stmt_trend = $pdo->prepare("
+            SELECT 
+                YEAR(r.timestamp) as year,
+                COUNT(DISTINCT r.response_id) as response_count
+            FROM tbl_responses r
+            WHERE r.response_id IN (
+                SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :campus
+            )
+            GROUP BY YEAR(r.timestamp)
+            ORDER BY year ASC
+        ");
+        $stmt_trend->execute([':campus' => $user_campus]);
+        $yearly_counts = $stmt_trend->fetchAll(PDO::FETCH_KEY_PAIR);
+
+        foreach ($yearly_counts as $year => $count) {
+            $trend_labels[] = (string)$year;
+            $trend_data[] = $count;
+        }
     } catch (PDOException $e) {
         error_log("Error fetching dashboard counts: " . $e->getMessage());
     }
@@ -280,16 +307,45 @@ if ($user_campus) {
             </div>
         </div>
 
-        <div class="w-full">
-            
+        <!-- Trend Line Graph -->
+        <div class="w-full mt-6">
+            <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+                    <h2 class="text-3xl font-bold">Trend Analysis</h2>
+                    <div class="flex flex-col lg:flex-row items-center gap-2 mt-2 sm:mt-0">
+                        <!-- Office Filter for Trend Chart -->
+                        <select id="trend-office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">\
+                            <option value="" hidden>Office</option>
+                            <option value="">All Offices</option>
+                            <?php foreach ($campus_offices as $office) : ?>
+                                <option value="<?php echo htmlspecialchars($office); ?>"><?php echo htmlspecialchars($office); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <!-- Period Filter for Trend Chart -->
+                        <select id="trend-period-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
+                            <option value="annual" selected>Annual</option>
+                            <option value="quarterly">Quarterly (This Year)</option>
+                            <option value="monthly">Monthly (This Year)</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="trend-scroll-container" class="overflow-x-auto w-full no-scrollbar cursor-grab active:cursor-grabbing">
+                    <div id="trend-chart-wrapper" class="relative h-80">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        let trendChartInstance = null; // To hold the chart object
         const pieLabels = <?php echo json_encode($pie_labels); ?>;
         const pieData = <?php echo json_encode($pie_data); ?>;
+        const trendLabels = <?php echo json_encode($trend_labels); ?>;
+        const trendData = <?php echo json_encode($trend_data); ?>;
 
 
         // Pie Chart for User Types
@@ -324,6 +380,186 @@ if ($user_campus) {
                 }
             });
         }
+
+        // --- Trend Line Chart ---
+        const trendCtx = document.getElementById('trendChart');
+        if (trendCtx) {
+            const ctx = trendCtx.getContext('2d');
+            const gradient = ctx.createLinearGradient(0, 0, 0, 320); // h-80 = 320px
+            gradient.addColorStop(0, 'rgba(6, 64, 137, 0.6)');
+            gradient.addColorStop(1, 'rgba(179, 205, 224, 0.1)');
+
+            trendChartInstance = new Chart(trendCtx, {
+                type: 'line',
+                data: {
+                    labels: trendLabels,
+                    datasets: [{
+                        label: 'Monthly Responses',
+                        data: trendData,
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: '#064089',
+                        borderWidth: 2.5,
+                        tension: 0.4, // Makes the line smoother
+                        pointBackgroundColor: '#064089',
+                        pointBorderColor: '#FFFFFF',
+                        pointBorderWidth: 2,
+                        pointRadius: 0, // Hide points by default
+                        pointHoverRadius: 7, // Show on hover
+                        pointHoverBackgroundColor: '#FFFFFF',
+                        pointHoverBorderColor: '#064089'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                font: {
+                                    family: 'sans-serif',
+                                    weight: '500'
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 500,
+                            grid: {
+                                color: '#E0E0E0',
+                                borderDash: [5, 5], // Dashed lines
+                                drawBorder: false,
+                            },
+                            ticks: {
+                                precision: 0, // Ensure ticks are integers
+                                padding: 10,
+                                font: {
+                                    family: 'sans-serif',
+                                    weight: '500'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: true,
+                            mode: 'index',
+                            intersect: false,
+                            backgroundColor: '#064089',
+                            titleFont: {
+                                size: 14,
+                                weight: 'bold'
+                            },
+                            bodyFont: {
+                                size: 12
+                            },
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: false, // Hide the little color box
+                            callbacks: {
+                                label: (context) => `  Responses: ${context.raw}`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Drag-to-scroll for Trend Chart ---
+        const trendSlider = document.getElementById('trend-scroll-container');
+        if (trendSlider) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            trendSlider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - trendSlider.offsetLeft;
+                scrollLeft = trendSlider.scrollLeft;
+            });
+
+            trendSlider.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            trendSlider.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            trendSlider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - trendSlider.offsetLeft;
+                const walk = (x - startX) * 2; // Speed multiplier
+                trendSlider.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // --- Trend Chart Filter Logic ---
+        const trendOfficeSelect = document.getElementById('trend-office-select');
+        const trendPeriodSelect = document.getElementById('trend-period-select');
+
+        const updateTrendChart = async () => {
+            if (!trendChartInstance) return;
+
+            const selectedOffice = trendOfficeSelect.value;
+            const selectedPeriod = trendPeriodSelect.value;
+            const url = `../../function/_dashboard/_getTrendData.php?office=${encodeURIComponent(selectedOffice)}&period=${selectedPeriod}`;
+            const chartWrapper = document.getElementById('trend-chart-wrapper');
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data.error) throw new Error(data.error);
+
+                // Adjust chart width for scrolling if needed
+                function updateChartWidth() {
+                    const labelCount = data.labels.length;
+                    const screenWidth = window.innerWidth;
+
+                    if (selectedPeriod === 'monthly') {
+                        if (screenWidth >= 1024) {
+                            // Large screens (lg and above)
+                            chartWrapper.style.width = '100%';
+                        } else {
+                            // Medium and smaller screens
+                            const barWidth = 80; // pixels per month
+                            chartWrapper.style.width = `${labelCount * barWidth}px`;
+                        }
+                    } else {
+                        // For annual or quarterly
+                        chartWrapper.style.width = '100%';
+                    }
+                }
+
+                // Smooth animation setup
+                chartWrapper.style.transition = 'width 0.4s ease-in-out';
+
+                // Run once on load
+                updateChartWidth();
+
+                // Re-run on resize
+                window.addEventListener('resize', updateChartWidth);
+
+                // Update chart data and redraw
+                trendChartInstance.data.labels = data.labels;
+                trendChartInstance.data.datasets[0].data = data.data;
+                trendChartInstance.update();
+
+            } catch (error) {
+                console.error('Failed to update trend chart:', error);
+            }
+        };
+
+        trendOfficeSelect.addEventListener('change', updateTrendChart);
+        trendPeriodSelect.addEventListener('change', updateTrendChart);
 
         // --- Office Dropdown Logic for Monthly Response Box ---
         const officeSelect = document.getElementById('office-select');
