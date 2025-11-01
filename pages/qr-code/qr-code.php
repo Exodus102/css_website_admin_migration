@@ -240,8 +240,22 @@ try {
     // Handle the download button click
     downloadBtn.addEventListener('click', function() {
       if (qrCodeStylingInstance) {
+        const campus = campusSelect.value;
+        const division = divisionSelect.value;
+        const unit = unitSelect.value;
+
+        let filenameParts = [];
+        if (campus) filenameParts.push(campus);
+        if (division) filenameParts.push(division);
+        if (unit) filenameParts.push(unit);
+
+        // Sanitize and join parts to create a filename, or use a default.
+        const filename = filenameParts.length > 0 ?
+          filenameParts.join('-').replace(/[\s\/\\?%*:|"<>]+/g, '-') :
+          "urs-survey-qrcode";
+
         qrCodeStylingInstance.download({
-          name: "urs-survey-qrcode",
+          name: filename,
           extension: "png"
         });
       } else {
