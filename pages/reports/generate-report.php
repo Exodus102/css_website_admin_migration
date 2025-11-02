@@ -48,20 +48,24 @@ try {
         // Page header
         function Header()
         {
-            // --- Dynamic Logo and Text Centering ---
-            $logoPath = '../../resources/img/urs-logo.png';
-            $logoWidth = 15;
-            $logoGap = 3; // Space between logo and text
+            $logo1Path = '../../resources/img/urs-logo.png';
+            $logo2Path = '../../resources/img/tuvr-urs-logo-mark.jpg';
+            $logo1Width = 15;
+            $logo2Width = 28;
+            $logoGap = 10; // Increased gap
 
             // Set font to calculate the width of the main title, which is the widest part of the text block.
             $this->SetFont('Arial', 'B', 12);
-            $titleWidth = $this->GetStringWidth('University of Rizal System');
+            $titleWidth = $this->GetStringWidth('UNIVERSITY OF RIZAL SYSTEM');
 
-            // Calculate the starting X position to center the entire block (logo + gap + text).
-            // A small negative offset is subtracted to shift the block slightly to the left.
-            $blockWidth = $logoWidth + $logoGap + $titleWidth;
-            $start_x = (($this->GetPageWidth() - $blockWidth) / 2) - 8;
-            $this->Image($logoPath, $start_x, 8, $logoWidth);
+            // Calculate the total width of the entire header block (text + gap + logo1 + gap + logo2)
+            $totalBlockWidth = $logo1Width + $logoGap + $titleWidth + $logoGap + $logo2Width;
+            $startX = ($this->GetPageWidth() - $totalBlockWidth) / 2;
+
+            $this->Image($logo1Path, $startX + 13, 8, $logo1Width);
+            if (file_exists($logo2Path)) {
+                $this->Image($logo2Path, $startX + $logo1Width + $logoGap + $titleWidth + $logoGap, 10, $logo2Width, 12);
+            }
 
             // --- Centered Header Text ---
             $this->SetY(10); // Move the cursor up to align text with the logo
@@ -72,7 +76,7 @@ try {
 
             // Set font for the main title
             $this->SetFont('Arial', 'B', 12);
-            $this->Cell(0, 6, 'University of Rizal System', 0, 1, 'C');
+            $this->Cell(0, 6, 'UNIVERSITY OF RIZAL SYSTEM', 0, 1, 'C');
 
             // Set font for the third line
             $this->SetFont('Arial', '', 10);

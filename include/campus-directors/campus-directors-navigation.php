@@ -27,11 +27,11 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                         </clipPath>
                     </defs>
                 </svg>
-                Tally Results
+                Unit Certification
             </a>
         </li>
         <li>
-            <a href="campus-directors-layout.php?page=tally-report" class="<?php echo $base_class; ?> <?php echo ($page === 'tally-report') ? $active_class : $inactive_class; ?>">
+            <a href="campus-directors-layout.php?page=tally-report-campus-director" class="<?php echo $base_class; ?> <?php echo ($page === 'tally-report-campus-director') ? $active_class : $inactive_class; ?>">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_306)">
                         <path class="fill-current" d="M11.0156 19.0701C11.0156 21.2811 10.1594 22.517 8.63438 22.517C7.10625 22.5154 6.25 21.2811 6.25 19.0701C6.25 16.8639 7.10625 15.6279 8.63438 15.6279C10.1594 15.6279 11.0156 16.8623 11.0156 19.0701ZM8.63438 16.5514C7.7875 16.5514 7.33437 17.4311 7.33437 19.0701C7.33437 19.2076 7.33906 19.3404 7.34375 19.4639L9.77969 17.6779C9.58281 16.9373 9.19375 16.5529 8.63438 16.5529V16.5514ZM7.49063 20.4701C7.6875 21.2076 8.07188 21.592 8.63438 21.592C9.47813 21.592 9.93125 20.7123 9.93125 19.0701C9.93125 18.9373 9.92656 18.8045 9.92188 18.6795L7.49063 20.4701ZM16.9609 21.4451V22.3748H12.2734V21.4451H14.1188V16.9061H14.0406L12.2656 18.0732V16.9982L14.125 15.7701H15.2031V21.4467H16.9609V21.4451Z" fill="#1E1E1E" />
@@ -43,7 +43,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                         </clipPath>
                     </defs>
                 </svg>
-                Tally Reports
+                CSS Reports
             </a>
         </li>
         <li>

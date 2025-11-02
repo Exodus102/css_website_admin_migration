@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
 
 require_once __DIR__ . '/../_databaseConfig/_dbConfig.php';
 
@@ -8,94 +10,92 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$response = ['success' => false, 'message' => 'An unknown error occurred.'];
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    exit;
+}
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // 'answers' will be an associative array of [question_id => answer]
-    $all_answers = $_POST['answers'] ?? null;
-    $userCampus = $_POST['user_campus'] ?? $_SESSION['user_campus'] ?? null;
+$answers_data = $_POST['answers'] ?? [];
+$user_campus = $_POST['user_campus'] ?? $_SESSION['user_campus'] ?? null;
 
-    if (!$all_answers || !is_array($all_answers) || !$userCampus) {
-        $response['message'] = 'Missing required data (answers or campus).';
-        echo json_encode($response);
-        exit;
-    }
+if (empty($answers_data) || !$user_campus) {
+    echo json_encode(['success' => false, 'message' => 'No response data or user campus provided.']);
+    exit;
+}
 
-    try {
-        $pdo->beginTransaction();
+try {
+    $pdo->beginTransaction();
 
-        // Get the starting response_id
-        $stmt_max_id = $pdo->query("SELECT MAX(response_id) FROM tbl_responses");
-        $current_max_id = ($stmt_max_id->fetchColumn() ?: 0);
-        $new_response_id_start = $current_max_id + 1;
+    // Get the highest existing response_id and increment it for the new set of responses.
+    $stmt_max_id = $pdo->query("SELECT MAX(response_id) FROM tbl_responses");
+    $max_id = $stmt_max_id->fetchColumn();
+    $next_response_id = ($max_id) ? $max_id + 1 : 1;
 
-        // Loop through each row of answers from the form
-        foreach ($all_answers as $rowIndex => $answers) {
-            $new_response_id = $new_response_id_start + $rowIndex;
+    // Prepare the main insert statement.
+    $sql = "INSERT INTO tbl_responses (question_id, response_id, response, comment, analysis, timestamp, uploaded) VALUES (?, ?, ?, ?, ?, ?, 0)";
+    $stmt = $pdo->prepare($sql);
 
-            // Extract comment and analysis for THIS specific row
-            $comment_value = $answers['comment'] ?? '';
-            $analysis_value = $answers['analysis'] ?? '';
-            unset($answers['comment'], $answers['analysis']);
+    $rows_processed = 0;
 
-            // Manually add the campus data for this row
-            $answers[-1] = $userCampus;
+    foreach ($answers_data as $row_index => $row_answers) {
+        // Extract special fields for this row.
+        $timestamp = $row_answers['timestamp'] ?? date('Y-m-d H:i:s'); // Fallback to current time
+        $comment = $row_answers['comment'] ?? '';
+        $analysis = $row_answers['analysis'] ?? '';
+        $division = $row_answers[-2] ?? '';
+        $office = $row_answers[-3] ?? '';
+        $customer_type = $row_answers[-4] ?? '';
 
-            // Prepare statement to fetch question details
-            $stmt_get_question_details = $pdo->prepare("
-                SELECT header, transaction_type, question_rendering
-                FROM tbl_questionaire
-                WHERE question_id = ?
-            ");
+        // Skip if essential metadata is missing for a row.
+        if (empty($division) || empty($office) || empty($customer_type)) {
+            continue;
+        }
 
-            // Prepare the insert statement
-            $stmt_insert = $pdo->prepare(
-                "INSERT INTO tbl_responses (response_id, question_id, response, comment, analysis, timestamp, header, transaction_type, question_rendering, uploaded) VALUES (?, ?, ?, ?, ?, NOW(), ?, ?, ?, ?)"
-            );
+        $current_response_id = $next_response_id + $rows_processed;
 
-            // Loop through the answers for the current row
-            foreach ($answers as $questionId => $answer) {
-                if ($answer !== null) {
-                    $header = 0;
-                    $transactionType = 2;
-                    $questionRendering = null;
-                    $uploaded = 0;
+        // --- Insert Metadata ---
+        // -1: Campus
+        $stmt->execute([-1, $current_response_id, $user_campus, $comment, $analysis, $timestamp]);
+        // -2: Division
+        $stmt->execute([-2, $current_response_id, $division, $comment, $analysis, $timestamp]);
+        // -3: Office
+        $stmt->execute([-3, $current_response_id, $office, $comment, $analysis, $timestamp]);
+        // -4: Customer Type
+        $stmt->execute([-4, $current_response_id, $customer_type, $comment, $analysis, $timestamp]);
 
-                    if ($questionId > 0) {
-                        $stmt_get_question_details->execute([$questionId]);
-                        $details = $stmt_get_question_details->fetch(PDO::FETCH_ASSOC);
-                        if ($details) {
-                            $header = $details['header'];
-                            $transactionType = $details['transaction_type'];
-                            $questionRendering = $details['question_rendering'];
-                        }
-                    }
+        // --- Insert Question Answers ---
+        foreach ($row_answers as $question_id => $response) {
+            // Skip metadata and special fields we've already processed.
+            if ($question_id < 1 || in_array($question_id, ['comment', 'analysis', 'timestamp'])) {
+                continue;
+            }
 
-                    $stmt_insert->execute([
-                        $new_response_id,
-                        $questionId,
-                        $answer,
-                        $comment_value,
-                        $analysis_value,
-                        $header,
-                        $transactionType,
-                        $questionRendering,
-                        $uploaded
-                    ]);
-                }
+            // Only insert if there is a response.
+            if (!empty($response)) {
+                $stmt->execute([$question_id, $current_response_id, $response, $comment, $analysis, $timestamp]);
             }
         }
 
-        $pdo->commit(); // Commit the transaction after all rows are processed
-        $response['success'] = true;
-        $response['message'] = count($all_answers) . ' response(s) added successfully!';
-    } catch (PDOException $e) {
-        $pdo->rollBack();
-        $response['message'] = 'Database error: ' . $e->getMessage();
-        error_log("Error adding manual response: " . $e->getMessage());
+        $rows_processed++;
     }
-} else {
-    $response['message'] = 'Invalid request method.';
-}
 
-echo json_encode($response);
+    if ($rows_processed > 0) {
+        $pdo->commit();
+        echo json_encode(['success' => true, 'message' => "$rows_processed response(s) added successfully!"]);
+    } else {
+        $pdo->rollBack();
+        echo json_encode(['success' => false, 'message' => 'No valid rows to add. Please ensure Division, Office, and Customer Type are filled for at least one row.']);
+    }
+} catch (PDOException $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    error_log("Add Manual Response Error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'A database error occurred. Please check the server logs.']);
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    error_log("Add Manual Response Error: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'An unexpected error occurred.']);
+}

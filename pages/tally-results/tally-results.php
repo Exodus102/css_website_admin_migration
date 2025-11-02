@@ -129,7 +129,7 @@ if ($target_campus_name) {
             }
         })();
     </script>
-    <h1 class="text-4xl font-bold">Tally Results</h1>
+    <h1 class="text-4xl font-bold">Unit Certification</h1>
     <P>You are viewing the tally results of available offices for this period.</P>
     <!-- Filters Bar -->
     <?php include 'filters.php'; // This now includes JS for interactions 

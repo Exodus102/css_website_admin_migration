@@ -28,7 +28,6 @@
                             <td class="border border-[#1E1E1ECC] p-2 text-center">
                                 <div class="flex justify-center gap-2">
                                     <button class="view-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-24 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/eye-icon.svg" alt="" srcset="">View</button>
-                                    <button class="download-report-btn bg-[#D9E2EC] flex gap-1 p-1 rounded-full w-28 justify-center text-[#064089] hover:bg-[#c2ccd6]"><img src="../../resources/svg/download-outline.svg" alt="" srcset="">Download</button>
                                 </div>
                             </td>
                         </tr>

@@ -13,11 +13,12 @@ if (session_status() == PHP_SESSION_NONE) {
 // --- PARAMETER VALIDATION ---
 $year = $_GET['year'] ?? null;
 $quarter = $_GET['quarter'] ?? null;
+$month = $_GET['month'] ?? null;
 $user_campus = $_SESSION['user_campus'] ?? null;
 
-if (!$year || !$quarter || !$user_campus) {
+if (!$year || (!$quarter && !$month) || !$user_campus) {
     http_response_code(400);
-    echo "<div class='p-4 text-red-500'>Error: Missing required parameters (year, quarter, or campus).</div>";
+    echo "<div class='p-4 text-red-500'>Error: Missing required parameters (year, quarter/month, or campus).</div>";
     exit;
 }
 
@@ -105,44 +106,41 @@ try {
         function Header()
         {
             // --- Dynamic Logo and Text Centering ---
-            $logoPath = '../../resources/img/urs-logo.png';
-            $logoWidth = 15;
-            $logoGap = 3; // Space between logo and text
+            $logo1Path = '../../resources/img/urs-logo.png';
+            $logo2Path = '../../resources/img/tuvr-urs-logo-mark.jpg';
+            $logo1Width = 15;
+            $logo2Width = 28;
+            $logoGap = 10; // Increased gap
 
             // Set font to calculate the width of the main title, which is the widest part of the text block.
             $this->SetFont('Arial', 'B', 12);
-            $titleWidth = $this->GetStringWidth('University of Rizal System');
+            $titleWidth = $this->GetStringWidth('UNIVERSITY OF RIZAL SYSTEM');
 
-            // Calculate the starting X position to center the entire block (logo + gap + text).
-            // A small negative offset is subtracted to shift the block slightly to the left.
-            $blockWidth = $logoWidth + $logoGap + $titleWidth;
-            $start_x = (($this->GetPageWidth() - $blockWidth) / 2) - 8;
-            $this->Image($logoPath, $start_x, 8, $logoWidth);
+            // Calculate the total width of the entire header block (text + gap + logo1 + gap + logo2)
+            $totalBlockWidth = $logo1Width + $logoGap + $titleWidth + $logoGap + $logo2Width;
+            $startX = ($this->GetPageWidth() - $totalBlockWidth) / 2;
+
+            $this->Image($logo1Path, $startX + 13, 8, $logo1Width);
+            if (file_exists($logo2Path)) {
+                $this->Image($logo2Path, $startX + $logo1Width + $logoGap + $titleWidth + $logoGap, 10, $logo2Width, 12);
+            }
 
             // --- Centered Header Text ---
             $this->SetY(10); // Move the cursor up to align text with the logo
-            // Set font for the first line
             $this->SetFont('Arial', '', 10);
-            // Add the cell, 0 width means it spans the page, 1 means new line after, 'C' is for center.
             $this->Cell(0, 5, 'Republic of the Philippines', 0, 1, 'C');
-
-            // Set font for the main title
             $this->SetFont('Arial', 'B', 12);
-            $this->Cell(0, 6, 'University of Rizal System', 0, 1, 'C');
-
-            // Set font for the third line
+            $this->Cell(0, 6, 'UNIVERSITY OF RIZAL SYSTEM', 0, 1, 'C');
             $this->SetFont('Arial', '', 10);
-            $this->Cell(0, 5, 'Province of Rizal', 0, 1, 'C');
-
-            // Draw a line below the header
-            $this->Ln(5); // Add a smaller space before the line
-            $this->SetLineWidth(0.5); // Make the line bold
-            $y = $this->GetY();
-            $this->Line($this->lMargin, $y, $this->GetPageWidth() - $this->rMargin, $y);
-            $this->SetLineWidth(0.2); // Reset line width to default for other elements
-
-            // Line break
-            $this->Ln(15);
+            $this->Cell(0, 2, 'Province of Rizal', 0, 1, 'C');
+            $this->SetFont('Arial', '', 9);
+            $this->Cell(0, 5, 'www.urs.edu.ph', 0, 1, 'C');
+            $this->Ln(5);
+            $this->Cell(0, 3, 'Email Address: ursmain@urs.edu.ph /urs.opmorong@gmail.com', 0, 1, 'C');
+            $this->Cell(0, 5, 'Main Campus:  URS Tanay Tel. (02) 401-4900; 401-4910; 401-4911; telefax 653-1735', 0, 1, 'C');
+            $this->SetLineWidth(0.5);
+            $this->Line($this->lMargin, $this->GetY(), $this->GetPageWidth() - $this->rMargin, $this->GetY());
+            $this->Ln(5);
         }
 
         function Footer()
@@ -183,22 +181,30 @@ try {
     $pdf->year = $year;
 
     // Determine the quarter text based on the quarter number for the footer
-    $quarter_text_for_footer = '';
-    switch ($quarter) {
-        case 1:
-            $quarter_text_for_footer = "January to March";
-            break;
-        case 2:
-            $quarter_text_for_footer = "April to June";
-            break;
-        case 3:
-            $quarter_text_for_footer = "July to September";
-            break;
-        case 4:
-            $quarter_text_for_footer = "October to December";
-            break;
+    $period_text_for_footer = '';
+    if ($quarter) {
+        switch ($quarter) {
+            case 1:
+                $period_text_for_footer = "January to March";
+                break;
+            case 2:
+                $period_text_for_footer = "April to June";
+                break;
+            case 3:
+                $period_text_for_footer = "July to September";
+                break;
+            case 4:
+                $period_text_for_footer = "October to December";
+                break;
+        }
+    } elseif ($month) {
+        $dateObj = DateTime::createFromFormat('!m', $month);
+        $period_text_for_footer = $dateObj->format('F'); // Full month name, e.g., "January"
     }
-    $pdf->quarter_display = $quarter_text_for_footer;
+
+    // This variable is used by the included files
+    $quarter_text_for_footer = $period_text_for_footer;
+    $pdf->quarter_display = $period_text_for_footer;
 
     $pdf->AddPage();
 
@@ -221,7 +227,12 @@ try {
 
     // --- SAVE AND PREPARE FOR DISPLAY ---
     $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
-    $filename = "tally-report_{$safe_campus_name}_{$year}_q{$quarter}.pdf";
+    if ($quarter) {
+        $filename = "tally-report_{$safe_campus_name}_{$year}_q{$quarter}.pdf";
+    } else {
+        $filename = "tally-report_{$safe_campus_name}_{$year}_m{$month}.pdf";
+    }
+
     $savePath = __DIR__ . '/../../upload/pdf/' . $filename;
 
     // Ensure the destination directory exists
@@ -243,7 +254,7 @@ try {
         $stmt = $pdo->prepare("INSERT INTO tbl_tally_report (file_path, timestamp) VALUES (?, NOW())");
         $stmt->execute([$relativePath]);
     } catch (PDOException $e) {
-        // For debugging, we'll display the error. In production, you might just log it.
+        // For debugging, display the error. In production, you might just log it.
         echo "<div class='p-4 mb-4 bg-red-100 text-red-800 border border-red-300 rounded-lg'>";
         echo "<strong>Database Error:</strong> Could not save the report path. Please check the following:<br>";
         echo "<ul class='list-disc list-inside ml-4 mt-2'>";
@@ -253,8 +264,8 @@ try {
         echo "<p class='mt-2'><strong>Specific Error Message:</strong> " . htmlspecialchars($e->getMessage()) . "</p>";
         echo "</div>";
     }
-
-    $pdf_url = '../../' . htmlspecialchars($relativePath);
+    // Add a unique timestamp as a query parameter to prevent browser caching issues.
+    $pdf_url = '../../' . htmlspecialchars($relativePath) . '?v=' . time();
 } catch (Exception $e) {
     http_response_code(500);
     // Log the detailed error for debugging

@@ -301,8 +301,11 @@
 
                 // Clear input/select values and update names for the new row
                 newRow.querySelectorAll('input, select').forEach(input => {
-                    if (input.type !== 'select-one') input.value = '';
-                    input.value = '';
+                    if (input.type === 'datetime-local') {
+                        // Do nothing, keep the timestamp from the previous row
+                    } else {
+                        input.value = ''; // Clear all other inputs and selects
+                    }
                     // Clear the required flag for division/office/customer type on cloned rows
                     input.required = false;
                     // Update the name attribute to reflect the new row index

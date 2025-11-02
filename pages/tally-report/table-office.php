@@ -84,37 +84,52 @@ try {
             )
             AND r.question_rendering IN ('QoS', 'Su')
             AND r.response REGEXP '^[0-9\.]+$'
-            AND YEAR(r.timestamp) = :year AND QUARTER(r.timestamp) = :quarter
-            GROUP BY r.question_id
+            AND YEAR(r.timestamp) = :year
         ";
-        $stmt_means = $pdo->prepare($sql_means);
-        $stmt_means->execute([
+        $params = [
             ':office_name_param' => $office_name,
             ':campus_name_param' => $user_campus,
             ':year' => $year,
-            ':quarter' => $quarter
-        ]);
+        ];
+
+        if ($quarter) {
+            $sql_means .= " AND QUARTER(r.timestamp) = :quarter";
+            $params[':quarter'] = $quarter;
+        } elseif ($month) {
+            $sql_means .= " AND MONTH(r.timestamp) = :month";
+            $params[':month'] = $month;
+        }
+        $sql_means .= " GROUP BY r.question_id";
+
+        $stmt_means = $pdo->prepare($sql_means);
+        $stmt_means->execute($params);
         $means = $stmt_means->fetchAll(PDO::FETCH_KEY_PAIR);
 
         // --- Fetch comments for this specific office ---
         $sql_comments = "
-            SELECT DISTINCT r.comment
-            FROM tbl_responses r
-            JOIN
-                (SELECT response_id FROM tbl_responses WHERE question_id = -3 AND response = :office_name_param) AS office_responses ON r.response_id = office_responses.response_id
-            JOIN
-                (SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :office_campus_param) AS campus_responses ON r.response_id = campus_responses.response_id
-            WHERE
-                YEAR(r.timestamp) = :year AND QUARTER(r.timestamp) = :quarter
-                AND r.comment IS NOT NULL AND r.comment != ''
+            SELECT DISTINCT r.comment FROM tbl_responses r
+            JOIN (SELECT response_id FROM tbl_responses WHERE question_id = -3 AND response = :office_name_param) AS office_responses 
+                ON r.response_id = office_responses.response_id
+            JOIN (SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :office_campus_param) AS campus_responses 
+                ON r.response_id = campus_responses.response_id
+            WHERE YEAR(r.timestamp) = :year AND r.comment IS NOT NULL AND r.comment != ''
         ";
-        $stmt_comments = $pdo->prepare($sql_comments);
-        $stmt_comments->execute([
+        $comment_params = [
             ':office_name_param' => $office_name,
             ':office_campus_param' => $user_campus,
             ':year' => $year,
-            ':quarter' => $quarter
-        ]);
+        ];
+
+        if ($quarter) {
+            $sql_comments .= " AND QUARTER(r.timestamp) = :quarter";
+            $comment_params[':quarter'] = $quarter;
+        } elseif ($month) {
+            $sql_comments .= " AND MONTH(r.timestamp) = :month";
+            $comment_params[':month'] = $month;
+        }
+
+        $stmt_comments = $pdo->prepare($sql_comments);
+        $stmt_comments->execute($comment_params);
         $comments = $stmt_comments->fetchAll(PDO::FETCH_COLUMN);
 
         // --- Draw Table Header ---

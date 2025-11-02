@@ -2801,6 +2801,10 @@ body {
     width: 100%;
   }
 
+  .lg\:w-32 {
+    width: 8rem;
+  }
+
   .lg\:max-w-lg {
     max-width: 32rem;
   }

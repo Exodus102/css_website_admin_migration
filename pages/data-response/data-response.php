@@ -339,6 +339,7 @@ try {
                 <table class="min-w-full border-collapse table-fixed w-full">
                     <thead class="bg-gray-100 sticky top-0 z-10">
                         <tr id="add-response-header">
+                            <th class="p-2 text-center font-semibold text-gray-700 border align-top w-52">Timestamp</th>
                             <th class="p-2 text-center font-semibold text-gray-700 border align-top w-52">Division</th>
                             <th class="p-2 text-center font-semibold text-gray-700 border align-top w-52">Office</th>
                             <th class="p-2 text-center font-semibold text-gray-700 border align-top w-52">Customer Type</th>
@@ -358,6 +359,9 @@ try {
                             </tr>
                         <?php else : ?>
                             <tr class="response-entry-row">
+                                <td class="p-1 border align-top">
+                                    <input type="datetime-local" name="answers[0][timestamp]" class="w-full px-2 py-1 h-full bg-transparent border-b border-gray-400 focus:outline-none focus:border-blue-500" required>
+                                </td>
                                 <td class="p-1 border align-top">
                                     <select name="answers[0][-2]" class="response-division-select w-full px-2 py-1 h-full bg-transparent border-b border-gray-400 focus:outline-none focus:border-blue-500" required>
                                         <option value="" hidden>Select Division</option>

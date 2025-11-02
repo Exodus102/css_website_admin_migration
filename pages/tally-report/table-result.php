@@ -14,19 +14,25 @@ $pdf->Ln(2); // Reduced space
 
 // --- Determine Quarter Title for the table header ---
 $quarter_title = '';
-switch ($quarter) {
-    case 1:
-        $quarter_title = "1st Quarter";
-        break;
-    case 2:
-        $quarter_title = "2nd Quarter";
-        break;
-    case 3:
-        $quarter_title = "3rd Quarter";
-        break;
-    case 4:
-        $quarter_title = "4th Quarter";
-        break;
+if ($quarter) {
+    switch ($quarter) {
+        case 1:
+            $quarter_title = "1st Quarter";
+            break;
+        case 2:
+            $quarter_title = "2nd Quarter";
+            break;
+        case 3:
+            $quarter_title = "3rd Quarter";
+            break;
+        case 4:
+            $quarter_title = "4th Quarter";
+            break;
+    }
+} elseif ($month) {
+    // For monthly view, the title is just the month name.
+    $dateObj = DateTime::createFromFormat('!m', $month);
+    $quarter_title = $dateObj->format('F'); // e.g., "January"
 }
 
 // --- Table Setup ---
@@ -118,12 +124,23 @@ try {
             AND r.question_rendering IN ('QoS', 'Su')
             AND r.response REGEXP '^[0-9\.]+$'
             AND YEAR(r.timestamp) = :year
-            AND QUARTER(r.timestamp) = :quarter
-        GROUP BY
-            office_response.response
     ";
+
+    // Add period condition based on whether it's a quarter or month
+    if ($quarter) {
+        $sql_data .= " AND QUARTER(r.timestamp) = :quarter";
+    } elseif ($month) {
+        $sql_data .= " AND MONTH(r.timestamp) = :month";
+    }
+
+    // Append the GROUP BY clause at the very end
+    $sql_data .= " GROUP BY office_response.response";
+
     $stmtData = $pdo->prepare($sql_data);
-    $stmtData->execute([':campus_name' => $user_campus, ':year' => $year, ':quarter' => $quarter]);
+    $params = [':campus_name' => $user_campus, ':year' => $year];
+    if ($quarter) $params[':quarter'] = $quarter;
+    if ($month) $params[':month'] = $month;
+    $stmtData->execute($params);
     $results = $stmtData->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Create a lookup map for easy access to unit data.

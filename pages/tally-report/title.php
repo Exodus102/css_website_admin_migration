@@ -15,27 +15,17 @@ $pdf->Cell(0, 10, "SURVEY", 0, 1, 'C');
 $pdf->Ln(15); // Add some space after the title
 
 // --- Dynamic Quarter and Year Display ---
-// These variables ($quarter, $quarter_text_for_footer, $year) are expected to be defined
+// These variables ($quarter, $month, $quarter_text_for_footer, $year) are expected to be defined
 // in the script that includes this file (generate-report-tally.php).
 
-$quarter_title = '';
-switch ($quarter) {
-    case 1:
-        $quarter_title = "1st Quarter";
-        break;
-    case 2:
-        $quarter_title = "2nd Quarter";
-        break;
-    case 3:
-        $quarter_title = "3rd Quarter";
-        break;
-    case 4:
-        $quarter_title = "4th Quarter";
-        break;
+$period_title = '';
+if ($quarter) {
+    // For quarterly reports, we show the quarter name and then the date range below it.
+    $period_title = ($quarter == 1 ? "1st" : ($quarter == 2 ? "2nd" : ($quarter == 3 ? "3rd" : "4th"))) . " Quarter";
+    $pdf->Cell(0, 10, $period_title, 0, 1, 'C');
+    $pdf->Ln(2);
 }
 
-$pdf->Cell(0, 10, $quarter_title, 0, 1, 'C');
-$pdf->Ln(2);
 $pdf->Cell(0, 10, $quarter_text_for_footer . " " . $year, 0, 1, 'C');
 
 $pdf->Ln(15);

@@ -44,7 +44,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                         </clipPath>
                     </defs>
                 </svg>
-                Tally Results
+                Unit Certification
             </a>
         </li>
         <li>
@@ -60,7 +60,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                         </clipPath>
                     </defs>
                 </svg>
-                Tally Report
+                CSS Reports
             </a>
         </li>
         <li>
