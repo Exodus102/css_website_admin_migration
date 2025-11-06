@@ -59,7 +59,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                         </clipPath>
                     </defs>
                 </svg>
-                Reports
+                Campus Unit Reports
             </a>
         </li>
         <span class="text-base">

@@ -8,7 +8,7 @@
             }
         })();
     </script>
-    <span class="text-4xl font-bold font-sfpro">Reports</span><br>
+    <span class="text-4xl font-bold font-sfpro">Campus Unit Reports</span><br>
     <span class="">You are viewing the generated reports of available offices for this period.</span>
 
     <?php include "filters.php"; ?><br>

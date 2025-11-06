@@ -308,9 +308,9 @@ try {
 
             <!-- Download Excel Template Link -->
             <div class="text-center">
-                <a href="../../upload/csv-template/csv-template.xlsx" download="csv-template.xlsx" class="text-sm text-blue-600 hover:underline font-medium inline-flex items-center gap-1">
+                <a href="../../upload/csv-template/csv-template.csv" download="csv-template.csv" class="text-sm text-blue-600 hover:underline font-medium inline-flex items-center gap-1">
                     <img src="../../resources/svg/download-outline.svg" alt="Download" class="w-4 h-4">
-                    Download Excel Template
+                    Download CSV Template
                 </a>
             </div>
 
