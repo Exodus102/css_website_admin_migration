@@ -50,11 +50,21 @@ try {
             SELECT
                 u.id AS unit_id,
                 u.unit_name,
-                COALESCE(n.status, 'Unresolved') AS ncar_status
+                COALESCE(n.status, 'Unresolved') AS ncar_status,
+                n.id as ncar_id
             FROM
                 tbl_unit u
-            JOIN
-                tbl_responses r_office ON u.unit_name = r_office.response AND r_office.question_id = -3
+            INNER JOIN (
+                SELECT DISTINCT r_office.response AS unit_name
+                FROM tbl_responses r_main
+                JOIN tbl_responses r_office ON r_main.response_id = r_office.response_id AND r_office.question_id = -3
+                WHERE r_main.analysis = 'negative'
+                  AND YEAR(r_main.timestamp) = :year
+                  AND QUARTER(r_main.timestamp) = :quarter
+                  AND r_main.response_id IN (
+                      SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :user_campus
+                  )
+            ) AS negative_offices ON u.unit_name = negative_offices.unit_name
             LEFT JOIN
                 tbl_ncar n ON n.file_path = CONCAT(
                     'upload/pdf/ncar-report_',
@@ -62,16 +72,7 @@ try {
                     REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
                     :year, '_q', :quarter, '.pdf'
                 )
-            WHERE
-                u.campus_name = :user_campus
-                AND r_office.response_id IN (
-                    SELECT r_main.response_id
-                    FROM tbl_responses r_main
-                    WHERE r_main.analysis = 'negative'
-                    AND YEAR(r_main.timestamp) = :year
-                    AND QUARTER(r_main.timestamp) = :quarter
-                )
-            GROUP BY u.id, u.unit_name, n.status
+            WHERE u.campus_name = :user_campus
         ";
 
         $params = [
@@ -80,6 +81,7 @@ try {
             ':quarter' => $filter_quarter
         ];
 
+        // Append division and office filters to the main WHERE clause
         if ($filter_division_id) {
             $sql .= " AND u.division_name = (SELECT division_name FROM tbl_division WHERE id = :division_id)";
             $params[':division_id'] = $filter_division_id;
@@ -90,7 +92,8 @@ try {
             $params[':office_id'] = $filter_office_id;
         }
 
-        $sql .= " ORDER BY u.unit_name ASC, n.id DESC";
+        // The GROUP BY and ORDER BY must come after all WHERE conditions
+        $sql .= " GROUP BY u.id, u.unit_name, n.status, n.id ORDER BY u.unit_name ASC";
 
         $stmtNcar = $pdo->prepare($sql);
         $stmtNcar->execute($params);
@@ -115,9 +118,9 @@ try {
         <h1 class="text-4xl font-bold">Non-conformity and Correction Action Report</h1>
         <P class="mb-5">You are viewing the generated reports of available offices for this period.</P>
 
-        <form id="ncar-filters-form" method="GET" class="flex items-center gap-2 mb-4">
-            <input type="hidden" name="page" value="ncar">
-            <select name="division" id="filter_division" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-52">
+        <form id="ncar-filters-form" method="GET" class="flex lg:items-center gap-2 mb-4 flex-col lg:flex-row">
+            <input type="hidden" name="page" value="ncar-campus-director">
+            <select name="division" id="filter_division" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
                 <option value="">All Divisions</option>
                 <?php foreach ($divisions as $division) : ?>
                     <option value="<?php echo htmlspecialchars($division['id']); ?>" <?php echo ($filter_division_id == $division['id']) ? 'selected' : ''; ?>>
@@ -126,7 +129,7 @@ try {
                 <?php endforeach; ?>
             </select>
 
-            <select name="office" id="filter_office" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-52">
+            <select name="office" id="filter_office" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
                 <option value="">All Offices</option>
                 <?php foreach ($units as $unit) : ?>
                     <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>" <?php echo ($filter_office_id == $unit['id']) ? 'selected' : ''; ?>>
@@ -183,10 +186,12 @@ try {
                                     <?php echo $status; ?>
                                 </span>
                             </td>
-                            <td class="border border-gray-300 p-3 text-center action-cell flex justify-center">
-                                <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
-                                    <img src="../../resources/svg/eye-icon.svg" alt="">View
-                                </button>
+                            <td class="border border-gray-300 p-3 text-center action-cell">
+                                <div class="flex justify-center">
+                                    <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
+                                        <img src="../../resources/svg/eye-icon.svg" alt="">View
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

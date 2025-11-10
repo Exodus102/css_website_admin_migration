@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 18, 2025 at 08:00 AM
+-- Generation Time: Nov 10, 2025 at 11:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,29 +24,29 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `tbl_active`
+-- Table structure for table `tbl_approved`
 --
 
-CREATE TABLE `tbl_active` (
+CREATE TABLE `tbl_approved` (
   `id` int(11) NOT NULL,
-  `status` int(11) NOT NULL
+  `file_path` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `tbl_active`
+-- Dumping data for table `tbl_approved`
 --
 
-INSERT INTO `tbl_active` (`id`, `status`) VALUES
-(1, 1);
+INSERT INTO `tbl_approved` (`id`, `file_path`) VALUES
+(1, 'upload/pdf/tally-report_Binangonan_2025_q1.pdf');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `tbl_active`
+-- Indexes for table `tbl_approved`
 --
-ALTER TABLE `tbl_active`
+ALTER TABLE `tbl_approved`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -54,9 +54,9 @@ ALTER TABLE `tbl_active`
 --
 
 --
--- AUTO_INCREMENT for table `tbl_active`
+-- AUTO_INCREMENT for table `tbl_approved`
 --
-ALTER TABLE `tbl_active`
+ALTER TABLE `tbl_approved`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 

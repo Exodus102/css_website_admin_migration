@@ -10,11 +10,20 @@ $filter_view = $_GET['filter_view'] ?? 'quarterly';
 $filter_year = $_GET['filter_year'] ?? date('Y');
 
 $reports = [];
+$approved_reports = [];
 
 if ($user_campus) {
     try {
         // Sanitize campus name to match the format in the filename
         $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
+
+        // Fetch all approved report paths for quick lookup
+        try {
+            $stmtApproved = $pdo->query("SELECT file_path FROM tbl_approved");
+            $approved_reports = $stmtApproved->fetchAll(PDO::FETCH_COLUMN);
+        } catch (PDOException $e) {
+            error_log("Error fetching approved reports: " . $e->getMessage());
+        }
 
         // Determine the search pattern based on the view filter
         $pattern_prefix = ($filter_view === 'quarterly') ? 'q' : 'm';
@@ -113,6 +122,11 @@ if ($user_campus) {
                 <span id="report-period-text" class="font-normal text-base"></span>
             </div>
         </div>
+        <div>
+            <button id="approve-report-btn" class="bg-blue-500 text-white px-6 py-2 rounded-md font-semibold hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed">
+                Approve
+            </button>
+        </div>
     </div>
     <div id="report-content" class="h-[80vh]">
         <!-- Content from generate-report-tally.php will be loaded here -->
@@ -156,6 +170,7 @@ if ($user_campus) {
             const filePath = viewButton.dataset.path;
             const reportName = viewButton.closest('tr').querySelector('td').textContent;
 
+
             // Construct the full URL for the PDF
             const pdfUrl = `../../${filePath}?v=${new Date().getTime()}`; // Add cache-busting
 
@@ -169,6 +184,22 @@ if ($user_campus) {
                 </div>
             </object>`;
 
+            // --- Handle Approve Button State ---
+            const approveBtn = document.getElementById('approve-report-btn');
+            const isApproved = <?php echo json_encode($approved_reports); ?>.includes(filePath);
+
+            approveBtn.dataset.path = filePath; // Set path for the approval action
+
+            if (isApproved) {
+                approveBtn.textContent = 'Approved';
+                approveBtn.disabled = true;
+                approveBtn.classList.replace('bg-blue-500', 'bg-green-600');
+            } else {
+                approveBtn.textContent = 'Approve';
+                approveBtn.disabled = false;
+                approveBtn.classList.replace('bg-green-600', 'bg-blue-500');
+            }
+
             // Switch to the report view
             tallyListContainer.classList.add('hidden');
             reportViewContainer.classList.remove('hidden');
@@ -180,6 +211,50 @@ if ($user_campus) {
             reportViewContainer.classList.add('hidden');
             tallyListContainer.classList.remove('hidden');
             reportContent.innerHTML = ''; // Clear the content
+        });
+
+        // --- Approve Report Logic ---
+        const approveBtn = document.getElementById('approve-report-btn');
+        approveBtn.addEventListener('click', async () => {
+            const filePath = approveBtn.dataset.path;
+            if (!filePath || approveBtn.disabled) return;
+
+            if (!confirm('Are you sure you want to approve this report? This action cannot be undone.')) {
+                return;
+            }
+
+            approveBtn.disabled = true;
+            approveBtn.textContent = 'Approving...';
+
+            try {
+                const response = await fetch('../../function/_tally/_approveReport.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file_path: filePath
+                    })
+                });
+
+                const result = await response.json();
+                alert(result.message);
+
+                if (result.success) {
+                    approveBtn.textContent = 'Approved';
+                    approveBtn.classList.replace('bg-blue-500', 'bg-green-600');
+                    // The button is already disabled, so we just leave it.
+                } else {
+                    // Re-enable on failure
+                    approveBtn.disabled = false;
+                    approveBtn.textContent = 'Approve';
+                }
+            } catch (error) {
+                console.error('Error approving report:', error);
+                alert('A network error occurred. Please try again.');
+                approveBtn.disabled = false;
+                approveBtn.textContent = 'Approve';
+            }
         });
     });
 </script>
