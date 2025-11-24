@@ -42,8 +42,8 @@ try {
     <span class="font-semibold">FILTERS:</span>
 
     <div class="flex-grow">
-        <label for="filter_division" class="block text-xs font-medium text-[#48494A]">DIVISION</label>
-        <select name="filter_division" id="filter_division" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
+        <label for="filter_division" class="block text-xs font-medium text-[#48494A] dark:text-white">DIVISION</label>
+        <select name="filter_division" id="filter_division" class="dark:text-white dark:bg-gray-900 border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
             <option value="" hidden>Division</option>
             <?php foreach ($divisions as $division) : ?>
                 <option value="<?php echo htmlspecialchars($division['id']); ?>"><?php echo htmlspecialchars($division['division_name']); ?></option>
@@ -52,8 +52,8 @@ try {
     </div>
 
     <div class="flex-grow">
-        <label for="filter_unit" class="block text-xs font-medium text-[#48494A]">OFFICE</label>
-        <select name="filter_unit" id="filter_unit" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
+        <label for="filter_unit" class="block text-xs font-medium text-[#48494A] dark:text-white">OFFICE</label>
+        <select name="filter_unit" id="filter_unit" class="dark:text-white dark:bg-gray-900 border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
             <option value="" hidden>Office</option>
             <?php foreach ($units as $unit) : ?>
                 <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>"><?php echo htmlspecialchars($unit['unit_name']); ?></option>
@@ -62,8 +62,8 @@ try {
     </div>
 
     <div class="flex-groww w-full lg:w-28">
-        <label for="filter_year" class="block text-xs font-medium text-[#48494A]">YEAR</label>
-        <select name="filter_year" id="filter_year" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
+        <label for="filter_year" class="block text-xs font-medium text-[#48494A] dark:text-white">YEAR</label>
+        <select name="filter_year" id="filter_year" class="dark:text-white dark:bg-gray-900 border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
             <option value="" hidden>Year</option>
             <?php foreach ($years as $year) : ?>
                 <option value="<?php echo htmlspecialchars($year); ?>" <?php echo ($year == date('Y')) ? 'selected' : ''; ?>>
@@ -74,8 +74,8 @@ try {
     </div>
 
     <div class="flex-grow">
-        <label for="filter_quarter" class="block text-xs font-medium text-[#48494A]">QUARTER</label>
-        <select name="filter_quarter" id="filter_quarter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
+        <label for="filter_quarter" class="block text-xs font-medium text-[#48494A] dark:text-white">QUARTER</label>
+        <select name="filter_quarter" id="filter_quarter" class="dark:text-white dark:bg-gray-900 border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] ">
             <option value="" hidden>Quarter</option>
             <option value="1">1st Quarter</option>
             <option value="2">2nd Quarter</option>

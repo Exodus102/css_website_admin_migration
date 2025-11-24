@@ -1,4 +1,4 @@
-<div class="p-4" id="reports-list-container">
+<div class="p-4 dark:text-white" id="reports-list-container">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -14,7 +14,7 @@
     <?php include "filters.php"; ?><br>
     <div class="overflow-x-auto">
         <table class="w-full">
-            <thead class="bg-[#064089] text-white font-normal">
+            <thead class="bg-[#064089] text-white font-normal dark:bg-gray-900">
                 <tr>
                     <th class="border border-[#1E1E1ECC] font-normal">Office</th>
                     <th class="border border-[#1E1E1ECC] font-normal">Action</th>
@@ -23,7 +23,7 @@
             <tbody id="reports-table-body">
                 <?php if (!empty($units)) : ?>
                     <?php foreach ($units as $unit) : ?>
-                        <tr class="bg-white office-row" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
+                        <tr class="bg-white office-row dark:text-white dark:bg-gray-700" data-unit-id="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>">
                             <td class="border border-[#1E1E1ECC] p-2"><?php echo htmlspecialchars($unit['unit_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-2 text-center">
                                 <div class="flex justify-center gap-2">

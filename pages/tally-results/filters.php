@@ -22,14 +22,14 @@ try {
 ?>
 <form id="tally-filters-form" method="GET" action="">
     <input type="hidden" name="page" value="tally-results">
-    <div class="bg-[#E6E7EC] lg:pt-4 mb-4 pt-4">
+    <div class="bg-[#E6E7EC] lg:pt-4 mb-4 pt-4 dark:bg-gray-800">
         <div class="flex lg:flex-row lg:items-end gap-2 flex-col">
-            <span class="font-semibold text-[#1E1E1E] lg:self-center">FILTERS:</span>
+            <span class="font-semibold text-[#1E1E1E] lg:self-center dark:text-white">FILTERS:</span>
 
             <!-- Division -->
             <div class="flex flex-col w-full lg:w-44">
-                <label for="filter_division" class="text-xs text-[#48494A] uppercase">Division</label>
-                <select id="filter_division" name="filter_division" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="filter_division" class="text-xs text-[#48494A] uppercase dark:text-white">Division</label>
+                <select id="filter_division" name="filter_division" class="dark:bg-gray-900 dark:text-white filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">All Divisions</option>
                     <?php foreach ($divisions as $division) : ?>
                         <option value="<?php echo htmlspecialchars($division['id']); ?>" <?php echo (isset($filter_division_id) && $filter_division_id == $division['id']) ? 'selected' : ''; ?>>
@@ -41,8 +41,8 @@ try {
 
             <!-- Year -->
             <div class="flex flex-col w-full lg:w-20">
-                <label for="filter_year" class="text-xs text-[#48494A] uppercase">Year</label>
-                <select id="filter_year" name="filter_year" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="filter_year" class="text-xs text-[#48494A] uppercase dark:text-white">Year</label>
+                <select id="filter_year" name="filter_year" class="dark:bg-gray-900 dark:text-white filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="" hidden>Year</option>
                     <?php
                     if (empty($years)) $years[] = date('Y');
@@ -56,8 +56,8 @@ try {
 
             <!-- Quarter -->
             <div class="flex flex-col w-full lg:w-28">
-                <label for="filter_quarter" class="text-xs text-[#48494A] uppercase">Quarter</label>
-                <select id="filter_quarter" name="filter_quarter" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="filter_quarter" class="text-xs text-[#48494A] uppercase dark:text-white">Quarter</label>
+                <select id="filter_quarter" name="filter_quarter" class="dark:bg-gray-900 dark:text-white filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">Quarter</option>
                     <option value="1" <?php echo (isset($filter_quarter) && $filter_quarter == 1) ? 'selected' : ''; ?>>1st Quarter</option>
                     <option value="2" <?php echo (isset($filter_quarter) && $filter_quarter == 2) ? 'selected' : ''; ?>>2nd Quarter</option>
@@ -68,8 +68,8 @@ try {
 
             <!-- Month -->
             <div class="flex flex-col lg:w-30">
-                <label for="filter_month" class="text-xs text-[#48494A] uppercase">Month</label>
-                <select id="filter_month" name="filter_month" class="filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <label for="filter_month" class="text-xs text-[#48494A] uppercase dark:text-white">Month</label>
+                <select id="filter_month" name="filter_month" class="dark:bg-gray-900 dark:text-white filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="">View All Months</option>
                     <?php for ($m = 1; $m <= 12; $m++) :
                         $month_name = date('F', mktime(0, 0, 0, $m, 1));

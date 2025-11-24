@@ -104,7 +104,7 @@ try {
     error_log("Error fetching data for NCAR page: " . $e->getMessage());
 }
 ?>
-<div id="ncar-list-container" class="p-4">
+<div id="ncar-list-container" class="p-4 dark:text-white">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -120,7 +120,7 @@ try {
 
         <form id="ncar-filters-form" method="GET" class="flex lg:items-center gap-2 mb-4 flex-col lg:flex-row">
             <input type="hidden" name="page" value="ncar-campus-director">
-            <select name="division" id="filter_division" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
+            <select name="division" id="filter_division" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
                 <option value="">All Divisions</option>
                 <?php foreach ($divisions as $division) : ?>
                     <option value="<?php echo htmlspecialchars($division['id']); ?>" <?php echo ($filter_division_id == $division['id']) ? 'selected' : ''; ?>>
@@ -129,7 +129,7 @@ try {
                 <?php endforeach; ?>
             </select>
 
-            <select name="office" id="filter_office" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
+            <select name="office" id="filter_office" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
                 <option value="">All Offices</option>
                 <?php foreach ($units as $unit) : ?>
                     <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>" <?php echo ($filter_office_id == $unit['id']) ? 'selected' : ''; ?>>
@@ -138,13 +138,13 @@ try {
                 <?php endforeach; ?>
             </select>
 
-            <select name="quarter" id="filter_quarter" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left">
+            <select name="quarter" id="filter_quarter" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left">
                 <?php for ($q = 1; $q <= 4; $q++) : ?>
                     <option value="<?php echo $q; ?>" <?php echo ($filter_quarter == $q) ? 'selected' : ''; ?>><?php echo $q . ($q == 1 ? 'st' : ($q == 2 ? 'nd' : ($q == 3 ? 'rd' : 'th'))); ?> Quarter</option>
                 <?php endfor; ?>
             </select>
 
-            <select name="year" id="filter_year" class="filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left">
+            <select name="year" id="filter_year" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left">
                 <?php foreach ($years as $year) : ?>
                     <option value="<?php echo htmlspecialchars($year); ?>" <?php echo ($filter_year == $year) ? 'selected' : ''; ?>>
                         <?php echo htmlspecialchars($year); ?>
@@ -156,7 +156,7 @@ try {
 
     <div class="overflow-x-auto">
         <table class="border border-[#1E1E1ECC] shadow-lg w-full">
-            <thead class="bg-[#064089] text-white font-normal">
+            <thead class="bg-[#064089] text-white font-normal dark:text-white dark:bg-gray-900">
                 <tr>
                     <th class="border px-4 py-3 border-[#1E1E1ECC] w-2/3 text-left">Office</th>
                     <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">Status</th>
@@ -166,13 +166,13 @@ try {
             <tbody id="ncar-table-body">
                 <?php if (empty($ncar_data)) : ?>
                     <tr>
-                        <td colspan="3" class="text-center p-4 border border-gray-300">No offices with negative analysis found for the selected period.</td>
+                        <td colspan="3" class="text-center p-4 border border-[#1E1E1ECC]">No offices with negative analysis found for the selected period.</td>
                     </tr>
                 <?php else : ?>
                     <?php foreach ($ncar_data as $row) : ?>
-                        <tr class="bg-white hover:bg-gray-50 ncar-row" data-unit-id="<?php echo htmlspecialchars($row['unit_id']); ?>">
-                            <td class="border border-gray-300 p-3 office-name"><?php echo htmlspecialchars($row['unit_name']); ?></td>
-                            <td class="border border-gray-300 p-3 text-center status-cell">
+                        <tr class="bg-white hover:bg-gray-50 ncar-row dark:text-white dark:bg-gray-700" data-unit-id="<?php echo htmlspecialchars($row['unit_id']); ?>">
+                            <td class="border border-[#1E1E1ECC] p-3 office-name"><?php echo htmlspecialchars($row['unit_name']); ?></td>
+                            <td class="border border-[#1E1E1ECC] p-3 text-center status-cell">
                                 <?php
                                 $status = htmlspecialchars($row['ncar_status']);
                                 $status_class = 'bg-[#EE6B6E] text-white'; // Default for Unresolved
@@ -186,7 +186,7 @@ try {
                                     <?php echo $status; ?>
                                 </span>
                             </td>
-                            <td class="border border-gray-300 p-3 text-center action-cell">
+                            <td class="border border-[#1E1E1ECC] p-3 text-center action-cell">
                                 <div class="flex justify-center">
                                     <button class="view-ncar-btn bg-[#D9E2EC] text-[#064089] px-6 py-1 rounded-full text-xs font-semibold transition hover:bg-[#c2ccd6] flex items-center justify-center gap-1">
                                         <img src="../../resources/svg/eye-icon.svg" alt="">View

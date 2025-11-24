@@ -4,10 +4,10 @@ $active_class = 'bg-[#064089] text-white active-nav-link';
 $inactive_class = 'hover:bg-[#064089] hover:text-[#F1F7F9]';
 $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors duration-200 flex items-center gap-2';
 ?>
-<nav class="z-30 bg-[#F1F7F9] text-black p-4 flex-col w-64 lg:w-1/5 rounded-r-lg lg:rounded-lg shadow-2xl fixed lg:relative lg:flex top-0 left-0 h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-x-auto" id="side-nav">
+<nav class="z-30 bg-[#F1F7F9] text-black p-4 flex-col w-64 lg:w-1/5 rounded-r-lg lg:rounded-lg shadow-2xl fixed lg:relative lg:flex top-0 left-0 h-full transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out overflow-x-auto dark:bg-gray-600 dark:text-white" id="side-nav">
     <ul class="space-y-1 flex-grow lg:pt-12">
         <li>
-            <a href="campus-directors-layout.php?page=dashboard" class="<?php echo $base_class; ?> <?php echo ($page === 'dashboard') ? $active_class : $inactive_class; ?>">
+            <a href="campus-directors-layout.php?page=dashboard-campus-director" class="<?php echo $base_class; ?> <?php echo ($page === 'dashboard-campus-director') ? $active_class : $inactive_class; ?>">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path class="fill-current" d="M4.16667 14.0417H10.4167C10.9896 14.0417 11.4583 13.5729 11.4583 13V4.66667C11.4583 4.09375 10.9896 3.625 10.4167 3.625H4.16667C3.59375 3.625 3.125 4.09375 3.125 4.66667V13C3.125 13.5729 3.59375 14.0417 4.16667 14.0417ZM4.16667 22.375H10.4167C10.9896 22.375 11.4583 21.9062 11.4583 21.3333V17.1667C11.4583 16.5937 10.9896 16.125 10.4167 16.125H4.16667C3.59375 16.125 3.125 16.5937 3.125 17.1667V21.3333C3.125 21.9062 3.59375 22.375 4.16667 22.375ZM14.5833 22.375H20.8333C21.4062 22.375 21.875 21.9062 21.875 21.3333V13C21.875 12.4271 21.4062 11.9583 20.8333 11.9583H14.5833C14.0104 11.9583 13.5417 12.4271 13.5417 13V21.3333C13.5417 21.9062 14.0104 22.375 14.5833 22.375ZM13.5417 4.66667V8.83333C13.5417 9.40625 14.0104 9.875 14.5833 9.875H20.8333C21.4062 9.875 21.875 9.40625 21.875 8.83333V4.66667C21.875 4.09375 21.4062 3.625 20.8333 3.625H14.5833C14.0104 3.625 13.5417 4.09375 13.5417 4.66667Z" fill="#1E1E1E" />
                 </svg>
@@ -175,7 +175,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
         </li>
     </ul>
     <div class="">
-        <a href="../../function/_auth/_logout.php" class="group font-bold px-4 py-2 text-base text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-colors duration-200 flex items-center gap-2">
+        <a href="../../function/_auth/_logout.php" class="dark:text-white group font-bold px-4 py-2 text-base text-red-600 hover:bg-red-600 hover:text-white rounded-md transition-colors duration-200 flex items-center gap-2">
             <svg class="group-hover:stroke-white stroke-red-600" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M15.75 9V5.25C15.75 4.65326 15.5129 4.08097 15.091 3.65901C14.669 3.23705 14.0967 3 13.5 3H7.5C6.90326 3 6.33097 3.23705 5.90901 3.65901C5.48705 4.08097 5.25 4.65326 5.25 5.25V18.75C5.25 19.3467 5.48705 19.919 5.90901 20.341C6.33097 20.7629 6.90326 21 7.5 21H13.5C14.0967 21 14.669 20.7629 15.091 20.341C15.5129 19.919 15.75 19.3467 15.75 18.75V15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                 <path d="M20.25 12H9.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />

@@ -21,7 +21,7 @@ try {
         // Prepare statement for fetching choices
         $stmt_choices = $pdo->prepare("SELECT choice_text FROM tbl_choices WHERE question_id = ?");
 ?>
-        <div class="p-4">
+        <div class="p-4 dark:bg-gray-800 dark:text-white">
             <script>
                 // Apply saved font size on every page load
                 (function() {
@@ -35,14 +35,14 @@ try {
             <p class="font-sfpro">You are viewing the survey questionnaire currently in use. Last updated: <span class="text-[#064089]"><?php echo $last_updated; ?>.</span></p><br>
 
             <?php if (empty($questions)) : ?>
-                <div class="bg-[#F1F7F9] p-5 rounded-md">
+                <div class="bg-[#F1F7F9] p-5 rounded-md dark:bg-gray-900 dark:text-white">
                     <p class="font-sfpro">This survey has no active questions.</p>
                 </div>
             <?php else : ?>
-                <div class="bg-[#F1F7F9] p-5 rounded-md">
+                <div class="bg-[#F1F7F9] p-5 rounded-md dark:bg-gray-900 dark:text-white">
                     <?php foreach ($questions as $index => $q) : ?>
                         <div>
-                            <span class="inline-block box-border border-2 rounded-md border-[#1E1E1E] px-3 font-sfpro"><?php echo ($index + 1) . '. ' . htmlspecialchars(ucfirst($q['question_type'])); ?></span><br><br>
+                            <span class="inline-block box-border border-2 rounded-md border-[#1E1E1E] px-3 font-sfpro dark:border-white"><?php echo ($index + 1) . '. ' . htmlspecialchars(ucfirst($q['question_type'])); ?></span><br><br>
                             <p class="font-bold text-lg font-sfpro"><?php echo htmlspecialchars($q['question']); ?></p><br>
 
                             <?php

@@ -59,7 +59,7 @@ if ($user_campus) {
 }
 ?>
 <!-- Main container for the list of quarters -->
-<div id="tally-list-container" class="p-4">
+<div id="tally-list-container" class="p-4 dark:text-white">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -82,7 +82,7 @@ if ($user_campus) {
 
     <div class="mt-4 overflow-x-auto">
         <table class="w-full border-collapse">
-            <thead class="bg-[#064089] text-white font-normal">
+            <thead class="bg-[#064089] text-white font-normal dark:bg-gray-900">
                 <tr>
                     <th class="border border-[#1E1E1ECC] font-normal p-3 text-left">Report Name</th>
                     <th class="border border-[#1E1E1ECC] font-normal">Action</th>
@@ -95,7 +95,7 @@ if ($user_campus) {
                     </tr>
                 <?php else : ?>
                     <?php foreach ($reports as $report) : ?>
-                        <tr class="bg-white">
+                        <tr class="bg-white dark:bg-gray-700 dark:text-white">
                             <td class="border border-[#1E1E1ECC] p-3"><?php echo htmlspecialchars($report['display_name']); ?></td>
                             <td class="border border-[#1E1E1ECC] p-3 text-center gap-2">
                                 <div class="flex justify-center gap-2">

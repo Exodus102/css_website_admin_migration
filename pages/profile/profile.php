@@ -7,8 +7,8 @@
             }
         })();
     </script>
-    <h1 class="text-4xl font-bold text-[#1E1E1E]">Profile</h1>
-    <p class="text-[#1E1E1E]">
+    <h1 class="text-4xl font-bold text-[#1E1E1E] dark:text-white">Profile</h1>
+    <p class="text-[#1E1E1E] dark:text-white">
         Manage your profile information in this page.
     </p><br>
 

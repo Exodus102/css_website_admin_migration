@@ -172,15 +172,24 @@ if ($user_campus) {
         // Apply saved font size on every page load
         (function() {
             const savedSize = localStorage.getItem('user_font_size');
+            const savedTheme = localStorage.getItem("theme");
             if (savedSize) {
                 document.documentElement.style.fontSize = savedSize;
+            }
+
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark');
             }
         })();
     </script>
     <!-- Main Dashboard Content -->
     <div class="w-full">
         <!-- Welcome Section -->
-        <div class="">
+        <div class="dark:text-white">
             <h1 class="text-3xl font-bold">Welcome, <?php echo htmlspecialchars($_SESSION['user_first_name'] ?? 'User'); ?>!</h1>
             <p class="">Gain real-time insights, track system status, and monitor key metrics to ensure total satisfaction.</p>
         </div>
@@ -191,7 +200,7 @@ if ($user_campus) {
             <!-- Left Column: Metrics and Bar Char -->
             <div class="flex flex-col w-full">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
+                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between dark:bg-gray-700 dark:text-white">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">Survey Version</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -200,7 +209,7 @@ if ($user_campus) {
                         </div>
                         <span class="inline-block text-lg font-bold px-3 py-1 mt-2 rounded-lg"><?php echo htmlspecialchars($active_survey_version); ?></span>
                     </div>
-                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
+                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between dark:bg-gray-700 dark:text-white">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">CSS Respondents</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -209,7 +218,7 @@ if ($user_campus) {
                         </div>
                         <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
                     </div>
-                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
+                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between dark:bg-gray-700 dark:text-white">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">Pending NCAR</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -220,27 +229,27 @@ if ($user_campus) {
                     </div>
                 </div>
 
-                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full">
+                <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full dark:bg-gray-700 dark:text-white">
                     <h2 class="text-3xl mb-4 font-bold">Monthly Responses</h2>
                     <!-- 4 boxes -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Total Responses</h3>
                             <p class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
                         </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Monthly Response</h3>
                             <p id="monthly-response-count" class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
                         </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Response Rate</h3>
-                            <p id="response-rate" class="text-4xl font-bold text-black">
+                            <p id="response-rate" class="text-4xl font-bold text-black dark:text-white">
                                 <?php echo htmlspecialchars($response_rate); ?>%
                             </p>
                         </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">vs Last Month</h3>
-                            <p id="vs-last-month" class="text-4xl font-bold text-black">
+                            <p id="vs-last-month" class="text-4xl font-bold text-black dark:text-white">
                                 <?php echo htmlspecialchars($vs_last_month_display); ?>
                             </p>
                         </div>
@@ -248,8 +257,8 @@ if ($user_campus) {
 
                     <!-- Dropdown -->
                     <div class="mt-6">
-                        <label for="office-select" class="block text-sm font-medium text-gray-700">Select an Office for Details</label>
-                        <select id="office-select" name="office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
+                        <label for="office-select" class="block text-sm font-medium text-gray-700 dark:text-white">Select an Office for Details</label>
+                        <select id="office-select" name="office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold dark:bg-gray-900 dark:text-white">
                             <option value="" hidden>Office</option>
                             <?php foreach ($campus_offices as $office) : ?>
                                 <option value="<?php echo htmlspecialchars($office); ?>"><?php echo htmlspecialchars($office); ?></option>
@@ -260,7 +269,7 @@ if ($user_campus) {
             </div>
 
             <!-- Right Column: User Types Pie Chart -->
-            <div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col">
+            <div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col dark:bg-gray-700 dark:text-white">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold ">User Types</h2>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -289,7 +298,7 @@ if ($user_campus) {
                         <?php foreach ($columns as $column) : ?>
                             <div>
                                 <?php foreach ($column as $item) : ?>
-                                    <div class="flex items-center mb-1">
+                                    <div class="flex items-center mb-1 dark:text-white">
                                         <span class="w-3 h-3 rounded-full mr-2" style="background-color: <?php echo htmlspecialchars($item['color']); ?>"></span>
                                         <?php echo htmlspecialchars($item['label']); ?>
                                     </div>
@@ -303,12 +312,12 @@ if ($user_campus) {
 
         <!-- Trend Line Graph -->
         <div class="w-full mt-6">
-            <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
+            <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full dark:bg-gray-700 dark:text-white">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
                     <h2 class="text-3xl font-bold">Trend Analysis</h2>
                     <div class="flex flex-col lg:flex-row items-center gap-2 mt-2 sm:mt-0">
                         <!-- Office Filter for Trend Chart -->
-                        <select id="trend-office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">\
+                        <select id="trend-office-select" class="dark:bg-gray-900 dark:text-white mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">\
                             <option value="" hidden>Office</option>
                             <option value="">All Offices</option>
                             <?php foreach ($campus_offices as $office) : ?>
@@ -316,7 +325,7 @@ if ($user_campus) {
                             <?php endforeach; ?>
                         </select>
                         <!-- Period Filter for Trend Chart -->
-                        <select id="trend-period-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
+                        <select id="trend-period-select" class="dark:bg-gray-900 dark:text-white mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
                             <option value="annual" selected>Annual</option>
                             <option value="quarterly">Quarterly (This Year)</option>
                             <option value="monthly">Monthly (This Year)</option>
@@ -375,6 +384,13 @@ if ($user_campus) {
             });
         }
 
+        const savedTheme = localStorage.getItem("theme");
+        const isDarkMode = savedTheme == 'dark';
+        const chartTextColor = isDarkMode ? 'white' : 'black';
+
+        const toolTipColor = isDarkMode ? '#212121' : '#064089';
+        const trendColor = isDarkMode ? '#111827' : '#064089';
+
         // --- Trend Line Chart ---
         const trendCtx = document.getElementById('trendChart');
         if (trendCtx) {
@@ -392,10 +408,10 @@ if ($user_campus) {
                         data: trendData,
                         fill: true,
                         backgroundColor: gradient,
-                        borderColor: '#064089',
+                        borderColor: trendColor,
                         borderWidth: 2.5,
                         tension: 0.4, // Makes the line smoother
-                        pointBackgroundColor: '#064089',
+                        pointBackgroundColor: trendColor,
                         pointBorderColor: '#FFFFFF',
                         pointBorderWidth: 2,
                         pointRadius: 0, // Hide points by default
@@ -416,7 +432,8 @@ if ($user_campus) {
                                 font: {
                                     family: 'sans-serif',
                                     weight: '500'
-                                }
+                                },
+                                color: chartTextColor
                             }
                         },
                         y: {
@@ -433,7 +450,8 @@ if ($user_campus) {
                                 font: {
                                     family: 'sans-serif',
                                     weight: '500'
-                                }
+                                },
+                                color: chartTextColor
                             }
                         }
                     },
@@ -445,7 +463,7 @@ if ($user_campus) {
                             enabled: true,
                             mode: 'index',
                             intersect: false,
-                            backgroundColor: '#064089',
+                            backgroundColor: toolTipColor,
                             titleFont: {
                                 size: 14,
                                 weight: 'bold'

@@ -119,7 +119,7 @@ if ($target_campus_name) {
     }
 }
 ?>
-<div class="p-4">
+<div class="p-4 dark:text-white">
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -138,16 +138,16 @@ if ($target_campus_name) {
     <!-- Table -->
     <div class="overflow-x-auto mt-4">
         <table class="w-full border-collapse">
-            <thead class="bg-[#064089] text-white font-normal text-left">
+            <thead class="bg-[#064089] text-white font-normal text-left dark:bg-gray-900 dark:text-white">
                 <tr>
-                    <th class="border border-gray-300 px-4 py-3 w-1/3">Office</th>
+                    <th class="border border-[#1E1E1ECC] px-4 py-3 w-1/3">Office</th>
                     <?php foreach ($column_headers as $header) : ?>
-                        <th class="border border-gray-300 px-4 py-3 text-center"><?php echo $header; ?></th>
+                        <th class="border border-[#1E1E1ECC] px-4 py-3 text-center"><?php echo $header; ?></th>
                     <?php endforeach; ?>
                     <?php if ($view_mode === 'month') : ?>
-                        <th class="border border-gray-300 px-4 py-3 text-center">Analysis</th>
+                        <th class="border border-[#1E1E1ECC] px-4 py-3 text-center">Analysis</th>
                     <?php endif; ?>
-                    <th class="border border-gray-300 px-4 py-3 text-center">Action</th>
+                    <th class="border border-[#1E1E1ECC] px-4 py-3 text-center">Action</th>
                 </tr>
             </thead>
             <tbody class="text-sm">
@@ -157,7 +157,7 @@ if ($target_campus_name) {
                         $colspan = count($column_headers) + 2; // Office + Action
                         if ($view_mode === 'month') $colspan++; // Add one for Analysis
                         ?>
-                        <td colspan="<?php echo $colspan; ?>" class="text-center p-4 text-gray-500 border border-gray-300">No offices found for your campus or no responses have been recorded for the selected period.</td>
+                        <td colspan="<?php echo $colspan; ?>" class="text-center p-4 text-gray-500 border border-[#1E1E1ECC]">No offices found for your campus or no responses have been recorded for the selected period.</td>
                     </tr>
                 <?php else : ?>
                     <?php foreach ($tally_data as $row) : ?>
@@ -182,25 +182,25 @@ if ($target_campus_name) {
                             $analysis_class = 'bg-green-100 text-green-800';
                         }
                         ?>
-                        <tr class="bg-white hover:bg-gray-50">
-                            <td class="border border-gray-300 p-3"><?php echo htmlspecialchars($row['unit_name']); ?></td>
+                        <tr class="bg-white hover:bg-gray-300 dark:bg-gray-700 dark:text-white">
+                            <td class="border border-[#1E1E1ECC] p-3"><?php echo htmlspecialchars($row['unit_name']); ?></td>
                             <?php
                             if ($view_mode === 'year' || $view_mode === 'quarter') {
                                 foreach ($column_headers as $header) {
-                                    echo '<td class="border border-gray-300 p-3 text-center">' . htmlspecialchars($row[strtolower($header) . '_count']) . '</td>';
+                                    echo '<td class="border border-[#1E1E1ECC] p-3 text-center">' . htmlspecialchars($row[strtolower($header) . '_count']) . '</td>';
                                 }
                             } else {
-                                echo '<td class="border border-gray-300 p-3 text-center">' . htmlspecialchars($row['count']) . '</td>';
+                                echo '<td class="border border-[#1E1E1ECC] p-3 text-center">' . htmlspecialchars($row['count']) . '</td>';
                             }
                             ?>
                             <?php if ($view_mode === 'month') : ?>
-                                <td class="border border-gray-300 p-3 text-center">
+                                <td class="border border-[#1E1E1ECC] p-3 text-center">
                                     <span class="px-3 py-1 font-semibold leading-tight rounded-full text-xs <?php echo $analysis_class; ?>">
                                         <?php echo $analysis; ?>
                                     </span>
                                 </td>
                             <?php endif; ?>
-                            <td class="border border-gray-300 p-3 text-center">
+                            <td class="border border-[#1E1E1ECC] p-3 text-center">
                                 <div class="flex justify-center">
                                     <?php
                                     $query_params = [

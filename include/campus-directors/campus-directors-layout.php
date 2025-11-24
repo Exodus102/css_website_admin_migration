@@ -34,7 +34,7 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
 
         <?php include "campus-directors-navigation.php"; ?>
 
-        <main class="flex-1 lg:p-5 w-4/5 overflow-y-auto">
+        <main class="flex-1 lg:p-5 w-4/5 overflow-y-auto dark:bg-gray-800">
             <h1 class="lg:text-3xl lg:font-bold lg:mb-6">
             </h1>
             <?php
@@ -53,6 +53,15 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
             const hamburgerBtn = document.getElementById('hamburger-btn');
             const sideNav = document.getElementById('side-nav');
             const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const savedTheme = localStorage.getItem("theme");
+
+            if (savedTheme === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.body.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+                document.body.classList.remove('dark');
+            }
 
             const toggleSidebar = () => {
                 sidebarOverlay.classList.toggle('hidden');
