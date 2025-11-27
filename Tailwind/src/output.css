@@ -1276,10 +1276,6 @@ video {
   border-color: rgb(229 231 235 / var(--tw-divide-opacity, 1));
 }
 
-.self-center {
-  align-self: center;
-}
-
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1394,22 +1390,6 @@ video {
 
 .border-transparent {
   border-color: transparent;
-}
-
-.border-\[\] {
-  border-color: ;
-}
-
-.border-\[\#1E\] {
-  border-color: #1E;
-}
-
-.border-\[\#1E1E1E1ECC\] {
-  border-color: #1E1E1E1ECC;
-}
-
-.border-\[border-\[\#1E1E1ECC\]\] {
-  border-color: border-[#1E1E1ECC];
 }
 
 .bg-\[\#064089\] {
@@ -2447,11 +2427,6 @@ body {
   background-color: rgb(220 38 38 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-gray-500:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(107 114 128 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:text-\[\#064089\]:hover {
   --tw-text-opacity: 1;
   color: rgb(6 64 137 / var(--tw-text-opacity, 1));
@@ -2648,10 +2623,6 @@ body {
   color: rgb(6 64 137 / var(--tw-text-opacity, 1));
 }
 
-.dark\:border:is(.dark *) {
-  border-width: 1px;
-}
-
 .dark\:border-gray-400:is(.dark *) {
   --tw-border-opacity: 1;
   border-color: rgb(156 163 175 / var(--tw-border-opacity, 1));
@@ -2692,9 +2663,9 @@ body {
   background-color: rgb(17 24 39 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:bg-gray-400:is(.dark *) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(156 163 175 / var(--tw-bg-opacity, 1));
+.dark\:text-gray-200:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(229 231 235 / var(--tw-text-opacity, 1));
 }
 
 .dark\:text-gray-300:is(.dark *) {
@@ -2710,6 +2681,21 @@ body {
 .dark\:text-white:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+
+.dark\:text-\[\#412B6B\]:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(65 43 107 / var(--tw-text-opacity, 1));
+}
+
+.dark\:text-\[\#EEE4B1\]:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(238 228 177 / var(--tw-text-opacity, 1));
+}
+
+.dark\:text-\[\#BED754\]:is(.dark *) {
+  --tw-text-opacity: 1;
+  color: rgb(190 215 84 / var(--tw-text-opacity, 1));
 }
 
 .dark\:hover\:bg-gray-600:hover:is(.dark *) {

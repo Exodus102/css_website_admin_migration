@@ -209,7 +209,7 @@ if ($user_campus) {
                         </div>
                         <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
                     </div>
-                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
+                    <!-- <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">Pending NCAR</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -217,7 +217,7 @@ if ($user_campus) {
                             </svg>
                         </div>
                         <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars($pending_ncar_count); ?></p>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full">
@@ -260,7 +260,7 @@ if ($user_campus) {
             </div>
 
             <!-- Right Column: User Types Pie Chart -->
-            <div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col">
+            <!--<div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold ">User Types</h2>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -278,7 +278,7 @@ if ($user_campus) {
                         <canvas id="pieChart"></canvas>
                     </div>
                 </div>
-                <!-- Legend for Pie Chart (you'd generate this dynamically with Chart.js) -->
+                Legend for Pie Chart (you'd generate this dynamically with Chart.js)
                 <?php if (!empty($pie_chart_legend_data)) : ?>
                     <div class="mt-4 text-sm text-gray-600 flex justify-center gap-6">
                         <?php
@@ -298,7 +298,7 @@ if ($user_campus) {
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-            </div>
+            </div> -->
         </div>
 
         <!-- Trend Line Graph -->

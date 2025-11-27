@@ -32,7 +32,7 @@ try {
                 })();
             </script>
             <h1 class="text-4xl font-bold font-sfpro"><?php echo htmlspecialchars($active_survey_name); ?></h1>
-            <p class="font-sfpro">You are viewing the survey questionnaire currently in use. Last updated: <span class="text-[#064089]"><?php echo $last_updated; ?>.</span></p><br>
+            <p class="font-sfpro">You are viewing the survey questionnaire currently in use. Last updated: <span class="text-[#064089] dark:text-[#EEE4B1]"><?php echo $last_updated; ?>.</span></p><br>
 
             <?php if (empty($questions)) : ?>
                 <div class="bg-[#F1F7F9] p-5 rounded-md dark:bg-gray-900 dark:text-white">
@@ -64,7 +64,7 @@ try {
                             ?>
                         </div>
                         <?php if ($index < count($questions) - 1) : ?>
-                            <hr class="my-6 border-[#1E1E1E]">
+                            <hr class="my-6 border-[#1E1E1E] dark:border-white">
                         <?php endif; ?>
                     <?php endforeach; ?>
                 </div>
