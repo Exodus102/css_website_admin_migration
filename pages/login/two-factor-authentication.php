@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_authenticated_pending']) || !$_SESSION['user_authenti
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../../Tailwind/src/output.css">
+  <link rel="stylesheet" href="../../Tailwind/public/output.css">
   <script>
     // Apply saved font size on every page load
     (function() {

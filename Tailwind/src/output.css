@@ -2663,9 +2663,9 @@ body {
   background-color: rgb(17 24 39 / var(--tw-bg-opacity, 1));
 }
 
-.dark\:text-gray-200:is(.dark *) {
+.dark\:text-\[\#EEE4B1\]:is(.dark *) {
   --tw-text-opacity: 1;
-  color: rgb(229 231 235 / var(--tw-text-opacity, 1));
+  color: rgb(238 228 177 / var(--tw-text-opacity, 1));
 }
 
 .dark\:text-gray-300:is(.dark *) {
@@ -2681,21 +2681,6 @@ body {
 .dark\:text-white:is(.dark *) {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
-.dark\:text-\[\#412B6B\]:is(.dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(65 43 107 / var(--tw-text-opacity, 1));
-}
-
-.dark\:text-\[\#EEE4B1\]:is(.dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(238 228 177 / var(--tw-text-opacity, 1));
-}
-
-.dark\:text-\[\#BED754\]:is(.dark *) {
-  --tw-text-opacity: 1;
-  color: rgb(190 215 84 / var(--tw-text-opacity, 1));
 }
 
 .dark\:hover\:bg-gray-600:hover:is(.dark *) {
