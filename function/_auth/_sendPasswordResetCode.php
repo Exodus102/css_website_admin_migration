@@ -5,13 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require_once '../../function/_databaseConfig/_dbConfig.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/Exception.php';
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/SMTP.php';
+// --- Resend Mailer Configuration ---
+require_once __DIR__ . '/../../vendor/autoload.php'; // Composer autoloader
+require_once __DIR__ . '/../_config/resend_config.php';
 
 if (isset($_GET['email'])) {
     $email = trim($_GET['email']);
@@ -38,22 +34,16 @@ if (isset($_GET['email'])) {
             $insertStmt = $pdo->prepare("INSERT INTO two_factor_codes (user_id, code, expires_at) VALUES (?, ?, ?)");
             $insertStmt->execute([$user_id, $resetCode, $expiresAt]);
 
-            // Send the email with PHPMailer
-            $mail = new PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com';
-            $mail->SMTPAuth   = true;
-            $mail->Username   = 'dlhor65@gmail.com';
-            $mail->Password   = 'mqvt lbsn naoe fgze';
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Port       = 587;
-            $mail->setFrom('ursmain@urs.edu.ph', 'Customer Satisfaction Survey System');
-            $mail->addAddress($email);
-            $mail->isHTML(true);
-            $mail->Subject = 'Password Reset Code';
-            $mail->Body    = "Hello {$user_first_name},<br><br>Your password reset code is: <b>{$resetCode}</b><br><br>This code is valid for 10 minutes.";
-            $mail->AltBody = "Hello {$user_first_name}, Your password reset code is: {$resetCode}. This code is valid for 10 minutes.";
-            $mail->send();
+            // --- Send the email using Resend ---
+            $resend = Resend::client(RESEND_API_KEY);
+
+            $resend->emails->send([
+                'from' => MAIL_FROM_NAME . ' <' . MAIL_FROM_ADDRESS . '>',
+                'to' => [$email],
+                'subject' => 'Password Reset Code',
+                'html' => "Hello {$user_first_name},<br><br>Your password reset code is: <b>{$resetCode}</b><br><br>This code is valid for 10 minutes.",
+                'text' => "Hello {$user_first_name}, Your password reset code is: {$resetCode}. This code is valid for 10 minutes."
+            ]);
 
             // Set a temporary session flag to authorize code verification
             $_SESSION['password_reset_pending'] = true;
