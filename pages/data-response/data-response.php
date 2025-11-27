@@ -1,5 +1,5 @@
 <?php
-require_once '../../function/_databaseConfig/_dbConfig.php';
+require_once __DIR__ . '/../../function/_databaseConfig/_dbConfig.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -188,17 +188,17 @@ try {
             </div>
         </div>
 
-        <div class="flex items-center gap-2">
-            <!-- Add Response button -->
+        <!--<div class="flex items-center gap-2">
+             Add Response button 
             <button id="add-response-btn" class="bg-[#D6D7DC] border border-[#1E1E1E] px-4 py-2 rounded shadow-sm text-sm flex items-center h-7">
                 Add Response
             </button>
-            <!-- Upload CSV button -->
+             Upload CSV button 
             <button id="upload-csv-btn" class="bg-[#D6D7DC] border border-[#1E1E1E] px-4 py-2 rounded shadow-sm text-sm flex items-center h-7">
                 <img src="../../resources/svg/upload-data-window.svg" alt="Upload CSV" class="mr-2">
                 Upload CSV
             </button>
-        </div>
+        </div> -->
     </div>
 
     <!-- Table -->

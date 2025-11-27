@@ -55,6 +55,24 @@ try {
         }
     }
 
+    if (!function_exists('getVerbalInterpretationFullText')) {
+        function getVerbalInterpretationFullText($mean)
+        {
+            if ($mean >= 4.50) {
+                return 'Excellent';
+            } elseif ($mean >= 3.50) {
+                return 'Very Satisfactory';
+            } elseif ($mean >= 2.50) {
+                return 'Satisfactory';
+            } elseif ($mean >= 1.50) {
+                return 'Unsatisfactory';
+            } elseif ($mean >= 1.00) {
+                return 'Poor/Needs Improvement';
+            }
+            return 'N/A'; // Not Applicable or out of range
+        }
+    }
+
     // --- Define the period display string ---
     $period_display = "$quarter_text_for_footer $year";
 
@@ -71,7 +89,7 @@ try {
         $pdf->SetFont('Arial', '', 12);
         $pdf->Cell(20, 7, '', 0, 0); // Add an empty cell for indentation
         $pdf->Cell(0, 7, $period_display, 0, 1);
-        $pdf->Ln(10);
+
 
         // --- Fetch means for this specific office ---
         $sql_means = "
@@ -147,6 +165,8 @@ try {
         $pdf->SetFont('Arial', '', 11);
         $qos_means = [];
         $su_means = [];
+        $questions_needing_recommendations = []; // Store questions that fall in the 'Satisfactory' range
+        $questions_for_recommendation = [];
         $current_rendering_group = null;
 
         foreach ($all_questions as $question) {
@@ -168,6 +188,11 @@ try {
             if ($is_computable && $mean_value > 0) {
                 if ($question_rendering === 'QoS') $qos_means[] = $mean_value;
                 if ($question_rendering === 'Su') $su_means[] = $mean_value;
+
+                // If a question's mean is 'Satisfactory' (2.50 - 3.49), add it to our list for recommendations.
+                if ($mean_value >= 2.50 && $mean_value < 3.50) {
+                    $questions_needing_recommendations[] = $question['question'];
+                }
             }
 
             $display_mean = $is_computable ? number_format($mean_value, 2) : '';
@@ -204,6 +229,31 @@ try {
         $all_means = array_merge($qos_means, $su_means);
         $grand_mean = !empty($all_means) ? array_sum($all_means) / count($all_means) : 0;
         drawSummaryRow($pdf, 'Grand Mean', $grand_mean, $col1_width, $col2_width, $col3_width, $col4_width);
+
+        // --- Display Recommendations Section based on Grand Mean ---
+        $verbal_interpretation_full_text = getVerbalInterpretationFullText($grand_mean);
+        $pdf->Ln(10);
+        $pdf->SetFont('Arial', 'B', 12);
+        $pdf->Cell(0, 5, 'Recommendations:', 0, 1, 'L');
+        $pdf->Ln(2);
+        $pdf->SetFont('Arial', '', 11);
+
+        $recommendation_text = 'No specific recommendation tier for this score.';
+        if ($grand_mean >= 4.50) {
+            $recommendation_text = "Grand Mean of " . number_format($grand_mean, 2) . " with a verbal interpretation of " . $verbal_interpretation_full_text . ", Optimizing (Performance is very high; sustain + refine)";
+        } elseif ($grand_mean >= 3.50) {
+            $recommendation_text = "Grand Mean of " . number_format($grand_mean, 2) . " with a verbal interpretation of " . $verbal_interpretation_full_text . ", Continuous Improvement (Good, but still needs ongoing improvements)";
+        } elseif ($grand_mean >= 2.50) {
+            $recommendation_text = "Grand Mean of " . number_format($grand_mean, 2) . " with a verbal interpretation of " . $verbal_interpretation_full_text . ", Targeted Enhancement (Average; needs focused improvements)";
+        } elseif ($grand_mean >= 1.50) {
+            $recommendation_text = "Grand Mean of " . number_format($grand_mean, 2) . " with a verbal interpretation of " . $verbal_interpretation_full_text . ", Corrective Action (Below standard; clear problems to fix)";
+        } elseif ($grand_mean >= 1.00) {
+            $recommendation_text = "Grand Mean of " . number_format($grand_mean, 2) . " with a verbal interpretation of " . $verbal_interpretation_full_text . ", Immediate Intervention (Critical; urgent and comprehensive action needed)";
+        } elseif ($grand_mean == 0) {
+            $recommendation_text = 'No responses recorded for this period.';
+        }
+
+        $pdf->MultiCell(0, 5, $recommendation_text, 0, 'L');
 
         $pdf->Ln(10); // Add more space
         $pdf->SetFont('Arial', 'B', 12);
