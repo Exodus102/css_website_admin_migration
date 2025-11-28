@@ -1,13 +1,13 @@
 <?php
 
 // This file is included from generate-report-tally.php and has access to:
-// $pdf, $pdo, $year, $quarter, and $user_campus.
+// $pdf, $pdo, $year, $quarter, $month, and $user_campus.
 
 try {
     // --- 1. Fetch all offices for the current campus ---
     $stmt_offices = $pdo->prepare("SELECT id, unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
     $stmt_offices->execute([$user_campus]);
-    $all_offices = $stmt_offices->fetchAll(PDO::FETCH_ASSOC);
+    $all_offices = $stmt_offices->fetchAll(PDO::FETCH_ASSOC); // Contains 'id' and 'unit_name'
 
     // --- 2. Fetch all active questions once to avoid re-querying in the loop ---
     $stmt_questions = $pdo->prepare("
@@ -25,6 +25,68 @@ try {
     ");
     $stmt_questions->execute();
     $all_questions = $stmt_questions->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- OPTIMIZATION: Fetch all means and comments for all offices in the campus at once ---
+    $base_sql = "
+        FROM tbl_responses r
+        JOIN (SELECT response_id, response FROM tbl_responses WHERE question_id = -3) AS office_response 
+            ON r.response_id = office_response.response_id
+        WHERE
+            r.response_id IN (
+                SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :campus_name_param
+            )
+            AND YEAR(r.timestamp) = :year
+    ";
+
+    $period_condition = '';
+    $params = [
+        ':campus_name_param' => $user_campus,
+        ':year' => $year,
+    ];
+
+    if ($quarter) {
+        $period_condition = " AND QUARTER(r.timestamp) = :quarter";
+        $params[':quarter'] = $quarter;
+    } elseif ($month) {
+        $period_condition = " AND MONTH(r.timestamp) = :month";
+        $params[':month'] = $month;
+    }
+
+    // Query for all mean values, grouped by office and question
+    $sql_all_means = "
+        SELECT 
+            office_response.response AS office_name, 
+            r.question_id, 
+            AVG(CAST(r.response AS DECIMAL(10,2))) AS mean_value
+        " . $base_sql . "
+        AND r.question_rendering IN ('QoS', 'Su')
+        AND r.response REGEXP '^[0-9\.]+$'
+        " . $period_condition . "
+        GROUP BY office_response.response, r.question_id
+    ";
+    $stmt_all_means = $pdo->prepare($sql_all_means);
+    $stmt_all_means->execute($params);
+    $all_means_raw = $stmt_all_means->fetchAll(PDO::FETCH_ASSOC);
+
+    // Query for all comments, grouped by office
+    $sql_all_comments = "
+        SELECT 
+            office_response.response AS office_name, 
+            r.comment
+        " . $base_sql . "
+        AND r.comment IS NOT NULL AND r.comment != ''
+        " . $period_condition . "
+        GROUP BY r.response_id, office_response.response, r.comment
+    ";
+    $stmt_all_comments = $pdo->prepare($sql_all_comments);
+    $stmt_all_comments->execute($params);
+    $all_comments_raw = $stmt_all_comments->fetchAll(PDO::FETCH_ASSOC);
+
+    // --- Pre-process the raw data into lookup maps for easy access ---
+    $means_by_office = [];
+    foreach ($all_means_raw as $row) $means_by_office[$row['office_name']][$row['question_id']] = $row['mean_value'];
+    $comments_by_office = [];
+    foreach ($all_comments_raw as $row) $comments_by_office[$row['office_name']][] = $row['comment'];
 
     // --- 3. Define Helper functions if they don't exist ---
     if (!function_exists('getVerbalInterpretation')) {
@@ -91,64 +153,10 @@ try {
         $pdf->Cell(0, 7, $period_display, 0, 1);
 
 
-        // --- Fetch means for this specific office ---
-        $sql_means = "
-            SELECT r.question_id, AVG(CAST(r.response AS DECIMAL(10,2))) AS mean_value
-            FROM tbl_responses r
-            WHERE r.response_id IN (
-                SELECT response_id FROM tbl_responses WHERE question_id = -3 AND response = :office_name_param
-            ) AND r.response_id IN (
-                SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :campus_name_param
-            )
-            AND r.question_rendering IN ('QoS', 'Su')
-            AND r.response REGEXP '^[0-9\.]+$'
-            AND YEAR(r.timestamp) = :year
-        ";
-        $params = [
-            ':office_name_param' => $office_name,
-            ':campus_name_param' => $user_campus,
-            ':year' => $year,
-        ];
+        // --- Get pre-fetched data for this office ---
+        $means = $means_by_office[$office_name] ?? []; // This is now a map of [question_id => mean_value]
+        $comments = $comments_by_office[$office_name] ?? [];
 
-        if ($quarter) {
-            $sql_means .= " AND QUARTER(r.timestamp) = :quarter";
-            $params[':quarter'] = $quarter;
-        } elseif ($month) {
-            $sql_means .= " AND MONTH(r.timestamp) = :month";
-            $params[':month'] = $month;
-        }
-        $sql_means .= " GROUP BY r.question_id";
-
-        $stmt_means = $pdo->prepare($sql_means);
-        $stmt_means->execute($params);
-        $means = $stmt_means->fetchAll(PDO::FETCH_KEY_PAIR);
-
-        // --- Fetch comments for this specific office ---
-        $sql_comments = "
-            SELECT DISTINCT r.comment FROM tbl_responses r
-            JOIN (SELECT response_id FROM tbl_responses WHERE question_id = -3 AND response = :office_name_param) AS office_responses 
-                ON r.response_id = office_responses.response_id
-            JOIN (SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :office_campus_param) AS campus_responses 
-                ON r.response_id = campus_responses.response_id
-            WHERE YEAR(r.timestamp) = :year AND r.comment IS NOT NULL AND r.comment != ''
-        ";
-        $comment_params = [
-            ':office_name_param' => $office_name,
-            ':office_campus_param' => $user_campus,
-            ':year' => $year,
-        ];
-
-        if ($quarter) {
-            $sql_comments .= " AND QUARTER(r.timestamp) = :quarter";
-            $comment_params[':quarter'] = $quarter;
-        } elseif ($month) {
-            $sql_comments .= " AND MONTH(r.timestamp) = :month";
-            $comment_params[':month'] = $month;
-        }
-
-        $stmt_comments = $pdo->prepare($sql_comments);
-        $stmt_comments->execute($comment_params);
-        $comments = $stmt_comments->fetchAll(PDO::FETCH_COLUMN);
 
         // --- Draw Table Header ---
         $pdf->SetFont('Arial', 'B', 11);
