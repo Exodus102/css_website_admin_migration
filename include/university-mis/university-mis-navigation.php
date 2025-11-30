@@ -31,7 +31,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                 Survey
             </a>
         </li>
-        <li>
+        <!--<li>
             <a href="university-mis-layout.php?page=data-response" class="<?php echo $base_class; ?> <?php echo ($page === 'data-response') ? $active_class : $inactive_class; ?>">
                 <svg class="nav-icon" width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_299)">
@@ -111,7 +111,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                 </svg>
                 NCAR
             </a>
-        </li>
+        </li> -->
         <li>
             <a href="university-mis-layout.php?page=qr-code" class="<?php echo $base_class; ?> <?php echo ($page === 'qr-code') ? $active_class : $inactive_class; ?>">
                 <!-- Default Icon (Black) -->

@@ -5,20 +5,12 @@
     document.addEventListener('DOMContentLoaded', () => {
         const divisionFilter = document.getElementById('filter_division');
         const unitFilter = document.getElementById('filter_unit');
-        const yearFilter = document.getElementById('filter_year');
-        const quarterFilter = document.getElementById('filter_quarter');
-        const tableBody = document.getElementById('response-table-body');
-
-        // Pagination elements
-        const prevButton = document.getElementById('pagination-prev');
-        const nextButton = document.getElementById('pagination-next');
-        const pageSpan = document.getElementById('pagination-current-page');
-        let currentPage = 1;
-        const rowsPerPage = 9;
-        let filteredRows = [];
+        const filtersForm = document.getElementById('data-response-filters-form');
+        const loadingOverlay = document.getElementById('loadingOverlay');
 
         // Store all original unit options to avoid re-querying the DOM
         const allUnitOptions = Array.from(unitFilter.querySelectorAll('option'));
+        filterOfficeDropdown(); // Run on initial load to set correct state
 
         // --- CSV Upload Logic ---
         const uploadCsvBtn = document.getElementById('upload-csv-btn');
@@ -59,95 +51,30 @@
             });
         };
 
-        const updatePaginationControls = () => {
-            const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
-            pageSpan.textContent = String(currentPage).padStart(2, '0');
-
-            prevButton.disabled = currentPage === 1;
-            nextButton.disabled = currentPage === pageCount || pageCount === 0;
-
-            // Style disabled buttons
-            prevButton.classList.toggle('text-gray-500', prevButton.disabled);
-            prevButton.classList.toggle('text-gray-700', !prevButton.disabled);
-            nextButton.classList.toggle('text-gray-500', nextButton.disabled);
-            nextButton.classList.toggle('text-gray-700', !nextButton.disabled);
-        };
-
-        const displayPage = (page) => {
-            const allRows = tableBody.querySelectorAll('tr.response-row');
-            allRows.forEach(row => row.style.display = 'none');
-
-            const startIndex = (page - 1) * rowsPerPage;
-            const endIndex = startIndex + rowsPerPage;
-            const pageRows = filteredRows.slice(startIndex, endIndex);
-
-            pageRows.forEach(row => {
-                row.style.display = '';
-            });
-
-            updatePaginationControls();
-        };
-
-        /**
-         * Filters the main response table based on all active filters.
-         */
-        const filterTable = () => {
-            const selectedDivisionId = divisionFilter.value;
-            const selectedUnitId = unitFilter.value;
-            const selectedYear = yearFilter.value;
-            const selectedQuarter = quarterFilter.value;
-
-            const allRows = tableBody.querySelectorAll('tr.response-row');
-            const noResultsRow = tableBody.querySelector('tr.no-results-row');
-
-            filteredRows = []; // Reset the list of filtered rows
-
-            allRows.forEach(row => {
-                const rowDivisionId = row.dataset.divisionId;
-                const rowUnitId = row.dataset.unitId;
-                const rowYear = row.dataset.year;
-                const rowQuarter = row.dataset.quarter;
-
-                const divisionMatch = !selectedDivisionId || rowDivisionId === selectedDivisionId;
-                const unitMatch = !selectedUnitId || rowUnitId === selectedUnitId;
-                const yearMatch = !selectedYear || rowYear === selectedYear;
-                const quarterMatch = !selectedQuarter || rowQuarter === selectedQuarter;
-
-                if (divisionMatch && unitMatch && yearMatch && quarterMatch) {
-                    filteredRows.push(row);
-                }
-            });
-
-            noResultsRow.style.display = filteredRows.length === 0 ? '' : 'none';
-
-            currentPage = 1; // Reset to the first page after filtering
-            displayPage(currentPage);
-        };
-
         // --- Event Listeners ---
-        divisionFilter.addEventListener('change', () => {
-            filterOfficeDropdown();
-            filterTable();
-        });
-        [unitFilter, yearFilter, quarterFilter].forEach(el => el.addEventListener('change', filterTable));
-
-        nextButton.addEventListener('click', () => {
-            const pageCount = Math.ceil(filteredRows.length / rowsPerPage);
-            if (currentPage < pageCount) {
-                currentPage++;
-                displayPage(currentPage);
-            }
+        document.querySelectorAll('#data-response-filters-form select').forEach(select => {
+            select.addEventListener('change', () => {
+                if (select.id === 'filter_division') {
+                    // When division changes, reset the office filter before submitting
+                    document.getElementById('filter_unit').value = '';
+                }
+                loadingOverlay.classList.remove('hidden'); // Show loader on filter change
+                filtersForm.submit();
+            })
         });
 
-        prevButton.addEventListener('click', () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayPage(currentPage);
-            }
+        // --- Pagination Loader Logic ---
+        const paginationLinks = document.querySelectorAll('#pagination-prev, #pagination-next');
+        paginationLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                // If the link is disabled (e.g., on the first or last page), do nothing.
+                if (link.classList.contains('pointer-events-none')) {
+                    e.preventDefault();
+                    return;
+                }
+                loadingOverlay.classList.remove('hidden');
+            });
         });
-
-        // Initial load
-        filterTable();
 
         // --- CSV Upload Event Listeners ---
         if (uploadCsvBtn) {

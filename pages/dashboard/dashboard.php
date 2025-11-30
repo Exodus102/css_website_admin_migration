@@ -16,6 +16,7 @@ $vs_last_month = 0;
 $vs_last_month_display = '0';
 $trend_labels = [];
 $trend_data = [];
+$css_respondents_current_year = 0;
 $campus_offices = []; // To store offices for the dropdown
 
 // Fetch active survey version for all users
@@ -49,7 +50,7 @@ if ($user_campus) {
         $stmt->execute([$pattern]);
         $pending_ncar_count = $stmt->fetchColumn();
 
-        // Count unique respondents for the user's campus
+        // Count unique respondents for the user's campus across all time
         $stmt_respondents = $pdo->prepare("
             SELECT COUNT(DISTINCT response_id) 
             FROM tbl_responses 
@@ -57,6 +58,15 @@ if ($user_campus) {
         ");
         $stmt_respondents->execute([$user_campus]);
         $respondents_count = $stmt_respondents->fetchColumn();
+
+        // Count unique respondents for the user's campus for the CURRENT YEAR
+        $stmt_css_respondents = $pdo->prepare("
+            SELECT COUNT(DISTINCT response_id) 
+            FROM tbl_responses 
+            WHERE question_id = -1 AND response = ? AND YEAR(timestamp) = YEAR(CURDATE())
+        ");
+        $stmt_css_respondents->execute([$user_campus]);
+        $css_respondents_current_year = $stmt_css_respondents->fetchColumn();
 
         // Fetch total monthly responses for the entire campus (for the second box initial value)
         $stmt_monthly_total = $pdo->prepare("
@@ -204,7 +214,7 @@ if ($user_campus) {
 
             <!-- Left Column: Metrics and Bar Char -->
             <div class="flex flex-col w-full">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">Survey Version</h2>
@@ -216,12 +226,12 @@ if ($user_campus) {
                     </div>
                     <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
-                            <h2 class="text-lg">CSS Respondents</h2>
+                            <h2 class="text-lg">CSS Respondent (<?php echo date('Y'); ?>)</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
                         </div>
-                        <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
+                        <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($css_respondents_current_year)); ?></p>
                     </div>
                     <!-- <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
@@ -237,16 +247,16 @@ if ($user_campus) {
                 <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full">
                     <h2 class="text-3xl mb-4 font-bold">Monthly Responses</h2>
                     <!-- 4 boxes -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-4">
+                        <!--<div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
                             <h3 class="text-md font-semibold">Total Responses</h3>
                             <p class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
-                        </div>
+                        </div> -->
                         <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
                             <h3 class="text-md font-semibold">Monthly Response</h3>
                             <p id="monthly-response-count" class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
                         </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <!-- <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
                             <h3 class="text-md font-semibold">Response Rate</h3>
                             <p id="response-rate" class="text-4xl font-bold text-black">
                                 <?php echo htmlspecialchars($response_rate); ?>%
@@ -257,7 +267,7 @@ if ($user_campus) {
                             <p id="vs-last-month" class="text-4xl font-bold text-black">
                                 <?php echo htmlspecialchars($vs_last_month_display); ?>
                             </p>
-                        </div>
+                        </div> -->
                     </div>
 
                     <!-- Dropdown -->

@@ -11,6 +11,17 @@ $years = [];
 $active_questions = [];
 $customer_types = [];
 $user_campus = $_SESSION['user_campus'] ?? null;
+$total_responses = 0;
+$total_pages = 1;
+$current_page = isset($_GET['data_page']) ? (int)$_GET['data_page'] : 1;
+$rows_per_page = 10;
+
+// --- Get Filter Values ---
+$filter_division_id = $_GET['filter_division'] ?? null;
+$filter_unit_id = $_GET['filter_unit'] ?? null;
+$filter_year = $_GET['filter_year'] ?? null;
+$filter_quarter = $_GET['filter_quarter'] ?? null;
+
 
 try {
     // Fetch all divisions
@@ -48,22 +59,61 @@ try {
     $stmt_active_questions->execute();
     $active_questions = $stmt_active_questions->fetchAll(PDO::FETCH_ASSOC);
 
-    // Step 1: Fetch raw response data, filtered by the user's campus.
     if ($user_campus) {
-        // Fetch only the response_ids associated with the user's campus.
-        $stmtResponses = $pdo->prepare("
-            SELECT * FROM tbl_responses 
-            WHERE response_id IN (
-                SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = ?
-            )
-            ORDER BY response_id DESC, id DESC
-        ");
-        $stmtResponses->execute([$user_campus]);
+        // --- Build the query to get filtered response_ids ---
+        $base_sql = "SELECT DISTINCT r.response_id FROM tbl_responses r";
+        $joins = " JOIN tbl_responses r_campus ON r.response_id = r_campus.response_id AND r_campus.question_id = -1 AND r_campus.response = :user_campus";
+        $where = " WHERE 1=1";
+        $params = [':user_campus' => $user_campus];
+
+        if ($filter_year) {
+            $where .= " AND YEAR(r.timestamp) = :year";
+            $params[':year'] = $filter_year;
+        }
+        if ($filter_quarter) {
+            $where .= " AND QUARTER(r.timestamp) = :quarter";
+            $params[':quarter'] = $filter_quarter;
+        }
+        if ($filter_unit_id) {
+            $joins .= " JOIN tbl_responses r_unit ON r.response_id = r_unit.response_id AND r_unit.question_id = -3 AND r_unit.response = (SELECT unit_name FROM tbl_unit WHERE id = :unit_id)";
+            $params[':unit_id'] = $filter_unit_id;
+        }
+        if ($filter_division_id && !$filter_unit_id) {
+            $joins .= " JOIN tbl_responses r_div ON r.response_id = r_div.response_id AND r_div.question_id = -2 AND r_div.response = (SELECT division_name FROM tbl_division WHERE id = :division_id)";
+            $params[':division_id'] = $filter_division_id;
+        }
+
+        // --- Get total count for pagination ---
+        $count_sql = "SELECT COUNT(DISTINCT r.response_id) FROM tbl_responses r" . $joins . $where;
+        $stmt_count = $pdo->prepare($count_sql);
+        $stmt_count->execute($params);
+        $total_responses = $stmt_count->fetchColumn();
+        $total_pages = ceil($total_responses / $rows_per_page);
+
+        // --- Get the response_ids for the current page ---
+        $offset = ($current_page - 1) * $rows_per_page;
+        $id_sql = $base_sql . $joins . $where . " ORDER BY r.response_id DESC LIMIT :limit OFFSET :offset";
+        $stmt_ids = $pdo->prepare($id_sql);
+        foreach ($params as $key => &$val) {
+            $stmt_ids->bindParam($key, $val);
+        }
+        $stmt_ids->bindParam(':limit', $rows_per_page, PDO::PARAM_INT);
+        $stmt_ids->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt_ids->execute();
+        $paged_response_ids = $stmt_ids->fetchAll(PDO::FETCH_COLUMN);
+
+        $responses_raw = [];
+        if (!empty($paged_response_ids)) {
+            // --- Fetch full data only for the paged response_ids ---
+            $in_clause = implode(',', array_fill(0, count($paged_response_ids), '?'));
+            $data_sql = "SELECT * FROM tbl_responses WHERE response_id IN ($in_clause) ORDER BY response_id DESC, id DESC";
+            $stmt_data = $pdo->prepare($data_sql);
+            $stmt_data->execute($paged_response_ids);
+            $responses_raw = $stmt_data->fetchAll(PDO::FETCH_ASSOC);
+        }
     } else {
-        // Fallback for users without a specific campus (e.g., super admin) - fetch all.
-        $stmtResponses = $pdo->query("SELECT * FROM tbl_responses WHERE response_id IS NOT NULL ORDER BY response_id DESC, id DESC");
+        $responses_raw = []; // No campus, no data
     }
-    $responses_raw = $stmtResponses->fetchAll(PDO::FETCH_ASSOC);
 
     // Step 2: Process the raw data in PHP to correctly group and interpret it.
     $grouped_responses = [];
@@ -148,44 +198,46 @@ try {
     <div class="flex xl:items-end mb-6 w-full justify-between flex-col xl:flex-row gap-4 xl:gap-0">
         <div class="flex lg:items-end gap-1 lg:flex-row flex-col">
             <span class="font-semibold text-gray-700">FILTERS:</span>
-
-            <div class="lg:w-72 w-full">
-                <label for="filter_division" class="block text-xs font-medium text-[#48494A]">DIVISION</label>
-                <select name="filter_division" id="filter_division" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
-                    <option value="">All Divisions</option>
-                    <?php foreach ($divisions as $division) : ?>
-                        <option value="<?php echo htmlspecialchars($division['id']); ?>"><?php echo htmlspecialchars($division['division_name']); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="lg:w-72 w-full">
-                <label for="filter_unit" class="block text-xs font-medium text-[#48494A]">OFFICE</label>
-                <select name="filter_unit" id="filter_unit" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
-                    <option value="">All Offices</option>
-                    <?php foreach ($units as $unit) : ?>
-                        <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>"><?php echo htmlspecialchars($unit['unit_name']); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="flex-grow">
-                <label for="filter_year" class="block text-xs font-medium text-[#48494A]">YEAR</label>
-                <select name="filter_year" id="filter_year" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
-                    <option value="">All Years</option>
-                    <?php foreach ($years as $year) : ?>
-                        <option value="<?php echo htmlspecialchars($year); ?>"><?php echo htmlspecialchars($year); ?></option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
-            <div class="flex-grow">
-                <label for="filter_quarter" class="block text-xs font-medium text-[#48494A]">QUARTER</label>
-                <select name="filter_quarter" id="filter_quarter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
-                    <option value="">All Quarters</option>
-                    <option value="1">1st Quarter</option>
-                    <option value="2">2nd Quarter</option>
-                    <option value="3">3rd Quarter</option>
-                    <option value="4">4th Quarter</option>
-                </select>
-            </div>
+            <form id="data-response-filters-form" method="GET" class="flex lg:items-end gap-1 lg:flex-row flex-col">
+                <input type="hidden" name="page" value="data-response">
+                <div class="lg:w-72 w-full">
+                    <label for="filter_division" class="block text-xs font-medium text-[#48494A]">DIVISION</label>
+                    <select name="filter_division" id="filter_division" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
+                        <option value="">All Divisions</option>
+                        <?php foreach ($divisions as $division) : ?>
+                            <option value="<?php echo htmlspecialchars($division['id']); ?>" <?php echo ($filter_division_id == $division['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($division['division_name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="lg:w-72 w-full">
+                    <label for="filter_unit" class="block text-xs font-medium text-[#48494A]">OFFICE</label>
+                    <select name="filter_unit" id="filter_unit" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
+                        <option value="">All Offices</option>
+                        <?php foreach ($units as $unit) : ?>
+                            <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>" <?php echo ($filter_unit_id == $unit['id']) ? 'selected' : ''; ?>><?php echo htmlspecialchars($unit['unit_name']); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="flex-grow">
+                    <label for="filter_year" class="block text-xs font-medium text-[#48494A]">YEAR</label>
+                    <select name="filter_year" id="filter_year" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
+                        <option value="">All Years</option>
+                        <?php foreach ($years as $year) : ?>
+                            <option value="<?php echo htmlspecialchars($year); ?>" <?php echo ($filter_year == $year) ? 'selected' : ''; ?>><?php echo htmlspecialchars($year); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="flex-grow">
+                    <label for="filter_quarter" class="block text-xs font-medium text-[#48494A]">QUARTER</label>
+                    <select name="filter_quarter" id="filter_quarter" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
+                        <option value="">All Quarters</option>
+                        <option value="1" <?php echo ($filter_quarter == 1) ? 'selected' : ''; ?>>1st Quarter</option>
+                        <option value="2" <?php echo ($filter_quarter == 2) ? 'selected' : ''; ?>>2nd Quarter</option>
+                        <option value="3" <?php echo ($filter_quarter == 3) ? 'selected' : ''; ?>>3rd Quarter</option>
+                        <option value="4" <?php echo ($filter_quarter == 4) ? 'selected' : ''; ?>>4th Quarter</option>
+                    </select>
+                </div>
+            </form>
         </div>
 
         <!--<div class="flex items-center gap-2">
@@ -277,27 +329,25 @@ try {
     <!-- Pagination -->
     <div class="flex items-end gap-4 mt-4 text-sm">
         <!-- Previous -->
-        <div>
-            <button id="pagination-prev" class="border border-[#1E1E1E] py-1 px-3 rounded bg-[#E6E7EC] text-gray-500" disabled>
-                &lt; Previous
-            </button>
-        </div>
+        <a href="?page=data-response&data_page=<?php echo max(1, $current_page - 1); ?>&<?php echo http_build_query(compact('filter_division_id', 'filter_unit_id', 'filter_year', 'filter_quarter')); ?>" id="pagination-prev" class="border border-[#1E1E1E] py-1 px-3 rounded bg-[#E6E7EC] <?php echo $current_page <= 1 ? 'text-gray-400 pointer-events-none' : 'text-gray-700'; ?>">
+            &lt; Previous
+        </a>
 
         <!-- Current Page -->
         <div>
             <span id="pagination-current-page" class="inline-block text-center border border-[#1E1E1E] py-1 px-4 rounded bg-white">
-                1
+                <?php echo $current_page; ?>
             </span>
         </div>
 
         <!-- Next -->
-        <div>
-            <button id="pagination-next" class="border border-[#1E1E1E] py-1 px-3 rounded bg-[#E6E7EC] text-gray-700">
-                Next Page &gt;
-            </button>
-        </div>
+        <a href="?page=data-response&data_page=<?php echo min($total_pages, $current_page + 1); ?>&<?php echo http_build_query(compact('filter_division_id', 'filter_unit_id', 'filter_year', 'filter_quarter')); ?>" id="pagination-next" class="border border-[#1E1E1E] py-1 px-3 rounded bg-[#E6E7EC] <?php echo $current_page >= $total_pages ? 'text-gray-400 pointer-events-none' : 'text-gray-700'; ?>">
+            Next Page &gt;
+        </a>
 
-
+        <span class="ml-4 text-gray-600">
+            Page <?php echo $current_page; ?> of <?php echo $total_pages; ?> (Total: <?php echo $total_responses; ?> responses)
+        </span>
     </div>
 
     <!-- Upload CSV Dialog -->
@@ -405,5 +455,17 @@ try {
         </form>
     </dialog>
     <?php
+    // Add the loading overlay
+    echo '
+    <!-- Full-screen Loading Overlay -->
+    <div id="loadingOverlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div class="flex flex-col items-center">
+            <svg class="animate-spin h-10 w-10 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p class="mt-4 text-white text-lg">Loading...</p>
+        </div>
+    </div>';
     include 'data-response-script.php';
     ?>
