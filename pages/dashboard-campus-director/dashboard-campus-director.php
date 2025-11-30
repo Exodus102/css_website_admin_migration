@@ -41,10 +41,10 @@ if ($user_campus) {
         // Fetch total monthly responses for the entire campus (for the second box initial value)
         $stmt_monthly_total = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
-            WHERE u.campus_name = :campus
-            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
+            FROM tbl_responses r JOIN tbl_unit u ON r.response = u.unit_name
+            WHERE r.question_id = -3 AND u.campus_name = :campus
+            AND r.timestamp >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            AND r.timestamp < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
         ");
         $stmt_monthly_total->execute([':campus' => $user_campus]);
         $total_monthly_responses = $stmt_monthly_total->fetchColumn();
@@ -52,11 +52,10 @@ if ($user_campus) {
         // Fetch last month's total responses for the entire campus
         $stmt_last_month_total = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
-            WHERE u.campus_name = :campus
-            AND YEAR(r.timestamp) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) 
-            AND MONTH(r.timestamp) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+            FROM tbl_responses r JOIN tbl_unit u ON r.response = u.unit_name
+            WHERE r.question_id = -3 AND u.campus_name = :campus
+            AND r.timestamp >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+            AND r.timestamp < DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ");
         $stmt_last_month_total->execute([':campus' => $user_campus]);
         $last_month_total_responses = $stmt_last_month_total->fetchColumn();
@@ -66,15 +65,13 @@ if ($user_campus) {
         // Fetch positive responses for the current month for the entire campus
         $stmt_positive = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            WHERE r.analysis = 'positive'
-            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
-            AND r.response_id IN (
-                SELECT r_inner.response_id
-                FROM tbl_responses r_inner
-                JOIN tbl_unit u_inner ON r_inner.response = u_inner.unit_name AND r_inner.question_id = -3
-                WHERE u_inner.campus_name = :campus
-            )
+            FROM tbl_responses r_positive
+            JOIN tbl_responses r_campus ON r_positive.response_id = r_campus.response_id
+            JOIN tbl_unit u ON r_campus.response = u.unit_name
+            WHERE r_positive.analysis = 'positive'
+            AND r_campus.question_id = -3 AND u.campus_name = :campus
+            AND r_positive.timestamp >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            AND r_positive.timestamp < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
         ");
         $stmt_positive->execute([':campus' => $user_campus]);
         $positive_responses_total = $stmt_positive->fetchColumn();
@@ -90,10 +87,9 @@ if ($user_campus) {
                 u.unit_name, 
                 COUNT(DISTINCT r.response_id) as response_count
             FROM tbl_unit u
-            LEFT JOIN tbl_responses r ON u.unit_name = r.response 
-                AND r.question_id = -3 
-                AND YEAR(r.timestamp) = YEAR(CURDATE())
-                AND MONTH(r.timestamp) = MONTH(CURDATE())
+            LEFT JOIN tbl_responses r ON u.unit_name = r.response AND r.question_id = -3 
+                AND r.timestamp >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+                AND r.timestamp < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
             WHERE u.campus_name = :campus
             GROUP BY u.id, u.unit_name
             ORDER BY u.unit_name ASC

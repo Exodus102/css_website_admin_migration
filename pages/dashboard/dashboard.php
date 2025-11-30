@@ -18,7 +18,27 @@ $trend_labels = [];
 $trend_data = [];
 $campus_offices = []; // To store offices for the dropdown
 
+// Fetch active survey version for all users
+try {
+    $stmt_survey = $pdo->query("SELECT question_survey FROM tbl_questionaireform WHERE date_approved IS NOT NULL ORDER BY date_approved DESC LIMIT 1");
+    $survey_name = $stmt_survey->fetchColumn();
+    if ($survey_name) {
+        $active_survey_version = $survey_name;
+    }
+} catch (PDOException $e) { /* Error is handled by 'N/A' default */
+}
+
 if ($user_campus) {
+    // Fetch campus offices for dropdowns, regardless of other data fetching success
+    try {
+        $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
+        $stmt_offices->execute([$user_campus]);
+        $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
+    } catch (PDOException $e) {
+        error_log("Error fetching campus offices for dashboard: " . $e->getMessage());
+        // $campus_offices remains an empty array, so dropdowns will be empty but page won't crash.
+    }
+
     try {
         // Sanitize the campus name to match the format used in the NCAR file paths
         $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
@@ -41,10 +61,10 @@ if ($user_campus) {
         // Fetch total monthly responses for the entire campus (for the second box initial value)
         $stmt_monthly_total = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
-            WHERE u.campus_name = :campus
-            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
+            FROM tbl_responses r JOIN tbl_unit u ON r.response = u.unit_name
+            WHERE r.question_id = -3 AND u.campus_name = :campus
+            AND r.timestamp >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            AND r.timestamp < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
         ");
         $stmt_monthly_total->execute([':campus' => $user_campus]);
         $total_monthly_responses = $stmt_monthly_total->fetchColumn();
@@ -52,11 +72,10 @@ if ($user_campus) {
         // Fetch last month's total responses for the entire campus
         $stmt_last_month_total = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            JOIN tbl_unit u ON r.response = u.unit_name AND r.question_id = -3
-            WHERE u.campus_name = :campus
-            AND YEAR(r.timestamp) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) 
-            AND MONTH(r.timestamp) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH))
+            FROM tbl_responses r JOIN tbl_unit u ON r.response = u.unit_name
+            WHERE r.question_id = -3 AND u.campus_name = :campus
+            AND r.timestamp >= DATE_FORMAT(CURDATE() - INTERVAL 1 MONTH, '%Y-%m-01')
+            AND r.timestamp < DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ");
         $stmt_last_month_total->execute([':campus' => $user_campus]);
         $last_month_total_responses = $stmt_last_month_total->fetchColumn();
@@ -66,15 +85,13 @@ if ($user_campus) {
         // Fetch positive responses for the current month for the entire campus
         $stmt_positive = $pdo->prepare("
             SELECT COUNT(DISTINCT r.response_id)
-            FROM tbl_responses r
-            WHERE r.analysis = 'positive'
-            AND YEAR(r.timestamp) = YEAR(CURDATE()) AND MONTH(r.timestamp) = MONTH(CURDATE())
-            AND r.response_id IN (
-                SELECT r_inner.response_id
-                FROM tbl_responses r_inner
-                JOIN tbl_unit u_inner ON r_inner.response = u_inner.unit_name AND r_inner.question_id = -3
-                WHERE u_inner.campus_name = :campus
-            )
+            FROM tbl_responses r_positive
+            JOIN tbl_responses r_campus ON r_positive.response_id = r_campus.response_id
+            JOIN tbl_unit u ON r_campus.response = u.unit_name
+            WHERE r_positive.analysis = 'positive'
+            AND r_campus.question_id = -3 AND u.campus_name = :campus
+            AND r_positive.timestamp >= DATE_FORMAT(CURDATE(), '%Y-%m-01')
+            AND r_positive.timestamp < DATE_FORMAT(CURDATE() + INTERVAL 1 MONTH, '%Y-%m-01')
         ");
         $stmt_positive->execute([':campus' => $user_campus]);
         $positive_responses_total = $stmt_positive->fetchColumn();
@@ -126,17 +143,6 @@ if ($user_campus) {
             ];
             $color_index++;
         }
-
-        // Fetch active survey version
-        $stmt_survey = $pdo->query("SELECT question_survey FROM tbl_questionaire WHERE status = 1 LIMIT 1");
-        $survey_name = $stmt_survey->fetchColumn();
-        if ($survey_name) {
-            $active_survey_version = $survey_name;
-        }
-
-        $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
-        $stmt_offices->execute([$user_campus]);
-        $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
     } catch (PDOException $e) {
         error_log("Error fetching dashboard counts: " . $e->getMessage());
     }
@@ -168,6 +174,14 @@ if ($user_campus) {
 }
 ?>
 <div class="p-4">
+    <!-- Full Page Loader -->
+    <div id="full-page-loader" class="fixed inset-0 bg-gray-100 bg-opacity-75 flex items-center justify-center z-50">
+        <svg class="animate-spin h-16 w-16 text-[#064089]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+
     <script>
         // Apply saved font size on every page load
         (function() {
@@ -595,5 +609,13 @@ if ($user_campus) {
                 }
             });
         }
+
+        // --- Full Page Loader Logic ---
+        window.onload = function() {
+            const loader = document.getElementById('full-page-loader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+        };
     });
 </script>
