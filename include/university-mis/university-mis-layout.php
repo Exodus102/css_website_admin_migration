@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$page = $_GET['page'] ?? 'dashboard';
+$page = $_GET['page'] ?? 'dashboard-mis';
 $page_title = ucwords(str_replace(['-', '_'], ' ', $page));
 
 // Handle specific cases for acronyms or special names
@@ -76,7 +76,7 @@ if (strtolower($page_title) === 'qr code') $page_title = 'QR Code';
             }
         });
     </script>
-    <?php include '../../JavaScript/autoLogout/idleLogOut.php'; ?>
+    
 </body>
 
 </html>

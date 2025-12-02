@@ -144,9 +144,9 @@ if ($target_campus_name) {
                     <?php foreach ($column_headers as $header) : ?>
                         <th class="border border-[#1E1E1ECC] px-4 py-3 text-center"><?php echo $header; ?></th>
                     <?php endforeach; ?>
-                    <?php if ($view_mode === 'month') : ?>
+                    <!--<?php if ($view_mode === 'month') : ?>
                         <th class="border border-[#1E1E1ECC] px-4 py-3 text-center">Analysis</th>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                     <th class="border border-[#1E1E1ECC] px-4 py-3 text-center">Action</th>
                 </tr>
             </thead>
@@ -193,13 +193,13 @@ if ($target_campus_name) {
                                 echo '<td class="border border-[#1E1E1ECC] p-3 text-center">' . htmlspecialchars($row['count']) . '</td>';
                             }
                             ?>
-                            <?php if ($view_mode === 'month') : ?>
+                            <!--<?php if ($view_mode === 'month') : ?>
                                 <td class="border border-[#1E1E1ECC] p-3 text-center">
                                     <span class="px-3 py-1 font-semibold leading-tight rounded-full text-xs <?php echo $analysis_class; ?>">
                                         <?php echo $analysis; ?>
                                     </span>
                                 </td>
-                            <?php endif; ?>
+                            <?php endif; ?> -->
                             <td class="border border-[#1E1E1ECC] p-3 text-center">
                                 <div class="flex justify-center">
                                     <?php

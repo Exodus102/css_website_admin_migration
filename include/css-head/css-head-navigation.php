@@ -15,7 +15,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
             </a>
         </li>
         <li>
-            <a href="css-head-layout.php?page=data-response" class="<?php echo $base_class; ?> <?php echo ($page === 'data-response') ? $active_class : $inactive_class; ?>">
+            <a href="css-head-layout.php?page=data-response-css-head" class="<?php echo $base_class; ?> <?php echo ($page === 'data-response-css-head') ? $active_class : $inactive_class; ?>">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_299)">
                         <path class="fill-current" d="M14.8438 0.5C15.051 0.5 15.2497 0.58231 15.3962 0.728823C15.5427 0.875336 15.625 1.07405 15.625 1.28125C15.625 1.48845 15.7073 1.68716 15.8538 1.83368C16.0003 1.98019 16.199 2.0625 16.4062 2.0625C16.6135 2.0625 16.8122 2.14481 16.9587 2.29132C17.1052 2.43784 17.1875 2.63655 17.1875 2.84375V3.625C17.1875 3.8322 17.1052 4.03091 16.9587 4.17743C16.8122 4.32394 16.6135 4.40625 16.4062 4.40625H8.59375C8.38655 4.40625 8.18784 4.32394 8.04132 4.17743C7.89481 4.03091 7.8125 3.8322 7.8125 3.625V2.84375C7.8125 2.63655 7.89481 2.43784 8.04132 2.29132C8.18784 2.14481 8.38655 2.0625 8.59375 2.0625C8.80095 2.0625 8.99966 1.98019 9.14618 1.83368C9.29269 1.68716 9.375 1.48845 9.375 1.28125C9.375 1.07405 9.45731 0.875336 9.60382 0.728823C9.75034 0.58231 9.94905 0.5 10.1562 0.5H14.8438Z" fill="#1E1E1E" />
@@ -32,6 +32,22 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
             </a>
         </li>
         <li>
+            <a href="css-head-layout.php?page=tally-report-dcc" class="<?php echo $base_class; ?> <?php echo ($page === 'tally-report-dcc') ? $active_class : $inactive_class; ?>">
+                <svg class="nav-icon" width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g clip-path="url(#clip0_180_312)">
+                        <path class="fill-current" d="M8.5703 11.2484C8.54744 11.1468 8.50451 11.0508 8.44403 10.9661C8.38355 10.8813 8.30673 10.8095 8.21811 10.7549C8.12948 10.7003 8.03082 10.6639 7.92794 10.6479C7.82505 10.6319 7.72001 10.6367 7.61899 10.6619C7.51797 10.6871 7.42301 10.7323 7.33968 10.7947C7.25635 10.8571 7.18635 10.9356 7.13377 11.0254C7.0812 11.1153 7.04712 11.2148 7.03353 11.318C7.01995 11.4212 7.02714 11.5261 7.05467 11.6265L9.39842 21.0015C9.44063 21.1689 9.53704 21.3175 9.67262 21.4243C9.8082 21.531 9.97531 21.5899 10.1479 21.5917C10.3204 21.5935 10.4887 21.5381 10.6265 21.4341C10.7642 21.3302 10.8637 21.1836 10.9094 21.0172L12.5 15.1906L14.0906 21.0187C14.1363 21.1851 14.2357 21.3318 14.3735 21.4357C14.5113 21.5396 14.6795 21.595 14.8521 21.5932C15.0247 21.5915 15.1918 21.5326 15.3273 21.4258C15.4629 21.3191 15.5593 21.1704 15.6015 21.0031L17.9453 11.6281C17.9901 11.429 17.9552 11.2203 17.8481 11.0466C17.741 10.8729 17.5702 10.748 17.3722 10.6986C17.1742 10.6492 16.9648 10.6792 16.7886 10.7823C16.6125 10.8853 16.4836 11.0532 16.4297 11.25L14.8109 17.725L13.2531 12.014C13.2076 11.8492 13.1093 11.7038 12.9733 11.6002C12.8373 11.4966 12.671 11.4405 12.5 11.4405C12.329 11.4405 12.1627 11.4966 12.0267 11.6002C11.8906 11.7038 11.7923 11.8492 11.7469 12.014L10.189 17.725L8.5703 11.25V11.2484Z" />
+                        <path class="fill-current" d="M21.875 22.375V7.53125L14.8438 0.5H6.25C5.4212 0.5 4.62634 0.82924 4.04029 1.41529C3.45424 2.00134 3.125 2.7962 3.125 3.625V22.375C3.125 23.2038 3.45424 23.9987 4.04029 24.5847C4.62634 25.1708 5.4212 25.5 6.25 25.5H18.75C19.5788 25.5 20.3737 25.1708 20.9597 24.5847C21.5458 23.9987 21.875 23.2038 21.875 22.375ZM14.8438 5.1875C14.8438 5.8091 15.0907 6.40524 15.5302 6.84478C15.9698 7.28432 16.5659 7.53125 17.1875 7.53125H20.3125V22.375C20.3125 22.7894 20.1479 23.1868 19.8549 23.4799C19.5618 23.7729 19.1644 23.9375 18.75 23.9375H6.25C5.8356 23.9375 5.43817 23.7729 5.14515 23.4799C4.85212 23.1868 4.6875 22.7894 4.6875 22.375V3.625C4.6875 3.2106 4.85212 2.81317 5.14515 2.52015C5.43817 2.22712 5.8356 2.0625 6.25 2.0625H14.8438V5.1875Z" />
+                    </g>
+                    <defs>
+                        <clipPath id="clip0_180_312">
+                            <rect width="25" height="25" fill="white" transform="translate(0 0.5)" />
+                        </clipPath>
+                    </defs>
+                </svg>
+                CSS Reports
+            </a>
+        </li>
+        <!--<li>
             <a href="css-head-layout.php?page=tally-results" class="<?php echo $base_class; ?> <?php echo ($page === 'tally-results') ? $active_class : $inactive_class; ?>">
                 <svg width="25" height="26" viewBox="0 0 25 26" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <g clip-path="url(#clip0_180_306)">
@@ -78,7 +94,7 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                 </svg>
                 NCAR
             </a>
-        </li>
+        </li>-->
         <span class="text-base">
             Settings
         </span>
@@ -91,6 +107,15 @@ $base_class = 'group font-bold px-4 py-1 text-base rounded-md transition-colors 
                     <path class="fill-current" d="M14.5 10.25C15.1904 10.25 15.75 10.8096 15.75 11.5V12.75H17C17.6904 12.75 18.25 13.3096 18.25 14C18.25 14.6904 17.6904 15.25 17 15.25H15.75V16.5C15.75 17.1904 15.1904 17.75 14.5 17.75C13.8096 17.75 13.25 17.1904 13.25 16.5V15.25H12C11.3096 15.25 10.75 14.6904 10.75 14C10.75 13.3096 11.3096 12.75 12 12.75H13.25V11.5C13.25 10.8096 13.8096 10.25 14.5 10.25Z" />
                 </svg>
                 Entity Management
+            </a>
+        </li>
+        <li>
+            <a href="css-head-layout.php?page=edit-survey" class="group <?php echo $base_class; ?> <?php echo ($page === 'edit-survey') ? $active_class : $inactive_class; ?>">
+                <!-- Default Icon (Black) -->
+                <img src="../../resources/svg/edit-survey.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:hidden <?php echo ($page === 'edit-survey') ? 'hidden' : 'block'; ?>">
+                <!-- Hover/Active Icon (White) -->
+                <img src="../../resources/svg/edit-survey-white.svg" alt="Edit Survey Icon" class="nav-icon w-6 h-6 group-hover:block <?php echo ($page === 'edit-survey') ? 'block' : 'hidden'; ?>">
+                Edit Survey
             </a>
         </li>
         <li>

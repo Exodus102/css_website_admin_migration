@@ -7,17 +7,18 @@ if (session_status() == PHP_SESSION_NONE) {
 
 header('Content-Type: application/json');
 
-$user_campus = $_SESSION['user_campus'] ?? null;
+$session_campus = $_SESSION['user_campus'] ?? null;
+$selected_campus = $_GET['campus'] ?? $session_campus; // Prioritize GET param, fallback to session
 $selected_office = $_GET['office'] ?? null;
 $period = $_GET['period'] ?? 'annual'; // Default to annual
 
-if (!$user_campus) {
+if (!$selected_campus) {
     echo json_encode(['error' => 'User campus not set.']);
     exit;
 }
 
 try {
-    $params = [':campus' => $user_campus];
+    $params = [':campus' => $selected_campus];
     $base_query = "
         FROM tbl_responses r
         WHERE r.response_id IN (

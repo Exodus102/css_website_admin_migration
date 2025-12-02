@@ -214,7 +214,7 @@ if ($user_campus) {
 
             <!-- Left Column: Metrics and Bar Char -->
             <div class="flex flex-col w-full">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
                             <h2 class="text-lg">Survey Version</h2>
@@ -232,6 +232,15 @@ if ($user_campus) {
                             </svg>
                         </div>
                         <p class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($css_respondents_current_year)); ?></p>
+                    </div>
+                    <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
+                        <div class="flex justify-between items-center">
+                            <h2 class="text-lg">Monthly Response</h2>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </div>
+                        <p id="monthly-response-count" class="text-4xl font-bold mt-2"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
                     </div>
                     <!-- <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between">
                         <div class="flex justify-between items-center">
@@ -252,10 +261,10 @@ if ($user_campus) {
                             <h3 class="text-md font-semibold">Total Responses</h3>
                             <p class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
                         </div> -->
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
+                        <!--<div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
                             <h3 class="text-md font-semibold">Monthly Response</h3>
                             <p id="monthly-response-count" class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
-                        </div>
+                        </div> -->
                         <!-- <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center">
                             <h3 class="text-md font-semibold">Response Rate</h3>
                             <p id="response-rate" class="text-4xl font-bold text-black">
@@ -272,7 +281,7 @@ if ($user_campus) {
 
                     <!-- Dropdown -->
                     <div class="mt-6">
-                        <label for="office-select" class="block text-sm font-medium text-gray-700">Select an Office for Details</label>
+                        <label for="office-select" class="block text-2xl font-medium text-gray-700">Select an Office for Details</label>
                         <select id="office-select" name="office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
                             <option value="" hidden>Office</option>
                             <?php foreach ($campus_offices as $office) : ?>
@@ -329,7 +338,7 @@ if ($user_campus) {
         <div class="w-full mt-6">
             <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
-                    <h2 class="text-3xl font-bold">Trend Analysis</h2>
+                    <h2 class="text-3xl font-bold">Trend Analysis <?php echo date('Y'); ?></h2>
                     <div class="flex flex-col lg:flex-row items-center gap-2 mt-2 sm:mt-0">
                         <!-- Office Filter for Trend Chart -->
                         <select id="trend-office-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">\
@@ -342,8 +351,8 @@ if ($user_campus) {
                         <!-- Period Filter for Trend Chart -->
                         <select id="trend-period-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
                             <option value="annual" selected>Annual</option>
-                            <option value="quarterly">Quarterly (This Year)</option>
-                            <option value="monthly">Monthly (This Year)</option>
+                            <option value="quarterly">Quarterly</option>
+                            <option value="monthly">Monthly</option>
                         </select>
                     </div>
                 </div>
@@ -582,18 +591,14 @@ if ($user_campus) {
         // --- Office Dropdown Logic for Monthly Response Box ---
         const officeSelect = document.getElementById('office-select');
         const monthlyResponseCountEl = document.getElementById('monthly-response-count');
-        const responseRateEl = document.getElementById('response-rate');
-        const vsLastMonthEl = document.getElementById('vs-last-month');
 
-        if (officeSelect && monthlyResponseCountEl && responseRateEl && vsLastMonthEl) {
+        if (officeSelect && monthlyResponseCountEl) {
             officeSelect.addEventListener('change', async () => {
                 const selectedOffice = officeSelect.value;
                 const url = `../../function/_dashboard/_getMonthlyOfficeResponse.php?office=${encodeURIComponent(selectedOffice)}`;
 
                 // Show a loading state
                 monthlyResponseCountEl.textContent = '...';
-                responseRateEl.textContent = '...';
-                vsLastMonthEl.textContent = '...';
 
                 try {
                     const response = await fetch(url);
@@ -602,20 +607,12 @@ if ($user_campus) {
                     if (data.error) {
                         throw new Error(data.error);
                     }
-                    // Update all three boxes
+                    // Update the monthly response count
                     monthlyResponseCountEl.textContent = data.current_month_count.toLocaleString();
-
-                    responseRateEl.textContent = `${data.response_rate}%`;
-                    responseRateEl.className = `text-4xl font-bold text-black`;
-
-                    vsLastMonthEl.textContent = data.vs_last_month;
-                    vsLastMonthEl.className = `text-4xl font-bold text-black`;
 
                 } catch (error) {
                     console.error('Failed to fetch monthly response count:', error);
                     monthlyResponseCountEl.textContent = 'Error';
-                    responseRateEl.textContent = 'Error';
-                    vsLastMonthEl.textContent = 'Error';
                 }
             });
         }

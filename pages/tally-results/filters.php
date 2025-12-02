@@ -40,7 +40,7 @@ try {
             </div>
 
             <!-- Year -->
-            <div class="flex flex-col w-full lg:w-20">
+           <!-- <div class="flex flex-col w-full lg:w-20">
                 <label for="filter_year" class="text-xs text-[#48494A] uppercase dark:text-white">Year</label>
                 <select id="filter_year" name="filter_year" class="dark:bg-gray-900 dark:text-white filter-select border border-black bg-[#E6E7EC] rounded px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <option value="" hidden>Year</option>
@@ -52,7 +52,7 @@ try {
                         </option>
                     <?php endforeach; ?>
                 </select>
-            </div>
+            </div> -->
 
             <!-- Quarter -->
             <div class="flex flex-col w-full lg:w-28">

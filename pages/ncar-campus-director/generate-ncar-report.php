@@ -13,10 +13,11 @@ if (session_status() == PHP_SESSION_NONE) {
 $unit_id = $_GET['unit_id'] ?? null;
 $year = $_GET['year'] ?? null;
 $quarter = $_GET['quarter'] ?? null;
+$comment_id = $_GET['comment_id'] ?? null; // New parameter
 $user_campus = $_SESSION['user_campus'] ?? null;
 
-if (!$unit_id || !$year || !$quarter || !$user_campus) {
-    echo json_encode(['success' => false, 'message' => 'Missing required parameters (office, year, quarter, or campus).']);
+if (!$unit_id || !$year || !$quarter || !$user_campus || !$comment_id) {
+    echo json_encode(['success' => false, 'message' => 'Missing required parameters (office, year, quarter, campus, or comment ID).']);
     exit;
 }
 
@@ -240,34 +241,18 @@ try {
 
     // --- Fetch and Display Negative Analysis Comments ---
     $sql_comments = "
-        SELECT DISTINCT r.comment
-        FROM tbl_responses r
-        JOIN (
-            SELECT response_id FROM tbl_responses
-            WHERE question_id = -3 AND response = :office_name
-        ) AS office_responses ON r.response_id = office_responses.response_id
-        JOIN (
-            SELECT response_id FROM tbl_responses
-            WHERE question_id = -1 AND response = :user_campus
-        ) AS campus_responses ON r.response_id = campus_responses.response_id
-        WHERE r.analysis = 'negative'
-          AND YEAR(r.timestamp) = :year
-          AND QUARTER(r.timestamp) = :quarter
-          AND r.comment IS NOT NULL
-          AND TRIM(r.comment) <> ''
+        SELECT comment
+        FROM tbl_responses
+        WHERE id = :comment_id
+        LIMIT 1
     ";
     $stmt_comments = $pdo->prepare($sql_comments);
-    $stmt_comments->execute([
-        ':office_name' => $office_name,
-        ':user_campus' => $user_campus,
-        ':year' => $year,
-        ':quarter' => $quarter
-    ]);
-    $negative_comments = $stmt_comments->fetchAll(PDO::FETCH_COLUMN);
+    $stmt_comments->execute([':comment_id' => $comment_id]);
+    $single_comment = $stmt_comments->fetchColumn();
 
     $comments_text = "";
-    foreach ($negative_comments as $index => $comment) {
-        $comments_text .= "          " . chr(149) . " " . trim(html_entity_decode($comment)) . "\n";
+    if ($single_comment) {
+        $comments_text = "          " . chr(149) . " " . trim(html_entity_decode($single_comment)) . "\n";
     }
     // Use a MultiCell for comments, but without the bottom border yet.
     $pdf->MultiCell($pageWidth, 6, $comments_text ?: "\n No specific comments found for negative analysis.", 'LR', 'L');
@@ -367,7 +352,7 @@ try {
     // --- Save and Output ---
     $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
     $safe_office_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $office_name ?: 'UnknownOffice');
-    $filename = "ncar-report_{$safe_campus_name}_{$safe_office_name}_{$year}_q{$quarter}.pdf";
+    $filename = "ncar-report_{$safe_campus_name}_{$safe_office_name}_{$year}_q{$quarter}_{$comment_id}.pdf";
     $savePath = __DIR__ . '/../../upload/pdf/' . $filename;
 
     $directory = dirname($savePath);

@@ -6,11 +6,12 @@ if (session_status() == PHP_SESSION_NONE) {
 
 $divisions = [];
 $units_by_name = [];
-$units = [];
+$units = []; // Units for the main table filters, based on selected campus
+$all_units_for_add_dialog = []; // All units for the add response dialog
 $years = [];
 $active_questions = [];
 $customer_types = [];
-$user_campus = $_SESSION['user_campus'] ?? null;
+$user_campus = $_SESSION['user_campus'] ?? null; // Logged-in user's campus
 $total_responses = 0;
 $total_pages = 1;
 $current_page = isset($_GET['data_page']) ? (int)$_GET['data_page'] : 1;
@@ -18,6 +19,7 @@ $rows_per_page = 10;
 
 // --- Get Filter Values ---
 $filter_division_id = $_GET['filter_division'] ?? null;
+$filter_campus_id = $_GET['filter_campus'] ?? $user_campus; // New: Campus filter, defaults to user's campus
 $filter_unit_id = $_GET['filter_unit'] ?? null;
 $filter_year = $_GET['filter_year'] ?? null;
 $filter_quarter = $_GET['filter_quarter'] ?? null;
@@ -29,7 +31,17 @@ try {
     $divisions = $stmtDivisions->fetchAll(PDO::FETCH_ASSOC);
 
     // Fetch units for the user's campus, along with their division ID
-    if ($user_campus) {
+    // Fetch ALL units with their division ID and campus for the add response dialog
+    $stmtAllUnits = $pdo->query("
+        SELECT u.id, u.unit_name, u.campus_name, d.id as division_id, d.division_name
+        FROM tbl_unit u
+        LEFT JOIN tbl_division d ON u.division_name = d.division_name
+        ORDER BY u.campus_name, u.unit_name ASC
+    ");
+    $all_units_for_add_dialog = $stmtAllUnits->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fetch units based on selected campus (or user's campus if no filter) for the main table filters
+    if ($filter_campus_id) {
         $stmtUnits = $pdo->prepare("
             SELECT u.id, u.unit_name, d.id as division_id 
             FROM tbl_unit u 
@@ -37,11 +49,11 @@ try {
             WHERE u.campus_name = ? 
             ORDER BY u.unit_name ASC
         ");
-        $stmtUnits->execute([$user_campus]);
+        $stmtUnits->execute([$filter_campus_id]);
         $units = $stmtUnits->fetchAll(PDO::FETCH_ASSOC);
         foreach ($units as $unit) {
             // Create a lookup map by unit name for efficient processing later
-            $units_by_name[$unit['unit_name']] = $unit;
+            $units_by_name[$unit['unit_name']] = $unit; // This is for internal processing, not directly for JS
         }
     }
 
@@ -59,12 +71,17 @@ try {
     $stmt_active_questions->execute();
     $active_questions = $stmt_active_questions->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($user_campus) {
+    // Fetch all campuses for the new dropdown
+    $all_campuses = [];
+    $stmt_all_campuses = $pdo->query("SELECT campus_name FROM tbl_campus ORDER BY campus_name ASC");
+    $all_campuses = $stmt_all_campuses->fetchAll(PDO::FETCH_COLUMN);
+
+    if ($filter_campus_id) {
         // --- Build the query to get filtered response_ids ---
         $base_sql = "SELECT DISTINCT r.response_id FROM tbl_responses r";
-        $joins = " JOIN tbl_responses r_campus ON r.response_id = r_campus.response_id AND r_campus.question_id = -1 AND r_campus.response = :user_campus";
+        $joins = " JOIN tbl_responses r_campus ON r.response_id = r_campus.response_id AND r_campus.question_id = -1 AND r_campus.response = :filter_campus_id";
         $where = " WHERE 1=1";
-        $params = [':user_campus' => $user_campus];
+        $params = [':filter_campus_id' => $filter_campus_id];
 
         if ($filter_year) {
             $where .= " AND YEAR(r.timestamp) = :year";
@@ -151,9 +168,14 @@ try {
                 case -3:
                     $unit_name = $row['response'];
                     $grouped_responses[$response_id]['unit_name'] = $unit_name;
-                    if (isset($units_by_name[$unit_name])) {
-                        $grouped_responses[$response_id]['unit_id'] = $units_by_name[$unit_name]['id'];
-                        $grouped_responses[$response_id]['division_id'] = $units_by_name[$unit_name]['division_id'];
+                    // Find unit_id and division_id from the $all_units_for_add_dialog array
+                    $found_unit = array_filter($all_units_for_add_dialog, function($u) use ($unit_name) {
+                        return $u['unit_name'] === $unit_name;
+                    });
+                    if (!empty($found_unit)) {
+                        $first_found = reset($found_unit);
+                        $grouped_responses[$response_id]['unit_id'] = $first_found['id'];
+                        $grouped_responses[$response_id]['division_id'] = $first_found['division_id'];
                     }
                     break;
                 case -4:
@@ -199,7 +221,16 @@ try {
         <div class="flex lg:items-end gap-1 lg:flex-row flex-col">
             <span class="font-semibold text-gray-700">FILTERS:</span>
             <form id="data-response-filters-form" method="GET" class="flex lg:items-end gap-1 lg:flex-row flex-col">
-                <input type="hidden" name="page" value="data-response">
+                <input type="hidden" name="page" value="data-response-css-head">
+                <div class="lg:w-72 w-full">
+                    <label for="filter_campus" class="block text-xs font-medium text-[#48494A]">CAMPUS</label>
+                    <select name="filter_campus" id="filter_campus" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">
+                        <option value="" hidden>Campuses</option>
+                        <?php foreach ($all_campuses as $campus_option) : ?>
+                            <option value="<?php echo htmlspecialchars($campus_option); ?>" <?php echo ($filter_campus_id == $campus_option) ? 'selected' : ''; ?>><?php echo htmlspecialchars($campus_option); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
                 <div class="lg:w-72 w-full">
                     <label for="filter_division" class="block text-xs font-medium text-[#48494A]">DIVISION</label>
                     <select name="filter_division" id="filter_division" class="border border-[#1E1E1E] py-1 px-2 rounded w-full bg-[#E6E7EC] font-bold">

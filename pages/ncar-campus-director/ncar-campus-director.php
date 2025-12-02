@@ -47,33 +47,40 @@ try {
     // --- Fetch NCAR Data (Offices with 'negative' analysis) ---
     if ($user_campus) {
         $sql = "
-            SELECT
-                u.id AS unit_id,
-                u.unit_name,
-                COALESCE(n.status, 'Unresolved') AS ncar_status,
-                n.id as ncar_id
-            FROM
-                tbl_unit u
-            INNER JOIN (
-                SELECT DISTINCT r_office.response AS unit_name
-                FROM tbl_responses r_main
-                JOIN tbl_responses r_office ON r_main.response_id = r_office.response_id AND r_office.question_id = -3
-                WHERE r_main.analysis = 'negative'
-                  AND YEAR(r_main.timestamp) = :year
-                  AND QUARTER(r_main.timestamp) = :quarter
-                  AND r_main.response_id IN (
-                      SELECT response_id FROM tbl_responses WHERE question_id = -1 AND response = :user_campus
-                  )
-            ) AS negative_offices ON u.unit_name = negative_offices.unit_name
-            LEFT JOIN
-                tbl_ncar n ON n.file_path = CONCAT(
-                    'upload/pdf/ncar-report_',
-                    REPLACE(REPLACE(REPLACE(u.campus_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
-                    REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
-                    :year, '_q', :quarter, '.pdf'
-                )
-            WHERE u.campus_name = :user_campus
+        SELECT
+            -- Use MIN to get a single, consistent comment ID for the group
+            MIN(r_comment.id) AS comment_id,
+            -- Get the timestamp of that first comment
+            MIN(r_comment.timestamp) AS date_issued,
+            -- Use SUBSTRING_INDEX and GROUP_CONCAT to get the first non-empty comment
+            SUBSTRING_INDEX(GROUP_CONCAT(r_comment.comment ORDER BY r_comment.id), ',', 1) AS comment,
+            u.id AS unit_id,
+            u.unit_name,
+            -- The COALESCE and LEFT JOIN for status remain tricky with grouping.
+            -- We will assume the status is the same for all comments in a response for now.
+            -- A more robust solution might require a subquery for the latest status.
+            (SELECT COALESCE(status, 'Unresolved') FROM tbl_ncar WHERE file_path LIKE CONCAT('upload/pdf/ncar-report_', REPLACE(REPLACE(REPLACE(u.campus_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_', REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_', :year, '_q', :quarter, '_%') ORDER BY id DESC LIMIT 1) AS ncar_status
+        FROM
+            tbl_responses r_comment
+        JOIN
+            tbl_responses r_office ON r_comment.response_id = r_office.response_id AND r_office.question_id = -3
+        JOIN
+            tbl_unit u ON r_office.response = u.unit_name
+        WHERE
+            r_comment.analysis = 'negative'
+            AND r_comment.question_id > 0
+            AND u.campus_name = :user_campus
+            AND YEAR(r_comment.timestamp) = :year
+            AND QUARTER(r_comment.timestamp) = :quarter
+        GROUP BY
+            r_comment.response_id, u.id, u.unit_name
         ";
+        /* LEFT JOIN tbl_ncar n ON n.file_path = CONCAT(
+                'upload/pdf/ncar-report_',
+                REPLACE(REPLACE(REPLACE(u.campus_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
+                REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_',
+                :year, '_q', :quarter, '_', r_comment.id, '.pdf'
+            ) */
 
         $params = [
             ':user_campus' => $user_campus,
@@ -93,7 +100,7 @@ try {
         }
 
         // The GROUP BY and ORDER BY must come after all WHERE conditions
-        $sql .= " GROUP BY u.id, u.unit_name, n.status, n.id ORDER BY u.unit_name ASC";
+        $sql .= " ORDER BY u.unit_name ASC";
 
         $stmtNcar = $pdo->prepare($sql);
         $stmtNcar->execute($params);
@@ -158,7 +165,11 @@ try {
         <table class="border border-[#1E1E1ECC] shadow-lg w-full">
             <thead class="bg-[#064089] text-white font-normal dark:text-white dark:bg-gray-900">
                 <tr>
+                    <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">NCAR No.</th>
                     <th class="border px-4 py-3 border-[#1E1E1ECC] w-2/3 text-left">Office</th>
+                    
+                    <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">Date Issued</th>
+                    <!--<th class="border px-4 py-3 border-[#1E1E1ECC] w-2/3 text-left">Negative Comment</th>-->
                     <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">Status</th>
                     <th class="border px-4 py-3 border-[#1E1E1ECC] text-center">Action</th>
                 </tr>
@@ -166,12 +177,22 @@ try {
             <tbody id="ncar-table-body">
                 <?php if (empty($ncar_data)) : ?>
                     <tr>
-                        <td colspan="3" class="text-center p-4 border border-[#1E1E1ECC]">No offices with negative analysis found for the selected period.</td>
+                        <td colspan="5" class="text-center p-4 border border-[#1E1E1ECC]">No negative comments found for the selected period.</td>
                     </tr>
                 <?php else : ?>
+                    <?php
+                    $ncar_counter = 0;
+                    $campus_abbr = strtoupper(substr($user_campus, 0, 3));
+                    ?>
                     <?php foreach ($ncar_data as $row) : ?>
-                        <tr class="bg-white hover:bg-gray-50 ncar-row dark:text-white dark:bg-gray-700" data-unit-id="<?php echo htmlspecialchars($row['unit_id']); ?>">
+                        <?php $ncar_counter++; ?>
+                        <?php $ncar_number = sprintf('CSS-%s-%03d', $campus_abbr, $ncar_counter); ?>
+                        <tr class="bg-white hover:bg-gray-50 ncar-row dark:text-white dark:bg-gray-700" data-unit-id="<?php echo htmlspecialchars($row['unit_id']); ?>" data-comment-id="<?php echo htmlspecialchars($row['comment_id']); ?>">
+                            <td class="border border-[#1E1E1ECC] p-3 text-center"><?php echo htmlspecialchars($ncar_number); ?></td>
                             <td class="border border-[#1E1E1ECC] p-3 office-name"><?php echo htmlspecialchars($row['unit_name']); ?></td>
+                            <!-- <td class="border border-[#1E1E1ECC] p-3 comment-text"><?php echo htmlspecialchars($row['comment']); ?></td>-->
+                           
+                            <td class="border border-[#1E1E1ECC] p-3 text-center"><?php echo date('F j, Y', strtotime($row['date_issued'])); ?></td>
                             <td class="border border-[#1E1E1ECC] p-3 text-center status-cell">
                                 <?php
                                 $status = htmlspecialchars($row['ncar_status']);
@@ -319,6 +340,7 @@ try {
 
             const row = viewButton.closest('tr.ncar-row');
             const unitId = row.dataset.unitId;
+            const commentId = row.dataset.commentId;
             const officeName = row.querySelector('.office-name').textContent.trim();
             const currentStatus = row.querySelector('.status-badge').textContent.trim();
 
@@ -330,7 +352,7 @@ try {
             const periodDisplayText = `${quarterText} ${year} NCAR Report`;
 
             try {
-                const generateUrl = `../../pages/ncar/generate-ncar-report.php?unit_id=${unitId}&year=${year}&quarter=${quarter}`;
+                const generateUrl = `../../pages/ncar-campus-director/generate-ncar-report.php?unit_id=${unitId}&year=${year}&quarter=${quarter}&comment_id=${commentId}`;
                 const response = await fetch(generateUrl);
                 const result = await response.json();
 

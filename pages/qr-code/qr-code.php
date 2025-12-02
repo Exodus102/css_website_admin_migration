@@ -113,7 +113,7 @@ try {
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     const allUnits = <?php echo json_encode($all_units); ?>;
-    const defaultSurveyUrl = window.location.origin + '/css_website_migration/';
+    const defaultSurveyUrl = 'https://urscustomer.online/';
     const qrCodeContainer = document.getElementById('qrcode');
     const textInput = document.getElementById('qr-text-input');
     const generateBtn = document.getElementById('generate-qr-btn');

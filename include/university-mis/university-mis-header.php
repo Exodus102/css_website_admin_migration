@@ -32,7 +32,7 @@
                     </span>
                 </p>
             </span>
-            <img src="../resources/svg/nav-arrow-right.svg" alt="" srcset="" class="hidden lg:flex">
+            <img src="../../resources/svg/nav-arrow-right.svg" alt="" srcset="" class="hidden lg:flex">
             <span class="text-2xl font-bold text-[#064089] dark:text-white"><?php echo htmlspecialchars($page_title); ?></span>
         </div>
     </div>

@@ -1,6 +1,19 @@
 <?php
 require_once __DIR__ . '/../../function/_databaseConfig/_dbConfig.php';
 
+// --- Force fetch of Survey Version at the top to avoid conflicts ---
+$active_survey_version = 'N/A'; // Default value
+try {
+    // This is the exact logic from the main dashboard.
+    $stmt_survey = $pdo->query("SELECT question_survey FROM tbl_questionaireform WHERE date_approved IS NOT NULL ORDER BY date_approved DESC LIMIT 1");
+    $survey_name = $stmt_survey->fetchColumn();
+    if ($survey_name) {
+        $active_survey_version = $survey_name;
+    }
+} catch (PDOException $e) {
+    error_log("Campus Director Dashboard - Survey Version DB Error: " . $e->getMessage());
+}
+
 $user_campus = $_SESSION['user_campus'] ?? null;
 $pending_ncar_count = 0;
 $respondents_count = 0;
@@ -9,7 +22,6 @@ $office_data = [];
 $pie_labels = [];
 $pie_data = [];
 $pie_chart_legend_data = [];
-$active_survey_version = 'N/A';
 $total_monthly_responses = 0;
 $response_rate = 0;
 $vs_last_month = 0;
@@ -19,6 +31,17 @@ $trend_data = [];
 $campus_offices = []; // To store offices for the dropdown
 
 if ($user_campus) {
+    // Fetch campus offices for dropdowns, regardless of other data fetching success.
+    try {
+        $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
+        $stmt_offices->execute([$user_campus]);
+        $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
+    } catch (PDOException $e) {
+        error_log("Error fetching campus offices for dashboard: " . $e->getMessage());
+        // $campus_offices remains an empty array, so dropdowns will be empty but page won't crash.
+    }
+
+
     try {
         // Sanitize the campus name to match the format used in the NCAR file paths
         $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
@@ -29,11 +52,12 @@ if ($user_campus) {
         $stmt->execute([$pattern]);
         $pending_ncar_count = $stmt->fetchColumn();
 
-        // Count unique respondents for the user's campus
+        // Count unique respondents for the user's campus for the CURRENT YEAR
         $stmt_respondents = $pdo->prepare("
             SELECT COUNT(DISTINCT response_id) 
             FROM tbl_responses 
-            WHERE question_id = -1 AND response = ?
+            WHERE question_id = -1 AND response = ? 
+            AND YEAR(timestamp) = YEAR(CURDATE())
         ");
         $stmt_respondents->execute([$user_campus]);
         $respondents_count = $stmt_respondents->fetchColumn();
@@ -122,17 +146,6 @@ if ($user_campus) {
             ];
             $color_index++;
         }
-
-        // Fetch active survey version
-        $stmt_survey = $pdo->query("SELECT question_survey FROM tbl_questionaire WHERE status = 1 LIMIT 1");
-        $survey_name = $stmt_survey->fetchColumn();
-        if ($survey_name) {
-            $active_survey_version = $survey_name;
-        }
-
-        $stmt_offices = $pdo->prepare("SELECT unit_name FROM tbl_unit WHERE campus_name = ? ORDER BY unit_name ASC");
-        $stmt_offices->execute([$user_campus]);
-        $campus_offices = $stmt_offices->fetchAll(PDO::FETCH_COLUMN);
     } catch (PDOException $e) {
         error_log("Error fetching dashboard counts: " . $e->getMessage());
     }
@@ -207,7 +220,7 @@ if ($user_campus) {
                     </div>
                     <div class="bg-[#CFD8E5] rounded-lg p-4 shadow-2xl flex flex-col justify-between dark:bg-gray-700 dark:text-white">
                         <div class="flex justify-between items-center">
-                            <h2 class="text-lg">CSS Respondents</h2>
+                            <h2 class="text-lg">CSS Respondents (<?php echo date('Y'); ?>)</h2>
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                             </svg>
@@ -228,27 +241,27 @@ if ($user_campus) {
                 <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full h-full dark:bg-gray-700 dark:text-white">
                     <h2 class="text-3xl mb-4 font-bold">Monthly Responses</h2>
                     <!-- 4 boxes -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-4">
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
+                    <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-1 xl:grid-cols-1 gap-4">
+                        <!--<div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Total Responses</h3>
                             <p class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($respondents_count)); ?></p>
-                        </div>
+                        </div> -->
                         <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Monthly Response</h3>
                             <p id="monthly-response-count" class="text-4xl font-bold"><?php echo htmlspecialchars(number_format($total_monthly_responses)); ?></p>
                         </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
+                        <!--<div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">Response Rate</h3>
                             <p id="response-rate" class="text-4xl font-bold text-black dark:text-white">
                                 <?php echo htmlspecialchars($response_rate); ?>%
                             </p>
-                        </div>
-                        <div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
+                        </div>-->
+                        <!--<div class="bg-[#F1F7F9]/80 rounded-lg p-4 shadow-md text-center dark:bg-gray-900 dark:text-white">
                             <h3 class="text-md font-semibold">vs Last Month</h3>
                             <p id="vs-last-month" class="text-4xl font-bold text-black dark:text-white">
                                 <?php echo htmlspecialchars($vs_last_month_display); ?>
                             </p>
-                        </div>
+                        </div>-->
                     </div>
 
                     <!-- Dropdown -->
@@ -265,7 +278,7 @@ if ($user_campus) {
             </div>
 
             <!-- Right Column: User Types Pie Chart -->
-            <div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col dark:bg-gray-700 dark:text-white">
+            <!--<div class="lg:w-2/5 bg-[#CFD8E5] rounded-lg p-6 shadow-2xl flex flex-col dark:bg-gray-700 dark:text-white">
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-xl font-semibold ">User Types</h2>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -283,7 +296,7 @@ if ($user_campus) {
                         <canvas id="pieChart"></canvas>
                     </div>
                 </div>
-                <!-- Legend for Pie Chart (you'd generate this dynamically with Chart.js) -->
+                Legend for Pie Chart (you'd generate this dynamically with Chart.js)
                 <?php if (!empty($pie_chart_legend_data)) : ?>
                     <div class="mt-4 text-sm text-gray-600 flex justify-center gap-6">
                         <?php
@@ -303,16 +316,16 @@ if ($user_campus) {
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>
-            </div>
+            </div> -->
         </div>
 
         <!-- Trend Line Graph -->
-        <div class="w-full mt-6">
+        <!--<div class="w-full mt-6">
             <div class="bg-[#CFD8E5] rounded-lg p-6 shadow-2xl w-full dark:bg-gray-700 dark:text-white">
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
                     <h2 class="text-3xl font-bold">Trend Analysis</h2>
                     <div class="flex flex-col lg:flex-row items-center gap-2 mt-2 sm:mt-0">
-                        <!-- Office Filter for Trend Chart -->
+                        Office Filter for Trend Chart
                         <select id="trend-office-select" class="dark:bg-gray-900 dark:text-white mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">\
                             <option value="" hidden>Office</option>
                             <option value="">All Offices</option>
@@ -320,7 +333,7 @@ if ($user_campus) {
                                 <option value="<?php echo htmlspecialchars($office); ?>"><?php echo htmlspecialchars($office); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <!-- Period Filter for Trend Chart -->
+                        Period Filter for Trend Chart
                         <select id="trend-period-select" class="dark:bg-gray-900 dark:text-white mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md font-bold">
                             <option value="annual" selected>Annual</option>
                             <option value="quarterly">Quarterly (This Year)</option>
@@ -334,7 +347,7 @@ if ($user_campus) {
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -566,46 +579,34 @@ if ($user_campus) {
             }
         };
 
-        trendOfficeSelect.addEventListener('change', updateTrendChart);
-        trendPeriodSelect.addEventListener('change', updateTrendChart);
+        if (trendOfficeSelect && trendPeriodSelect) {
+            trendOfficeSelect.addEventListener('change', updateTrendChart);
+            trendPeriodSelect.addEventListener('change', updateTrendChart);
+        }
 
         // --- Office Dropdown Logic for Monthly Response Box ---
-        const officeSelect = document.getElementById('office-select');
+        const officeSelectEl = document.getElementById('office-select');
         const monthlyResponseCountEl = document.getElementById('monthly-response-count');
-        const responseRateEl = document.getElementById('response-rate');
-        const vsLastMonthEl = document.getElementById('vs-last-month');
 
-        if (officeSelect && monthlyResponseCountEl && responseRateEl && vsLastMonthEl) {
-            officeSelect.addEventListener('change', async () => {
-                const selectedOffice = officeSelect.value;
+        if (officeSelectEl && monthlyResponseCountEl) {
+            officeSelectEl.addEventListener('change', async () => {
+                const selectedOffice = officeSelectEl.value;
+                // If "Office" placeholder is selected, reload to show campus-wide total
+                if (!selectedOffice) {
+                    window.location.reload();
+                    return;
+                }
                 const url = `../../function/_dashboard/_getMonthlyOfficeResponse.php?office=${encodeURIComponent(selectedOffice)}`;
 
-                // Show a loading state
-                monthlyResponseCountEl.textContent = '...';
-                responseRateEl.textContent = '...';
-                vsLastMonthEl.textContent = '...';
+                monthlyResponseCountEl.textContent = '...'; // Loading indicator
 
                 try {
                     const response = await fetch(url);
                     const data = await response.json();
-
-                    if (data.error) {
-                        throw new Error(data.error);
-                    }
-                    // Update all three boxes
                     monthlyResponseCountEl.textContent = data.current_month_count.toLocaleString();
-
-                    responseRateEl.textContent = `${data.response_rate}%`;
-                    responseRateEl.className = `text-4xl font-bold text-black`;
-
-                    vsLastMonthEl.textContent = data.vs_last_month;
-                    vsLastMonthEl.className = `text-4xl font-bold text-black`;
-
                 } catch (error) {
                     console.error('Failed to fetch monthly response count:', error);
                     monthlyResponseCountEl.textContent = 'Error';
-                    responseRateEl.textContent = 'Error';
-                    vsLastMonthEl.textContent = 'Error';
                 }
             });
         }
