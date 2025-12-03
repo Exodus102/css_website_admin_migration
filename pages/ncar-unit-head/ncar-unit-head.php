@@ -5,22 +5,15 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$divisions = [];
-$units = [];
 $user_campus = $_SESSION['user_campus'] ?? null;
+$user_unit_id = $_SESSION['user_unit_id'] ?? null; // Get the logged-in user's unit ID
 $ncar_data = [];
 $years = [];
 
 // --- Get Filter Values ---
-$filter_division_id = $_GET['division'] ?? null;
-$filter_office_id = $_GET['office'] ?? null;
 $filter_quarter = $_GET['quarter'] ?? (date('n') <= 3 ? 1 : (date('n') <= 6 ? 2 : (date('n') <= 9 ? 3 : 4)));
 
 try {
-    // Fetch all divisions
-    $stmtDivisions = $pdo->query("SELECT id, division_name FROM tbl_division ORDER BY division_name ASC");
-    $divisions = $stmtDivisions->fetchAll(PDO::FETCH_ASSOC);
-
     // Fetch distinct years from responses for the filter
     $stmtYears = $pdo->query("SELECT DISTINCT YEAR(timestamp) as response_year FROM tbl_responses WHERE YEAR(timestamp) IS NOT NULL ORDER BY response_year DESC");
     $years = $stmtYears->fetchAll(PDO::FETCH_COLUMN);
@@ -31,21 +24,9 @@ try {
     // Set the filter year. Default to the latest year with data if not specified in URL.
     $filter_year = $_GET['year'] ?? $years[0];
 
-    // Fetch units for the user's campus
-    if ($user_campus) {
-        $stmtUnits = $pdo->prepare("
-            SELECT u.id, u.unit_name, d.id as division_id 
-            FROM tbl_unit u 
-            LEFT JOIN tbl_division d ON u.division_name = d.division_name
-            WHERE u.campus_name = ? 
-            ORDER BY u.unit_name ASC
-        ");
-        $stmtUnits->execute([$user_campus]);
-        $units = $stmtUnits->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     // --- Fetch NCAR Data (Offices with 'negative' analysis) ---
-    if ($user_campus) {
+    // Only fetch data if the user is assigned to a unit
+    if ($user_unit_id) {
         $sql = "
         SELECT
             MIN(r_comment.id) AS comment_id,
@@ -67,7 +48,7 @@ try {
         WHERE
             r_comment.analysis = 'negative'
             AND r_comment.question_id > 0
-            AND u.campus_name = :user_campus
+            AND u.id = :user_unit_id
             AND YEAR(r_comment.timestamp) = :year
             AND QUARTER(r_comment.timestamp) = :quarter
         GROUP BY
@@ -75,21 +56,10 @@ try {
         ";
 
         $params = [
-            ':user_campus' => $user_campus,
+            ':user_unit_id' => $user_unit_id,
             ':year' => $filter_year,
             ':quarter' => $filter_quarter
         ];
-
-        // Append division and office filters to the main WHERE clause
-        if ($filter_division_id) {
-            $sql .= " AND u.division_name = (SELECT division_name FROM tbl_division WHERE id = :division_id)";
-            $params[':division_id'] = $filter_division_id;
-        }
-
-        if ($filter_office_id) {
-            $sql .= " AND u.id = :office_id";
-            $params[':office_id'] = $filter_office_id;
-        }
 
         // The GROUP BY and ORDER BY must come after all WHERE conditions
         $sql .= " ORDER BY MIN(r_comment.timestamp) DESC, u.unit_name ASC";
@@ -118,24 +88,7 @@ try {
         <P class="mb-5">You are viewing the generated reports of available offices for this period.</P>
 
         <form id="ncar-filters-form" method="GET" class="flex lg:items-center gap-2 mb-4 flex-col lg:flex-row">
-            <input type="hidden" name="page" value="ncar-campus-director">
-            <select name="division" id="filter_division" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
-                <option value="">All Divisions</option>
-                <?php foreach ($divisions as $division) : ?>
-                    <option value="<?php echo htmlspecialchars($division['id']); ?>" <?php echo ($filter_division_id == $division['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($division['division_name']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
-
-            <select name="office" id="filter_office" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-20 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left w-full lg:w-52">
-                <option value="">All Offices</option>
-                <?php foreach ($units as $unit) : ?>
-                    <option value="<?php echo htmlspecialchars($unit['id']); ?>" data-division-id="<?php echo htmlspecialchars($unit['division_id'] ?? ''); ?>" <?php echo ($filter_office_id == $unit['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($unit['unit_name']); ?>
-                    </option>
-                <?php endforeach; ?>
-            </select>
+            <input type="hidden" name="page" value="ncar-unit-head">
 
             <select name="quarter" id="filter_quarter" class="dark:text-white dark:bg-gray-900 filter-select border border-black bg-[#E6E7EC] font-bold rounded pl-2 pr-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-left">
                 <?php for ($q = 1; $q <= 4; $q++) : ?>
@@ -239,8 +192,6 @@ try {
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const divisionFilter = document.getElementById('filter_division');
-        const officeFilter = document.getElementById('filter_office');
         const filtersForm = document.getElementById('ncar-filters-form');
 
         const ncarListContainer = document.getElementById('ncar-list-container');
@@ -248,42 +199,12 @@ try {
         const backToNcarListBtn = document.getElementById('back-to-ncar-list-btn');
         const ncarTableBody = document.getElementById('ncar-table-body');
 
-        // --- Dynamic Office Filtering ---
-        const allOfficeOptions = Array.from(officeFilter.options);
-
-        const filterOfficeDropdown = () => {
-            const selectedDivisionId = divisionFilter.value;
-            const currentOfficeValue = officeFilter.value;
-
-            // Clear current options but keep the first "All Offices" placeholder
-            officeFilter.innerHTML = '';
-            officeFilter.appendChild(allOfficeOptions[0]); // Re-add the "All Offices" placeholder
-
-            allOfficeOptions.forEach(option => {
-                // Skip the placeholder option as it's already there
-                if (!option.value) return;
-
-                const optionDivisionId = option.dataset.divisionId;
-                if (!selectedDivisionId || !option.value || optionDivisionId === selectedDivisionId) {
-                    officeFilter.appendChild(option.cloneNode(true));
-                }
-            });
-            officeFilter.value = currentOfficeValue; // Restore selection if possible
-        };
-
         // --- Form Submission on Filter Change ---
         document.querySelectorAll('.filter-select').forEach(select => {
             select.addEventListener('change', () => {
-                if (select.id === 'filter_division') {
-                    // When division changes, reset the office filter before submitting
-                    document.getElementById('filter_office').value = '';
-                }
                 filtersForm.submit();
             });
         });
-
-        // Initial filter application on page load
-        filterOfficeDropdown();
 
         // --- View Report Logic ---
         const loadNcarView = (officeName, periodText, filePath, status, commentId) => {

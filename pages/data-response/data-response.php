@@ -274,6 +274,7 @@ try {
                     <?php endforeach; ?>
                     <th class="px-4 py-2 border border-gray-300 w-64">Comments & Suggestions</th>
                     <th class="px-4 py-2 border border-gray-300 w-28">Analysis</th>
+                    <th class="px-4 py-2 border border-gray-300 w-28">Action</th>
                 </tr>
             </thead>
             <tbody id="response-table-body">

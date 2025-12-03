@@ -40,6 +40,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
                 $clearStmt = $pdo->prepare("DELETE FROM two_factor_codes WHERE user_id = ?");
                 $clearStmt->execute([$user_id]);
 
+                // --- ADDED: Fetch and set user_unit_id for Unit Heads ---
+                if ($user_type === 'Unit Head') {
+                    try {
+                        // Corrected query to join with tbl_unit and get the ID
+                        $stmt_unit = $pdo->prepare("
+                            SELECT u.id 
+                            FROM credentials c
+                            JOIN tbl_unit u ON c.unit = u.unit_name
+                            WHERE c.user_id = ?
+                        ");
+                        $stmt_unit->execute([$_SESSION['user_id']]);
+                        $unit_id = $stmt_unit->fetchColumn();
+                        $_SESSION['user_unit_id'] = $unit_id;
+                    } catch (PDOException $e) {
+                        // Log error but don't block login
+                        error_log("Failed to fetch unit_id for user_id: $user_id. Error: " . $e->getMessage());
+                    }
+                }
+
                 // Redirect based on user type
                 if ($user_type === 'Admin') {
                     header("Location: ../../include/university-mis/university-mis-layout.php");

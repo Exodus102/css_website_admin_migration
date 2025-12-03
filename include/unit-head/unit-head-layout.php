@@ -3,7 +3,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-$page = $_GET['page'] ?? 'dashboard';
+$page = $_GET['page'] ?? 'dashboard-unit-head';
 $page_title = ucwords(str_replace(['-', '_'], ' ', $page));
 
 // Handle specific cases for acronyms or special names

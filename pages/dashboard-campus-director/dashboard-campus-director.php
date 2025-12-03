@@ -43,13 +43,44 @@ if ($user_campus) {
 
 
     try {
-        // Sanitize the campus name to match the format used in the NCAR file paths
-        $safe_campus_name = preg_replace('/[\s\/\\?%*:|"<>]+/', '-', $user_campus);
-        $pattern = 'upload/pdf/ncar-report_' . $safe_campus_name . '_%';
+        // --- Corrected Pending NCAR Count Logic ---
+        // This query now mirrors the logic from the ncar-campus-director.php page to get an accurate count.
+        $current_year = date('Y');
+        $current_quarter = ceil(date('n') / 3);
 
-        // Count NCARs for the user's campus that are not 'Resolved'
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_ncar WHERE file_path LIKE ? AND status != 'Resolved'");
-        $stmt->execute([$pattern]);
+        // This query now joins with the tbl_ncar table to exclude resolved items,
+        // providing an accurate count of only pending (Unresolved) NCARs.
+        $ncar_count_sql = "
+            SELECT COUNT(*) FROM (
+                SELECT 
+                    COALESCE((SELECT status 
+                              FROM tbl_ncar 
+                              WHERE file_path LIKE CONCAT('%', REPLACE(REPLACE(REPLACE(u.unit_name, ' ', '-'), '/', '-'), '\\\\', '-'), '_', :year, '_q', :quarter, '_', MIN(r_comment.id), '.pdf') 
+                              ORDER BY id DESC LIMIT 1), 
+                    'Unresolved') AS ncar_status
+                FROM
+                    tbl_responses r_comment
+                JOIN
+                    tbl_responses r_office ON r_comment.response_id = r_office.response_id AND r_office.question_id = -3
+                JOIN
+                    tbl_unit u ON r_office.response = u.unit_name
+                WHERE
+                    r_comment.analysis = 'negative'
+                    AND r_comment.question_id > 0
+                    AND u.campus_name = :user_campus
+                    AND YEAR(r_comment.timestamp) = :year
+                    AND QUARTER(r_comment.timestamp) = :quarter
+                GROUP BY
+                    r_comment.response_id, u.id, u.unit_name
+            ) AS ncars WHERE ncars.ncar_status != 'Resolved'
+        ";
+
+        $stmt = $pdo->prepare($ncar_count_sql);
+        $stmt->execute([
+            ':user_campus' => $user_campus,
+            ':year' => $current_year,
+            ':quarter' => $current_quarter
+        ]);
         $pending_ncar_count = $stmt->fetchColumn();
 
         // Count unique respondents for the user's campus for the CURRENT YEAR
