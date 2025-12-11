@@ -2,14 +2,20 @@
 header('Content-Type: application/json');
 require_once '../_databaseConfig/_dbConfig.php';
 
-require_once '../_auditTrail/_audit.php'; // Include the audit trail function
-// Include PHPMailer files
+require_once '../_auditTrail/_audit.php';
+
+// --- Composer Autoloader and Environment Variables ---
+require_once __DIR__ . '/../../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+$dotenv->load();
+
+// --- PHPMailer Configuration ---
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/Exception.php';
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require '../../PHPMailer/vendor/phpmailer/phpmailer/src/SMTP.php';
+require_once '../../PHPMailer/vendor/phpmailer/phpmailer/src/Exception.php';
+require_once '../../PHPMailer/vendor/phpmailer/phpmailer/src/PHPMailer.php';
+require_once '../../PHPMailer/vendor/phpmailer/phpmailer/src/SMTP.php';
 
 $response = ['success' => false, 'message' => 'An error occurred.'];
 
@@ -59,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $mail->isSMTP();
                         $mail->Host       = 'smtp.gmail.com';
                         $mail->SMTPAuth   = true;
-                        $mail->Username   = 'dlhor65@gmail.com';
-                        $mail->Password   = 'mqvt lbsn naoe fgze';
+                        $mail->Username   = $_ENV['GMAIL_USERNAME'];
+                        $mail->Password   = $_ENV['GMAIL_APP_PASSWORD'];
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port       = 587;
 

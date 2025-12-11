@@ -27,6 +27,11 @@
         const addResponseForm = document.getElementById('add-response-form');
         const addNewRowBtn = document.getElementById('add-new-response-row');
 
+        // --- Sentiment Details Logic ---
+        const sentimentDialog = document.getElementById('sentiment-details-dialog');
+        const closeSentimentDialogBtn = document.getElementById('close-sentiment-dialog');
+        const sentimentContent = document.getElementById('sentiment-details-content');
+
         // --- Event Listeners ---
         document.querySelectorAll('#data-response-filters-form select').forEach(select => {
             select.addEventListener('change', () => {
@@ -253,6 +258,64 @@
                     alert('An error occurred while saving the responses. Please check the console.');
                     console.error('Add Response Error:', error);
                 }
+            });
+        }
+
+        // --- Sentiment Details Event Listeners ---
+        const responseTableBody = document.getElementById('response-table-body');
+        if (responseTableBody) {
+            responseTableBody.addEventListener('click', async (e) => {
+                if (e.target.closest('.view-sentiment-btn')) {
+                    const button = e.target.closest('.view-sentiment-btn');
+                    const responseId = button.dataset.responseId;
+
+                    button.disabled = true;
+                    button.textContent = 'Loading...';
+
+                    try {
+                        const response = await fetch(`../../pages/data-response/get-sentiment-details.php?response_id=${responseId}`);
+                        const result = await response.json();
+
+                        if (result.success) {
+                            const details = result.data;
+                            let contentHtml = `
+                                <p><strong>Detail ID:</strong> ${details.id}</p>
+                                <p><strong>Response ID:</strong> ${details.response_id}</p>
+                                <h4 class="font-semibold mt-4 mb-2">Sentiment Details:</h4>
+                            `;
+
+                            // Try to parse the sentiment_details if it's a JSON string
+                            try {
+                                const sentimentJson = JSON.parse(details.sentiment_details);
+                                contentHtml += `<pre class="bg-gray-100 p-3 rounded-md text-sm whitespace-pre-wrap font-mono">${JSON.stringify(sentimentJson, null, 2)}</pre>`;
+                            } catch (jsonError) {
+                                // If it's not valid JSON, display it as plain text
+                                contentHtml += `<div class="bg-gray-100 p-3 rounded-md text-sm whitespace-pre-wrap">${details.sentiment_details}</div>`;
+                            }
+
+                            sentimentContent.innerHTML = contentHtml;
+                            sentimentDialog.showModal();
+                        } else {
+                            alert(result.message);
+                        }
+                    } catch (error) {
+                        console.error('Error fetching sentiment details:', error);
+                        alert('An error occurred while fetching the sentiment details.');
+                    } finally {
+                        button.disabled = false;
+                        button.textContent = 'View';
+                    }
+                }
+            });
+        }
+
+        if (closeSentimentDialogBtn) {
+            closeSentimentDialogBtn.addEventListener('click', () => sentimentDialog.close());
+        }
+
+        if (sentimentDialog) {
+            sentimentDialog.addEventListener('click', (e) => {
+                if (e.target === sentimentDialog) sentimentDialog.close();
             });
         }
     });

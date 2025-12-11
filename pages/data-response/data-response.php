@@ -316,6 +316,11 @@ try {
                                     <?php echo $analysis; ?>
                                 </span>
                             </td>
+                            <td class="px-4 py-2 border border-gray-300 text-center">
+                                <button class="view-sentiment-btn bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-semibold hover:bg-blue-200" data-response-id="<?php echo htmlspecialchars($group['id']); ?>">
+                                    View
+                                </button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
@@ -455,6 +460,20 @@ try {
             </div>
         </form>
     </dialog>
+
+    <!-- Sentiment Details Dialog -->
+    <dialog id="sentiment-details-dialog" class="p-6 rounded-md shadow-lg backdrop:bg-black backdrop:bg-opacity-50 w-full max-w-2xl bg-[#F1F7F9]">
+        <div class="space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-lg">Sentiment Analysis Details</h3>
+                <button type="button" id="close-sentiment-dialog" class="text-2xl font-bold leading-none">&times;</button>
+            </div>
+            <div id="sentiment-details-content" class="max-h-[60vh] overflow-y-auto bg-white p-4 rounded border border-gray-300">
+                <!-- Details will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </dialog>
+
     <?php
     // Add the loading overlay
     echo '
